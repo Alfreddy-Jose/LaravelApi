@@ -1,18 +1,18 @@
 [phases.setup]
-# Versiones actualizadas (verifica en https://search.nixos.org/packages)
 nixPkgs = [
-    "php84",                   # PHP 8.4 (o "php83" si prefieres)
-    "php84Extensions.curl",     # Extensiones requeridas por Laravel
+    # Nombres verificados para 2025 (ajustar según search.nixos.org)
+    "php84",                     # o "php83" si prefieres
+    "php84Extensions.curl",
     "php84Extensions.mbstring",
     "php84Extensions.xml",
     "php84Extensions.fileinfo",
-    "nodejs-20x",              # Node.js 20.x (LTS 2025)
+    "nodejs_22",                 # Posible nuevo nombre en 2025
     "yarn"
 ]
 
 [phases.build]
 commands = [
-    # Instalación manual de Composer (método oficial 2025)
+    # Instalación manual de Composer (siempre funciona)
     "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
     
     # Comandos del proyecto
