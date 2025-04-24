@@ -14,10 +14,6 @@ nixOverlays = [
 
 [phases.build]
 commands = [
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
-    "composer install --no-interaction --prefer-dist --optimize-autoloader",
-    "yarn install",
-    "yarn prod",
     "php artisan optimize:clear",
     "php artisan migrate --force"
 ]
