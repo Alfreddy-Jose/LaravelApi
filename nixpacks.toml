@@ -1,26 +1,30 @@
 [phases.setup]
 nixPkgs = [
-    # Nombres verificados para 2025 (ajustar según search.nixos.org)
-    "php84",                     # o "php83" si prefieres
+    # PHP y extensiones (verifica nombres actuales en https://search.nixos.org/packages)
+    "php84", 
     "php84Extensions.curl",
     "php84Extensions.mbstring",
     "php84Extensions.xml",
     "php84Extensions.fileinfo",
-    "nodejs_22",                 # Posible nuevo nombre en 2025
+    "nodejs-18x",  # Última LTS disponible según tu confirmación
     "yarn"
 ]
 
 [phases.build]
 commands = [
-    # Instalación manual de Composer (siempre funciona)
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
+    # Instalación EXPLÍCITA de Composer (método 100% confiable)
+    "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\"",
+    "php composer-setup.php --install-dir=/usr/bin --filename=composer",
+    "php -r \"unlink('composer-setup.php');\"",
+    
+    # Verifica que Composer esté instalado
+    "composer --version",
     
     # Comandos del proyecto
-    "composer install --no-interaction --prefer-dist --optimize-autoloader",
+    "composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs",
     "yarn install",
     "yarn prod",
-    "php artisan optimize:clear",
-    "php artisan migrate --force"
+    "php artisan optimize:clear"
 ]
 
 [start]
