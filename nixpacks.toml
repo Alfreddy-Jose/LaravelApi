@@ -1,19 +1,24 @@
 [phases.setup]
+# Versiones actualizadas (verifica en https://search.nixos.org/packages)
 nixPkgs = [
-    "php", 
-    "php82Extensions.curl",
-    "php82Extensions.mbstring",
-    "php82Extensions.xml",
-    "php82Extensions.fileinfo",
-    "nodejs",
+    "php84",                   # PHP 8.4 (o "php83" si prefieres)
+    "php84Extensions.curl",     # Extensiones requeridas por Laravel
+    "php84Extensions.mbstring",
+    "php84Extensions.xml",
+    "php84Extensions.fileinfo",
+    "nodejs-20x",              # Node.js 20.x (LTS 2025)
     "yarn"
-]
-nixOverlays = [
-    "https://github.com/nix-community/composer2nix/archive/main.tar.gz"
 ]
 
 [phases.build]
 commands = [
+    # Instalación manual de Composer (método oficial 2025)
+    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
+    
+    # Comandos del proyecto
+    "composer install --no-interaction --prefer-dist --optimize-autoloader",
+    "yarn install",
+    "yarn prod",
     "php artisan optimize:clear",
     "php artisan migrate --force"
 ]
