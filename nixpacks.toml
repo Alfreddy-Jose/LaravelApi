@@ -6,7 +6,7 @@ nixPkgs = [
     "php84Extensions.mbstring",
     "php84Extensions.xml",
     "php84Extensions.fileinfo",
-    "nodejs-18x",  # Última LTS disponible según tu confirmación
+    "nodejs_22",  # Última LTS disponible según tu confirmación
     "yarn"
 ]
 
