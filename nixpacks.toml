@@ -1,5 +1,15 @@
 [phases.setup]
-nixPkgs = ["nodejs", "yarn"]  # Instala Node.js y Yarn automáticamente
+# Instala PHP, Composer, Node.js y Yarn
+nixPkgs = [
+    "php",           # PHP
+    "php82Extensions.curl",  # Extensiones comunes (ajusta la versión, ej: php83Extensions.curl)
+    "php82Extensions.mbstring",
+    "php82Extensions.xml",
+    "php82Extensions.fileinfo",
+    "composer",      # Composer
+    "nodejs",        # Node.js
+    "yarn"           # Yarn
+]
 
 [phases.build]
 commands = [
