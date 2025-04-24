@@ -1,18 +1,20 @@
 [phases.setup]
-# Instala PHP, Composer, Node.js y Yarn
 nixPkgs = [
-    "php",           # PHP
-    "php82Extensions.curl",  # Extensiones comunes (ajusta la versión, ej: php83Extensions.curl)
+    "php", 
+    "php82Extensions.curl",
     "php82Extensions.mbstring",
     "php82Extensions.xml",
     "php82Extensions.fileinfo",
-    "composer",      # Composer
-    "nodejs",        # Node.js
-    "yarn"           # Yarn
+    "nodejs",
+    "yarn"
+]
+nixOverlays = [
+    "https://github.com/nix-community/composer2nix/archive/main.tar.gz"
 ]
 
 [phases.build]
 commands = [
+    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
     "composer install --no-interaction --prefer-dist --optimize-autoloader",
     "yarn install",
     "yarn prod",
