@@ -55,8 +55,10 @@ class MatriculaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Matricula $id)
     {
-        //
+        $id->delete();
+
+        return response()->json(["message" => "Matricula Eliminada"], 200);
     }
 }
