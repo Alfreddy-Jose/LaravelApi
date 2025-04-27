@@ -23,7 +23,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Instala dependencias de Composer (sin dev)
-RUN composer install --no-dev --optimize-autoloader
+#RUN composer install --no-dev --optimize-autoloader
 
 # Configura permisos para Laravel
 RUN chown -R www-data:www-data /var/www/html/storage \
@@ -33,9 +33,10 @@ RUN chown -R www-data:www-data /var/www/html/storage \
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 # Optimización de Laravel
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
+RUN composer install --no-dev --optimize-autoloader
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
 
 EXPOSE 80
 CMD ["apache2-foreground"]
