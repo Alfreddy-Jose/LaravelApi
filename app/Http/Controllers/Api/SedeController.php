@@ -28,23 +28,29 @@ class SedeController extends Controller
         // creando nueva sede
         Sede::create($request->all());
 
+        // Enviando respuesta al frontend
         return response()->json(['message' => 'Sede Registrada']);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Sede $id) // <-- almacenando datos en la variable $id
     {
-        //
+        // enviando datos al frontend
+        return response()->json($id);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Sede $id)
     {
-        //
+        // Editando registro
+        $id->update($request->all());
+        
+        // Enviando respuesta al frontend
+        return response()->json(['message' => 'Sede Editada']);
     }
 
     /**

@@ -48,11 +48,18 @@ class PnfController extends Controller
         $id->update($request->all());
 
         // Enviando respuesta a la api
-        return response()->json(['message' => 'PNF Actualizado', 200]);
+        return response()->json(['message' => 'PNF Editado', 200]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) {}
+    public function destroy(Pnf $id) {
+
+        // Eliminando el pnf
+        $id->delete();
+        
+        // Enviando respuesta a la api
+        return response()->json(['message' => 'PNF Eliminado'], 200);
+    }
 }

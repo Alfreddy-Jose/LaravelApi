@@ -17,7 +17,7 @@ class MatriculaController extends Controller
         $matriculas = Matricula::select('id', 'nombre', 'tipo')->get();
 
         // enviando datos a la api
-        return response()->json($matriculas); 
+        return response()->json($matriculas);
     }
 
     /**
@@ -35,17 +35,21 @@ class MatriculaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Matricula $id)
     {
-        //
+        return response()->json($id);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Matricula $id)
     {
-        //
+
+        // Actualizando registro
+        $id->update($request->all()); // <-- variable $id es el registro captado
+
+        return response()->json(["message" => "Matricula Editada"], 200);
     }
 
     /**
