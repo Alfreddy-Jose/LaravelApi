@@ -1,6 +1,11 @@
 # Verifica conexión a PostgreSQL
 nc -z $DB_HOST $DB_PORT || exit 1
 
+# 2. Genera clave de aplicación si no existe
+if [ -z "$APP_KEY" ]; then
+  php artisan key:generate
+fi
+
 # 1. Limpia cachés antiguos
 php artisan config:clear
 php artisan cache:clear
