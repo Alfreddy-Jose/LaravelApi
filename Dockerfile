@@ -46,5 +46,11 @@ RUN chmod +x /usr/local/bin/start.sh
 # Puerto expuesto
 EXPOSE 80
 
+# Añade esto ANTES del CMD final
+RUN mkdir -p storage/logs && \
+    touch storage/logs/laravel.log && \
+    chown -R www-data:www-data storage && \
+    chmod -R 775 storage
+
 # Comando de inicio (ejecuta migraciones y luego inicia Apache)
 CMD ["/usr/local/bin/start.sh"]
