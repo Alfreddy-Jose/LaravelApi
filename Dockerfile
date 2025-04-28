@@ -1,41 +1,51 @@
-
+# Usa la imagen oficial de PHP con Apache
 FROM php:8.2-apache
 
+# Configura el directorio de trabajo
 WORKDIR /var/www/html
 
-# 1. Instala dependencias del sistema
+# Instala dependencias del sistema (incluyendo PostgreSQL)
 RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libjpeg-dev libonig-dev \
-    libxml2-dev zip unzip libpq-dev && \
-    docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd && \
-    a2enmod rewrite
+    git \
+    curl \
+    libpng-dev \
+    libjpeg-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd \
+    && a2enmod rewrite
 
 # Configuración SSL para PostgreSQL
 RUN echo "extension=pdo_pgsql" >> /usr/local/etc/php/conf.d/docker-php-ext-pdo_pgsql.ini && \
-echo "extension=openssl" >> /usr/local/etc/php/conf.d/docker-php-ext-openssl.ini
+    echo "extension=openssl" >> /usr/local/etc/php/conf.d/docker-php-ext-openssl.ini
 
-# 2. Instala Composer
+# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 3. Copia solo lo necesario para composer install
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
-
-# 4. Copia el resto del proyecto
+# Copia el proyecto (ignorando lo especificado en .dockerignore)
 COPY . .
 
-# 5. Configura permisos
+# Instala dependencias de Composer (sin dev)
+RUN composer install --no-dev --optimize-autoloader
+
+# Configura permisos para Laravel
 RUN mkdir -p storage/logs && \
     touch storage/logs/laravel.log && \
     chown -R www-data:www-data storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
-# 6. Configura Apache
+# Configura Apache para Laravel
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
-# 7. Mueve los comandos de Artisan al script de inicio
+# Script de inicio
 COPY .docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
+# Puerto expuesto
 EXPOSE 80
+
+# Comando de inicio
 CMD ["/usr/local/bin/start.sh"]
