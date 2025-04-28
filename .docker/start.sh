@@ -1,9 +1,18 @@
-#!/bin/bash
+# 1. Limpia cachés antiguos
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
 
-# Ejecuta migraciones
-php artisan
+# 2. Genera nuevos cachés (solo en producción)
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# 3. Ejecuta migraciones (opcional)
+php artisan migrate --force
+
 # Ejecuta seeds
 php artisan db:seed --force
 
-# Inicia Apache
+# 4. Inicia Apache
 exec apache2-foreground
