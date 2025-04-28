@@ -27,12 +27,15 @@ Route::get('/sedes', [SedeController::class, 'index']);
 Route::post('/sede', [SedeController::class, 'store']);
 Route::get('/sede/{id}', [SedeController::class, 'show']);
 Route::put('/sede/{id}', [SedeController::class, 'update']);
+Route::delete('/sede/{id}', [SedeController::class, 'destroy']);
 
 // Rutas de Tipo de Matriculas
 Route::get('/matriculas', [MatriculaController::class, 'index']);
 Route::get('/matricula/{id}', [MatriculaController::class, 'show']);
 Route::post('/matricula', [MatriculaController::class, 'store']);
 Route::put('/matricula/{id}', [MatriculaController::class, 'update']);
+Route::delete('/matricula/{id}', [MatriculaController::class, 'destroy']);
+
 
 // Rutas de los Roles
 Route::get('/roles', [RolesController::class, 'index']);
@@ -42,3 +45,4 @@ Route::get('/lapsos', [LapsoAcademicoController::class, 'index']);
 Route::post('/lapso', [LapsoAcademicoController::class, 'store']);
 Route::get('/lapso/{id}', [LapsoAcademicoController::class, 'show']);
 Route::put('/lapso/{id}', [LapsoAcademicoController::class, 'update']);
+Route::delete('/lapso/{id}', [LapsoAcademicoController::class, 'destroy']);

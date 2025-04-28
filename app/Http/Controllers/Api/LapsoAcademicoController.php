@@ -29,7 +29,7 @@ class LapsoAcademicoController extends Controller
         LapsoAcademico::create($request->all());
 
         // Enviando respuesta al frontend
-        return response()->json(["message" => "Lapso Regisrado"]);
+        return response()->json(["message" => "Lapso Academico Registrado"]);
     }
 
     /**
@@ -55,8 +55,11 @@ class LapsoAcademicoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(LapsoAcademico $id)
     {
-        //
+        // Eliminando Lapso Academico
+        $id->delete();
+        // Enviando respuesta al frontend
+        return response()->json(["message" => "Lapso Academico Eliminado"]);
     }
 }

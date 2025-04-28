@@ -56,8 +56,12 @@ class SedeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Sede $id)
     {
-        //
+        // Eliminando la Sede
+        $id->delete();
+        
+        // Enviando respuesta a la api
+        return response()->json(['message' => 'Sede Eliminada'], 200);
     }
 }
