@@ -44,6 +44,9 @@ COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
+# Elimina cualquier referencia a SQLite
+RUN if [ -f database/database.sqlite ]; then rm database/database.sqlite; fi
+
 # Puerto expuesto
 EXPOSE 80
 
