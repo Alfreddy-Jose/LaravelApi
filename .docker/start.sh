@@ -1,5 +1,8 @@
-# Verifica conexión a PostgreSQL
-nc -z $DB_HOST $DB_PORT || exit 1
+# 1. Verificación alternativa de conexión PostgreSQL (sin nc)
+if ! php -r "try {new PDO('pgsql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_DATABASE', '$DB_USERNAME', '$DB_PASSWORD');} catch(Exception \$e) {exit(1);}"; then
+    echo "Error: No se puede conectar a PostgreSQL"
+    exit 1
+fi
 
 # 2. Genera clave de aplicación si no existe
 if [ -z "$APP_KEY" ]; then
