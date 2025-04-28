@@ -51,4 +51,9 @@ RUN if [ -f database/database.sqlite ]; then rm database/database.sqlite; fi
 EXPOSE 80
 
 # Comando de inicio
+COPY fix-sessions.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/fix-sessions.sh
+
+
+CMD ["sh", "-c", "fix-sessions.sh && /usr/local/bin/start.sh"]
 CMD ["/usr/local/bin/start.sh"]

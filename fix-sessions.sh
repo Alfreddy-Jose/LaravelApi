@@ -1,0 +1,1 @@
+php artisan migrate --force --path=database/migrations/2025_04_25_019194_create_sessions_table.php
