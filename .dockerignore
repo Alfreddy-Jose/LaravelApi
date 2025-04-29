@@ -1,6 +1,0 @@
-/node_modules
-/.git
-/.github
-/storage/*.key
-/.env
-/docker-compose.yml
