@@ -1,0 +1,12 @@
+{
+    "build": {
+      "builder": "nixpacks",
+      "config": {
+        "phpVersion": "8.2",
+        "startCommand": "bash start.sh"
+      }
+    },
+    "deploy": {
+      "startCommand": "./start.sh"
+    }
+  }
