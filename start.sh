@@ -3,8 +3,8 @@
 # Instala dependencias de Composer (sin dev)
 composer install --optimize-autoloader --no-dev
 
-# Genera el APP_KEY si no existe
-if [ -z "$(grep 'APP_KEY=' .env)" ]; then
+# Genera el APP_KEY solo si no está definido
+if [ -z "${APP_KEY}" ]; then
   php artisan key:generate
 fi
 
