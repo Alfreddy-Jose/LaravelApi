@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\AutenticacionController;
 use App\Http\Controllers\Api\LapsoAcademicoController;
 use App\Http\Controllers\Api\MatriculaController;
+use App\Http\Controllers\Api\PersonaController;
 use App\Http\Controllers\Api\PnfController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SedeController;
@@ -13,6 +15,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
+// Rutas de Usuarios y Autenticación
+Route::post('/login', [AutenticacionController::class, 'login']);
 Route::get('/usuarios', [UserController::class, 'index']);
 
 // Rutas de PNF
@@ -46,3 +51,9 @@ Route::post('/lapso', [LapsoAcademicoController::class, 'store']);
 Route::get('/lapso/{id}', [LapsoAcademicoController::class, 'show']);
 Route::put('/lapso/{id}', [LapsoAcademicoController::class, 'update']);
 Route::delete('/lapso/{id}', [LapsoAcademicoController::class, 'destroy']);
+
+// Rutas de Personas
+Route::get('/personas', [PersonaController::class, 'index']);
+Route::post('/persona', [PersonaController::class, 'store']);
+Route::get('/persona/{id}', [PersonaController::class, 'show']);
+Route::delete('/persona/{id}', [PersonaController::class, 'destroy']);
