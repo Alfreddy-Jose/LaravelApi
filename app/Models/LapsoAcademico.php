@@ -11,4 +11,9 @@ class LapsoAcademico extends Model
         'ano',
         'tipo_lapso'
     ];
+    // Relación con el modelo Tipo_persona
+    public function tipo_persona()
+    {
+        return $this->hasMany(Tipo_persona::class, 'lapso_academico_id');
+    }
 }

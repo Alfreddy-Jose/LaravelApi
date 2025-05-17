@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('personas', function (Blueprint $table) {
+            // Definicion de la tabla personas
             $table->id();
             $table->bigInteger('cedula_persona');
             $table->string('nombre');

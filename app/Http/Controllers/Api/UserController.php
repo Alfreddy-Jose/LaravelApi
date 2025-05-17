@@ -14,9 +14,7 @@ class UserController extends Controller
     public function index()
     {
         // Obteniendo nombre de roles y id, nombre de usuarios
-        $user = User::with(['roles' => function ($query) {
-            $query->select('name');
-        }])->select('id', 'name', 'email')->where('name', '!=', 'administrador')->get();
+        $user = User::select('id', 'name', 'email')->get();
         return response()->json($user);
     }
 

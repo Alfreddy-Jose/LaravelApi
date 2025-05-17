@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Persona;
 use Illuminate\Http\Request;
+use PDOException;
+use PhpParser\Node\Stmt\TryCatch;
 
 class PersonaController extends Controller
 {
@@ -27,7 +29,7 @@ class PersonaController extends Controller
     {
         // Gardando los registros
         Persona::create($request->all());
-        
+
         // retornando confirmacion a la vista
         return response()->json(["message" => "Persona Registrada"]);
     }
@@ -44,9 +46,13 @@ class PersonaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Persona $id)
     {
-        //
+        // Editando registro
+        $id->update($request->all());
+
+        // Enviando respuesta al frontend
+        return response()->json(['message' => 'Persona Editada']);
     }
 
     /**
@@ -56,7 +62,7 @@ class PersonaController extends Controller
     {
         // Eliminando Persona
         $id->delete();
-        
+
         // Enviando respuesta a la api
         return response()->json(['message' => 'Persona Eliminada'], 200);
     }

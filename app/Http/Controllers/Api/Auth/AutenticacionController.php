@@ -12,17 +12,45 @@ class AutenticacionController extends Controller
 
     public function login(Request $request)
     {
+        // Obtener usuario 
         $user = User::where('email', $request->email)->first();
 
+        // verificar credenciales
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Credenciales incorrectas']);
+            return response()->json(['message' => 'Credenciales incorrectas'], 401);
         }
 
-        return response()->json($user);
+        // Crear Token 
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        // Obtener nombres de los permisoso
+        //$permissions = $user->getAllPermissions()->pluck('name')->toArray();
+
+        return response()->json([
+            'message' => 'Inicio de sesión exitoso',
+            'user' => $user,
+            'token' => $token,
+            //'permissions' => $permissions,
+        ], 200);
     }
 
-    public function store(Request $request)
+    // Obtener el usuario autenticado
+    public function user(Request $request)
     {
-        //
+        return response()->json([
+            'user' => $request->user()
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            // Revocar el token actual
+            $request->user()->currentAccessToken()->delete();
+
+            return response()->json(['message' => 'Sesión cerrada correctamente'], 200);
+        } catch (\Exception $th) {
+            return response()->json(['message' => 'Error del token', 'error' => $th], 400);
+        }
     }
 }

@@ -13,4 +13,9 @@ class Pnf extends Model
         'abreviado',
         'abreviado_coord'
     ];
+    // Relación con el modelo Tipo_persona
+    public function tipo_persona()
+    {
+        return $this->hasMany(Tipo_persona::class, 'pnf_id');
+    }
 }
