@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://laravelapi-production-2350.up.railway.app'],
+    'allowed_origins' => ['https://react-vite-eta-ashen.vercel.app'],
 
     'allowed_origins_patterns' => [],
 
