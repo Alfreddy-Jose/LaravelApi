@@ -29,5 +29,5 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Expone el puerto 8000
 EXPOSE 8000
 
-# Comando por defecto: espera a que la base de datos esté lista, luego ejecuta migraciones y seeders, y finalmente inicia el servidor
-CMD php artisan migrate --seed --force && php artisan serve --host=0.0.0.0 --port=8000
+# Refresca la base de datos y ejecuta seeders en cada despliegue
+CMD php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=8000
