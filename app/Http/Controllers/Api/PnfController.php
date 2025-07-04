@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePnfRequest;
+use App\Http\Requests\UpdatePnfRequest;
 use App\Models\Pnf;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class PnfController extends Controller
     public function index()
     {
         // Seleccionar los pnf
-        $pnfs = Pnf::select('id', 'codigo', 'nombre', 'abreviado', 'abreviado_coord')->get();
+        $pnfs = Pnf::select('id', 'nombre', 'abreviado', 'abreviado_coord')->get();
 
         // Enviar a la vista del listado de PNF con la variable
         return response()->json($pnfs);
@@ -23,9 +25,10 @@ class PnfController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePnfRequest $request)
     {
-        Pnf::create($request->all());
+
+        Pnf::create($request->all()); 
 
         return response()->json(["message" => "PNF Registrado"], 200);
     }
@@ -33,31 +36,31 @@ class PnfController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pnf $id)
+    public function show(Pnf $pnf)
     {
-        return response()->json($id);
+        return response()->json($pnf);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pnf $id)
+    public function update(UpdatePnfRequest $request, Pnf $pnf)
     {
 
         // actualizando pnf
-        $id->update($request->all());
+        $pnf->update($request->all());
 
         // Enviando respuesta a la api
-        return response()->json(['message' => 'PNF Editado', 200]);
+        return response()->json(['message' => 'PNF Editado'], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pnf $id) {
+    public function destroy(Pnf $pnf) {
 
         // Eliminando el pnf
-        $id->delete();
+        $pnf->delete();
         
         // Enviando respuesta a la api
         return response()->json(['message' => 'PNF Eliminado'], 200);

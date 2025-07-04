@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('laboratorios', function (Blueprint $table) {
+        Schema::create('adscrita_noadscritas', function (Blueprint $table) {
             $table->id();
-            $table->string('etapa');
-            $table->string('nombre_lab');
-            $table->string('abreviado_lab');
-            $table->integer('equipos');
+            // Relacion con PNF
+            $table->string('pnf_id');
+            $table->foreign('pnf_id')
+                ->references('id')
+                ->on('pnfs')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('laboratorios');
+        Schema::dropIfExists('adscrita_noadscritas');
     }
 };

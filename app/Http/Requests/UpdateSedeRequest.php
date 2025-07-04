@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateSedeRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /** 
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            "nro_sede" => "required|numeric|unique:sedes,nro_sede" . ($this->sede ? ',' . $this->sede->id : ''),
+            "nombre_sede" => "required|string",
+            "nombre_abreviado" => "required|string|min:3",
+            "direccion" => "required|string",
+            "municipio" => "required"
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            "nro_sede" => "numero sede",
+            "nombre_sede" => " nombre",
+            "nombre_abreviado" => "nombre abreviado",
+            "municipio" => "municipio"
+        ];
+    }
+}

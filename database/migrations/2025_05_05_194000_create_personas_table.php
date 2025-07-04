@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('personas', function (Blueprint $table) {
             // Definicion de la tabla personas
             $table->id();
-            $table->bigInteger('cedula_persona');
+            $table->bigInteger('cedula_persona')->unique();
             $table->string('nombre');
             $table->string('apellido');
             $table->text('direccion');
             $table->string('municipio');
-            $table->bigInteger('telefono');
+            $table->string('telefono');
             $table->string('email')->unique();
             $table->string('tipo_persona');
             $table->string('grado_inst');

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreMatriculaRequest;
+use App\Http\Requests\UpdateMatriculaRequest;
 use App\Models\Matricula;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class MatriculaController extends Controller
     public function index()
     {
         // Seleccionando todos los tipos de matricula
-        $matriculas = Matricula::select('id', 'nombre', 'tipo')->get();
+        $matriculas = Matricula::select('id', 'nombre', 'numero')->get();
 
         // enviando datos a la api
         return response()->json($matriculas);
@@ -23,31 +25,31 @@ class MatriculaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreMatriculaRequest $request)
     {
         // Creando Tipo de Matricula
         Matricula::create($request->all());
 
         // Enviando respuesta a la api
-        return response()->json(['message' => 'Matricula Registrada']);
+        return response()->json(['message' => 'Matricula Registrada'], 200);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Matricula $id)
+    public function show(Matricula $matricula)
     {
-        return response()->json($id);
+        return response()->json($matricula);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Matricula $id)
+    public function update(UpdateMatriculaRequest $request, Matricula $matricula)
     {
 
         // Actualizando registro
-        $id->update($request->all()); // <-- variable $id es el registro captado
+        $matricula->update($request->all()); // <-- variable $id es el registro captado
 
         return response()->json(["message" => "Matricula Editada"], 200);
     }
@@ -55,9 +57,9 @@ class MatriculaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Matricula $id)
+    public function destroy(Matricula $matricula)
     {
-        $id->delete();
+        $matricula->delete();
 
         return response()->json(["message" => "Matricula Eliminada"], 200);
     }

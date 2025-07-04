@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolesController extends Controller
@@ -13,8 +14,9 @@ class RolesController extends Controller
      */
     public function index()
     {
-        $roles = Role::select('id', 'name')->get();
-        
+        // seleccionar roles con permisos
+        $roles = Role::with('permissions')->get();
+
         return response()->json($roles);
     }
 
@@ -23,30 +25,72 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|unique:roles,name',
+            'permisos' => 'required|array',
+            'permisos.*' => 'string|exists:permissions,name',
+        ]);
+
+        // Creando rol
+        $rol = Role::create(['name' => $request->nombre, 'guard_name' => 'web']);
+
+        // Asignar permisos seleccionados
+        $rol->syncPermissions($request->permisos);
+
+        return response()->json(["message" => "Rol Registrado"], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $rol)
     {
-        //
+        $role = Role::with('permissions')->findOrFail($rol);
+
+        // Obtén todos los permisos disponibles
+        $allPermissions = Permission::all();
+
+        // Obtén solo los nombres de los permisos asignados al rol
+        $rolePermissions = $role->permissions->pluck('name');
+
+        return response()->json([
+            'role' => [
+                'id' => $role->id,
+                'name' => $role->name,
+            ],
+            'permissions' => $allPermissions->pluck('name'),
+            'rolePermissions' => $rolePermissions,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Role $rol)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|unique:roles,name,' . $rol->id,
+            'permisos' => 'required|array',
+            'permisos.*' => 'string|exists:permissions,name',
+        ]);
+        // Actualizando rol
+        $rol->name = $request->nombre;
+        $rol->save();
+
+        // Sincroniza los permisos
+        $rol->syncPermissions($request->permisos);
+
+        return response()->json(['message' => 'Rol Editado'], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Role $rol)
     {
-        //
+        // eliminando rol desvinculando permisos
+        $rol->syncPermissions([]);
+        $rol->delete();
+        return response()->json(["message" => "Rol Eliminado"], 200);
     }
 }

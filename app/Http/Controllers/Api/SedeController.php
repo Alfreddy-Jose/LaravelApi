@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSedeRequest;
+use App\Http\Requests\UpdateSedeRequest;
 use App\Models\Sede;
 use Illuminate\Http\Request;
 
@@ -23,7 +25,7 @@ class SedeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSedeRequest $request)
     {
         // creando nueva sede
         Sede::create($request->all());
@@ -35,19 +37,19 @@ class SedeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sede $id) // <-- almacenando datos en la variable $id
+    public function show(Sede $sede)
     {
         // enviando datos al frontend
-        return response()->json($id);
+        return response()->json($sede);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Sede $id)
+    public function update(UpdateSedeRequest $request, Sede $sede)
     {
         // Editando registro
-        $id->update($request->all());
+        $sede->update($request->all());
         
         // Enviando respuesta al frontend
         return response()->json(['message' => 'Sede Editada']);
@@ -56,10 +58,10 @@ class SedeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sede $id)
+    public function destroy(Sede $sede)
     {
         // Eliminando la Sede
-        $id->delete();
+        $sede->delete();
         
         // Enviando respuesta a la api
         return response()->json(['message' => 'Sede Eliminada'], 200);

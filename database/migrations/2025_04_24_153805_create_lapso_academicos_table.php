@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nombre_lapso', 50);
             $table->bigInteger('ano');
-            $table->string('tipo_lapso', 100);
+            $table->foreignId('tipo_lapso_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

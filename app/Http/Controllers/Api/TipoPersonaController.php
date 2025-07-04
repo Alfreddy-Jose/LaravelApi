@@ -28,7 +28,12 @@ class TipoPersonaController extends Controller
 
     public function index()
     {
-        $tipoPersonas = Tipo_persona::with(['persona:id,cedula_persona,nombre,apellido', 'pnf:id,codigo,nombre', 'lapso:id,nombre_lapso'])
+        $tipoPersonas = Tipo_persona::with(
+        [
+            'persona:id,cedula_persona,nombre,apellido',
+            'pnf:id,codigo,nombre', 
+            'lapso:id,nombre_lapso'
+        ])
             ->get();
         return response()->json($tipoPersonas);
     }

@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pnfs', function (Blueprint $table) {
-            $table->id();
-            $table->text('codigo');
+            $table->string("id")->primary();
             $table->string('nombre');
             $table->string('abreviado');
             $table->string('abreviado_coord');

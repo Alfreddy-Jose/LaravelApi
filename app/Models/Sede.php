@@ -13,4 +13,9 @@ class Sede extends Model
         'direccion',
         'municipio',
     ];
+
+    public function espacios()
+    {
+        return $this->hasMany(Espacio::class);
+    }
 }

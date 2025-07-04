@@ -23,14 +23,14 @@ class AutenticacionController extends Controller
         // Crear Token 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // Obtener nombres de los permisoso
-        //$permissions = $user->getAllPermissions()->pluck('name')->toArray();
+        // Obtener nombres de los permisos
+        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
 
         return response()->json([
             'message' => 'Inicio de sesión exitoso',
             'user' => $user,
             'token' => $token,
-            //'permissions' => $permissions,
+            'permissions' => $permissions,
         ], 200);
     }
 
@@ -46,7 +46,7 @@ class AutenticacionController extends Controller
     {
         try {
             // Revocar el token actual
-            $request->user()->currentAccessToken()->delete();
+            $request->user()->Tokens()->delete();
 
             return response()->json(['message' => 'Sesión cerrada correctamente'], 200);
         } catch (\Exception $th) {

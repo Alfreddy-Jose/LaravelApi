@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateUnidadCurricularRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            "nombre" => "required|string|unique:unidad_curriculars,nombre" . ',' . $this->unidad_curricular->id,
+            "descripcion" => "required",
+            "unidad_credito" => "required|numeric",
+            "hora_acad" => "required|numeric",
+            "hora_total_est" => "required|numeric",
+            "periodo" => "required",
+            "trimestre_id" => "required"
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            "unidad_credito" => "required|numeric",
+            "hora_acad" => "horas academicas",
+            "hora_total_est" => "horas total estimadas",
+            "trimestre_id" => "trimestre"
+        ];
+    }
+}

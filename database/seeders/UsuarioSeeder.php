@@ -21,7 +21,7 @@ class UsuarioSeeder extends Seeder
             'password' => Hash::make('12345678'),
         ]);
         // Asignando Rol de Administrador
-        $administrador->assignRole('administrador');
+        $administrador->assignRole('ADMINISTRADOR');
 
         // Creando Usuario Asistente
         $asistente = User::create([
@@ -30,7 +30,6 @@ class UsuarioSeeder extends Seeder
             'password' => Hash::make('romulo123'),
         ]);
         // Asignando Rol de Asistente
-        $asistente->assignRole('asistente');
-
+        $asistente->assignRole('ASISTENTE');
     }
 }

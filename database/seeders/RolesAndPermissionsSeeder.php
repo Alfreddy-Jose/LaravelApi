@@ -27,7 +27,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'eliminar rol']);
         Permission::create(['name' => 'ver rol']);
         // Permisos de Pnf
-        Permission::create(['name' => 'crear pnf']);    
+        Permission::create(['name' => 'crear pnf']);
         Permission::create(['name' => 'editar pnf']);
         Permission::create(['name' => 'eliminar pnf']);
         Permission::create(['name' => 'ver pnf']);
@@ -41,6 +41,16 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar lapso']);
         Permission::create(['name' => 'eliminar lapso']);
         Permission::create(['name' => 'ver lapso']);
+        //Permisos de Trayecto
+        Permission::create(['name' => 'crear trayecto']);
+        Permission::create(['name' => 'editar trayecto']);
+        Permission::create(['name' => 'eliminar trayecto']);
+        Permission::create(['name' => 'ver trayecto']);
+        //Permisos de unidad curricular
+        Permission::create(['name' => 'crear unidad']);
+        Permission::create(['name' => 'editar unidad']);
+        Permission::create(['name' => 'eliminar unidad']);
+        Permission::create(['name' => 'ver unidad']);
         // Permisos de Matricula
         Permission::create(['name' => 'crear matricula']);
         Permission::create(['name' => 'editar matricula']);
@@ -63,21 +73,28 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar laboratorio']);
         Permission::create(['name' => 'eliminar laboratorio']);
         Permission::create(['name' => 'ver laboratorio']);
-        //Permisos de Bloques de horas
-        Permission::create(['name' => 'crear bloque']);
-        Permission::create(['name' => 'editar bloque']);
-        Permission::create(['name' => 'eliminar bloque']);
-        Permission::create(['name' => 'ver bloque']);
+        // Permisos de Turnos
+        Permission::create(['name' => 'crear turno']);
+        Permission::create(['name' => 'editar turno']);
+        Permission::create(['name' => 'eliminar turno']);
+        Permission::create(['name' => 'ver turno']);
         // Permisos de Malla de Pnf
         Permission::create(['name' => 'crear malla']);
         Permission::create(['name' => 'editar malla']);
         Permission::create(['name' => 'eliminar malla']);
         Permission::create(['name' => 'ver malla']);
+        // Permisos para gestionar Persona
+        Permission::create(['name' => 'gestionar persona']);
         // Permisos de Personas
         Permission::create(['name' => 'crear persona']);
         Permission::create(['name' => 'editar persona']);
         Permission::create(['name' => 'eliminar persona']);
         Permission::create(['name' => 'ver persona']);
+        // Permisos de Docentes
+        Permission::create(['name' => 'crear docente']);
+        Permission::create(['name' => 'editar docente']);
+        Permission::create(['name' => 'eliminar docente']);
+        Permission::create(['name' => 'ver docente']);
         // Permisos de Coordinadores municipales
         Permission::create(['name' => 'crear coordinador']);
         Permission::create(['name' => 'editar coordinador']);
@@ -88,17 +105,25 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar asistente']);
         Permission::create(['name' => 'eliminar asistente']);
         Permission::create(['name' => 'ver asistente']);
-
+        // Permisos de Voceros
+        Permission::create(['name' => 'crear vocero']);
+        Permission::create(['name' => 'editar vocero']);
+        Permission::create(['name' => 'eliminar vocero']);
+        Permission::create(['name' => 'ver vocero']);
+        // Permisos para ver Estadisticas
+/*         Permission::create(['name' => 'ver estadisticas']);
+        Permission::create(['name' => 'ver general']);
+        Permission::create(['name' => 'ver instrucciones']); */
 
         // Crear Roles y asignar permisos
 
         //  Crear rol de  Administrador
-        $adminRole = Role::create(['name' => 'administrador']);
+        $adminRole = Role::create(['name' => 'ADMINISTRADOR']);
         // Asignar todos los permisos al rol de Administrador
         $adminRole->givePermissionTo(Permission::all());
 
         // Rol de Asistente
-        $asistenteRole = Role::create(['name' => 'asistente']);
+        $asistenteRole = Role::create(['name' => 'ASISTENTE']);
         // Asignar permisos al rol de Asistente
         $asistenteRole->givePermissionTo(['ver pnf', 'ver sede', 'ver lapso']);
     }

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('matriculas', function (Blueprint $table) {
             $table->id();
+            $table->integer('numero');
             $table->string('nombre');
-            $table->string('tipo');
             $table->timestamps();
         });
     }
