@@ -118,12 +118,12 @@ class RolesAndPermissionsSeeder extends Seeder
         // Crear Roles y asignar permisos
 
         //  Crear rol de  Administrador
-        $adminRole = Role::create(['name' => 'ADMINISTRADOR']);
+        $adminRole = Role::firstOrCreate(['name' => 'ADMINISTRADOR']);
         // Asignar todos los permisos al rol de Administrador
         $adminRole->givePermissionTo(Permission::all());
 
         // Rol de Asistente
-        $asistenteRole = Role::create(['name' => 'ASISTENTE']);
+        $asistenteRole = Role::firstOrCreate(['name' => 'ASISTENTE']);
         // Asignar permisos al rol de Asistente
         $asistenteRole->givePermissionTo(['ver pnf', 'ver sede', 'ver lapso']);
     }

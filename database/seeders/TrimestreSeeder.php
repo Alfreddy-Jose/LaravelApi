@@ -13,8 +13,8 @@ class TrimestreSeeder extends Seeder
      */
     public function run(): void
     {
-        Trimestre::create(['nombre' => 'I']);
-        Trimestre::create(['nombre' => 'II']);
-        Trimestre::create(['nombre' => 'III']);
+        Trimestre::firstOrCreate(['nombre' => 'I']);
+        Trimestre::firstOrCreate(['nombre' => 'II']);
+        Trimestre::firstOrCreate(['nombre' => 'III']);
     }
 }

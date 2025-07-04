@@ -15,7 +15,7 @@ class UsuarioSeeder extends Seeder
     public function run(): void
     {  
         // Creando Usuario Administrador
-        $administrador = User::create([
+        $administrador = User::firstOrCreate([
             'name' => 'Administrador',
             'email' => 'administrador@gmail.com',
             'password' => Hash::make('12345678'),
@@ -24,7 +24,7 @@ class UsuarioSeeder extends Seeder
         $administrador->assignRole('ADMINISTRADOR');
 
         // Creando Usuario Asistente
-        $asistente = User::create([
+        $asistente = User::firstOrCreate([
             'name' => 'Romulo',
             'email' => 'romulo@gmail.com',
             'password' => Hash::make('romulo123'),
