@@ -20,7 +20,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'https://react-vite-git-master-alfreddys-projects.vercel.app' // Reemplaza con tu dominio de producción
+        '*' // Reemplaza con tu dominio de producción
     ],
 
     'allowed_origins_patterns' => [],
