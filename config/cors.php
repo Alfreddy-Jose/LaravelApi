@@ -23,7 +23,7 @@ return [
 
     'allowed_origins' => [
         'http://localhost:5173',
-        'https://react-vite-75pm.vercel.app',// Reemplaza con tu dominio de producción
+        'https://react-vite-75pm-bgh1mspxr-alfreddys-projects.vercel.app', // Reemplaza con tu dominio de producción
     ],
 
     'allowed_origins_patterns' => [],
