@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/sede/{sede}', [SedeController::class, 'destroy']);
 
     // Rutas de Secciones
-    //Route::get('/secciones', [SeccionController::class, 'index']);
+    Route::get('/secciones', [SeccionController::class, 'index']);
     Route::post('/secciones', [SeccionController::class, 'store']);
     Route::get('/seccion/getDataSelect', [SeccionController::class, 'getDataSelect']);
 

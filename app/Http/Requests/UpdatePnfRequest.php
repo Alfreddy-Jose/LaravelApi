@@ -22,7 +22,7 @@ class UpdatePnfRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|numeric|unique:pnfs,id,' . $this->route('pnf')->id,
+            'codigo' => 'required|numeric|unique:pnfs,codigo,' . $this->route('pnf')->id,
             'nombre' => 'required|string',
             'abreviado' => 'required|string|min:4',
             'abreviado_coord' => 'required|string|min:3'
@@ -32,7 +32,7 @@ class UpdatePnfRequest extends FormRequest
     public function attributes()
     {
         return [
-            'id' => 'código',
+            'codigo' => 'código',
             'nombre' => 'nombre',
             'abreviado' => 'abreviado',
             'abreviado_coord' => 'abreviado coordinación'

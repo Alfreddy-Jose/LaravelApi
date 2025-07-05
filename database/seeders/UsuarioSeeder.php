@@ -14,22 +14,24 @@ class UsuarioSeeder extends Seeder
      */
     public function run(): void
     {  
-        // Creando Usuario Administrador
-        $administrador = User::firstOrCreate([
-            'name' => 'Administrador',
-            'email' => 'administrador@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-        // Asignando Rol de Administrador
+        // Usuario Administrador
+        $administrador = User::firstOrCreate(
+            ['email' => 'administrador@gmail.com'],
+            [
+                'name' => 'Administrador',
+                'password' => Hash::make('12345678'),
+            ]
+        );
         $administrador->assignRole('ADMINISTRADOR');
 
-        // Creando Usuario Asistente
-        $asistente = User::firstOrCreate([
-            'name' => 'Romulo',
-            'email' => 'romulo@gmail.com',
-            'password' => Hash::make('romulo123'),
-        ]);
-        // Asignando Rol de Asistente
+        // Usuario Asistente
+        $asistente = User::firstOrCreate(
+            ['email' => 'romulo@gmail.com'],
+            [
+                'name' => 'Romulo',
+                'password' => Hash::make('romulo123'),
+            ]
+        );
         $asistente->assignRole('ASISTENTE');
     }
 }

@@ -9,6 +9,7 @@ class Pnf extends Model
     //
     protected $fillable = [
         'id',
+        'codigo',
         'nombre',
         'abreviado',
         'abreviado_coord'

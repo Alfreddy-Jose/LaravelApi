@@ -17,10 +17,13 @@ return [
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => [
+        '*', // Permite todos los métodos HTTP
+    ],
 
     'allowed_origins' => [
-        '*' // Reemplaza con tu dominio de producción
+        'http://localhost:5173',
+        'https://react-vite-75pm.vercel.app',// Reemplaza con tu dominio de producción
     ],
 
     'allowed_origins_patterns' => [],

@@ -19,7 +19,15 @@ class SeccionController extends Controller
      */
     public function index()
     {
-        //
+        $secciones = Seccion::with([
+            'pnf:id,nombre',
+            'matricula:id,nombre',
+            'trayecto:id,nombre',
+            'sede:id,nombre_sede',
+            'lapso:id,nombre_lapso,ano'
+        ])->select('id', 'pnf_id', 'matricula_id', 'trayecto_id', 'sede_id', 'lapso_id', 'nombre', 'numero_seccion')->get();
+
+        return response()->json($secciones);
     }
 
     /**
@@ -34,7 +42,7 @@ class SeccionController extends Controller
         $sede = Sede::findOrFail($request->sede_id); // Para obtener el nro_sede
 
         // Construir el nombre de la sección
-        $nombre = $pnf->id . '-' . $matricula->numero . '-' . $trayecto->nombre . '-' . $sede->nro_sede . '-' . $request->numero_seccion;
+        $nombre = $pnf->codigo . '-' . $matricula->numero . '-' . $trayecto->nombre . '-' . $sede->nro_sede . '-' . $request->numero_seccion;
 
         // Crear la sección
         $seccion = new Seccion();

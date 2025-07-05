@@ -22,10 +22,20 @@ class StorePnfRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|numeric|unique:pnfs,id',
+            'codigo' => 'required|numeric|unique:pnfs,codigo',
             'nombre' => 'required|string',
             'abreviado' => 'required|string|min:4',
             'abreviado_coord' => 'required|string|min:3'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'codigo' => 'código',
+            'nombre' => 'nombre',
+            'abreviado' => 'abreviado',
+            'abreviado_coord' => 'abreviado coordinación'
         ];
     }
 }

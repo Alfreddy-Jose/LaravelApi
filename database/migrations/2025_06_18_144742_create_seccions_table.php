@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('seccions', function (Blueprint $table) {
             $table->id();
             // Foreign keys de PNF
-            $table->string('pnf_id');
-            $table->foreign('pnf_id')
-                ->references('id')
-                ->on('pnfs')
+            $table->foreignId('pnf_id')
+                ->constrained('pnfs')
                 ->onDelete('cascade');
             // Foreign keys de Tipo de Matricula
             $table->foreignId('matricula_id')

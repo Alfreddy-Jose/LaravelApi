@@ -16,7 +16,7 @@ class PnfController extends Controller
     public function index()
     {
         // Seleccionar los pnf
-        $pnfs = Pnf::select('id', 'nombre', 'abreviado', 'abreviado_coord')->get();
+        $pnfs = Pnf::select('id', 'codigo', 'nombre', 'abreviado', 'abreviado_coord')->get();
 
         // Enviar a la vista del listado de PNF con la variable
         return response()->json($pnfs);
