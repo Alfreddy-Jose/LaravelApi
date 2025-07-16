@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSedeRequest extends FormRequest
+class UpdateUniversidadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,22 +22,20 @@ class StoreSedeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "universidad_id" => "required|exists:universidads,id",
-            "nro_sede" => "required|numeric|unique:sedes,nro_sede",
-            "nombre_sede" => "required|string",
-            "nombre_abreviado" => "required|string|min:3",
-            "direccion" => "required|string",
-            "municipio" => "required"
+            'nombre_univ' => 'required|string|max:255',
+            'abreviado_univ' => 'required|string|max:50',
+            'rif_univ' => 'required|string|max:20',
+            'direccion' => 'nullable|string|max:255',
         ];
     }
 
     public function attributes()
     {
         return [
-            "nro_sede" => "numero sede",
-            "nombre_sede" => " nombre",
-            "nombre_abreviado" => "nombre abreviado",
-            "municipio" => "municipio"
+            'nombre_univ' => 'nombre',
+            'abreviado_univ' => 'nombre abreviatura',
+            'rif_univ' => 'rif',
+            'direccion' => 'dirección',
         ];
     }
 }

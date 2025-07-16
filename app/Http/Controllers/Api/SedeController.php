@@ -27,7 +27,6 @@ class SedeController extends Controller
      */
     public function store(StoreSedeRequest $request)
     {
-        // creando nueva sede
         Sede::create($request->all());
 
         // Enviando respuesta al frontend

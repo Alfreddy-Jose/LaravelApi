@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('nombre_abreviado', 30);
             $table->text('direccion');
             $table->string('municipio', 100);
+            // Relación con la tabla universidads
+            $table->foreignId('universidad_id')
+                ->constrained('universidads')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

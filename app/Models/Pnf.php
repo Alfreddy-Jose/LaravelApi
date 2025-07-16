@@ -19,4 +19,9 @@ class Pnf extends Model
     {
         return $this->hasMany(Tipo_persona::class, 'pnf_id');
     }
+    // Relación con el modelo Seccion
+    public function secciones()
+    {
+        return $this->hasMany(Seccion::class, 'pnf_id');
+    }
 }

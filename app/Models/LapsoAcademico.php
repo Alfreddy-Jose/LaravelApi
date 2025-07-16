@@ -21,4 +21,9 @@ class LapsoAcademico extends Model
     {
         return $this->belongsTo(TipoLapso::class);
     }
+    // Relación con el modelo Seccion
+    public function secciones()
+    {
+        return $this->hasMany(Seccion::class, 'lapso_id');
+    }
 }

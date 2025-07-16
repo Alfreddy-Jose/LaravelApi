@@ -10,4 +10,9 @@ class Matricula extends Model
         'nombre',
         'numero'
     ];
+
+    public function secciones()
+    {
+        return $this->hasMany(Seccion::class);
+    }
 }

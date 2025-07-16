@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\TipoPersonaController;
 use App\Http\Controllers\Api\TrayectoController;
 use App\Http\Controllers\Api\TurnoController;
 use App\Http\Controllers\Api\UnidadCurricularController;
+use App\Http\Controllers\Api\UniversidadController;
 use App\Http\Controllers\Api\UserController;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/pnf/{pnf}', [PnfController::class, 'update']);
     Route::delete('/pnf/{pnf}', [PnfController::class, 'destroy']);
 
+    // Rutas de Universidades
+    Route::get('/universidades', [UniversidadController::class, 'index']);
+    Route::post('/universidad', [UniversidadController::class, 'store']);
+    Route::get('/universidad', [UniversidadController::class, 'show']);
+    Route::put('/universidad/{universidad}', [UniversidadController::class, 'update']);
+    //Route::delete('/universidad/{universidad}', [UniversidadController::class, 'destroy']);
+
     // Rutas de Sedes
     Route::get('/sedes', [SedeController::class, 'index']);
     Route::post('/sede', [SedeController::class, 'store']);
@@ -53,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/secciones', [SeccionController::class, 'index']);
     Route::post('/secciones', [SeccionController::class, 'store']);
     Route::get('/seccion/getDataSelect', [SeccionController::class, 'getDataSelect']);
+    Route::delete('/seccion/{seccion}', [SeccionController::class, 'destroy']);
 
     // Rutas de Tipo de Matriculas
     Route::get('/matriculas', [MatriculaController::class, 'index']);
@@ -62,7 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/matricula/{matricula}', [MatriculaController::class, 'destroy']);
 
     // Rutas de los Roles
-    Route::get('/roles', [RolesController::class, 'index']);
+    Route::get('/roles', [RolesController::class, 'getRolesWithPermissions']);
     Route::get('/rol/{rol}/edit', [RolesController::class, 'show']);
     Route::post('/roles', [RolesController::class, 'store']);
     Route::put('/rol/{rol}', [RolesController::class, 'update']);

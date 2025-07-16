@@ -12,10 +12,16 @@ class Sede extends Model
         'nombre_abreviado',
         'direccion',
         'municipio',
+        'universidad_id'
     ];
 
     public function espacios()
     {
         return $this->hasMany(Espacio::class);
+    }
+
+    public function secciones()
+    {
+        return $this->hasMany(Seccion::class);
     }
 }

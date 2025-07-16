@@ -42,7 +42,7 @@ class SeccionController extends Controller
         $sede = Sede::findOrFail($request->sede_id); // Para obtener el nro_sede
 
         // Construir el nombre de la sección
-        $nombre = $pnf->codigo . '-' . $matricula->numero . '-' . $trayecto->nombre . '-' . $sede->nro_sede . '-' . $request->numero_seccion;
+        $nombre = $pnf->codigo . '' . $matricula->numero . '' . $trayecto->nombre . '' . $sede->nro_sede . '' . $request->numero_seccion;
 
         // Crear la sección
         $seccion = new Seccion();
@@ -68,15 +68,19 @@ class SeccionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Seccion $seccion)
     {
-        //
+        // eliminar la sección
+        $seccion->delete();
+
+        // retornar una respuesta de éxito
+        return response()->json(['message' => 'Sección eliminada'], 200);
     }
 
     public function getDataSelect()

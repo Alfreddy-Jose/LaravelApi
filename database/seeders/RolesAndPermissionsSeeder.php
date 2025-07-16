@@ -17,99 +17,99 @@ class RolesAndPermissionsSeeder extends Seeder
         // Crear Permisos
 
         // Permisos de Usuario
-        Permission::firstOrCreate(['name' => 'crear usuario']);
-        Permission::firstOrCreate(['name' => 'editar usuario']);
-        Permission::firstOrCreate(['name' => 'eliminar usuario']);
-        Permission::firstOrCreate(['name' => 'ver usuario']);
+        Permission::firstOrCreate(['name' => 'usuario.crear']);
+        Permission::firstOrCreate(['name' => 'usuario.editar']);
+        Permission::firstOrCreate(['name' => 'usuario.eliminar']);
+        Permission::firstOrCreate(['name' => 'usuario.ver']);
         // Permisos rol
-        Permission::firstOrCreate(['name' => 'crear rol']);
-        Permission::firstOrCreate(['name' => 'editar rol']);
-        Permission::firstOrCreate(['name' => 'eliminar rol']);
-        Permission::firstOrCreate(['name' => 'ver rol']);
+        Permission::firstOrCreate(['name' => 'rol.crear']);
+        Permission::firstOrCreate(['name' => 'rol.editar']);
+        Permission::firstOrCreate(['name' => 'rol.eliminar']);
+        Permission::firstOrCreate(['name' => 'rol.ver']);
         // Permisos pnf
-        Permission::firstOrCreate(['name' => 'crear pnf']);
-        Permission::firstOrCreate(['name' => 'editar pnf']);
-        Permission::firstOrCreate(['name' => 'eliminar pnf']);
-        Permission::firstOrCreate(['name' => 'ver pnf']);
+        Permission::firstOrCreate(['name' => 'pnf.crear']);
+        Permission::firstOrCreate(['name' => 'pnf.editar']);
+        Permission::firstOrCreate(['name' => 'pnf.eliminar']);
+        Permission::firstOrCreate(['name' => 'pnf.ver']);
         // Permisos sede
-        Permission::firstOrCreate(['name' => 'crear sede']);
-        Permission::firstOrCreate(['name' => 'editar sede']);
-        Permission::firstOrCreate(['name' => 'eliminar sede']);
-        Permission::firstOrCreate(['name' => 'ver sede']);
+        Permission::firstOrCreate(['name' => 'sede.crear']);
+        Permission::firstOrCreate(['name' => 'sede.editar']);
+        Permission::firstOrCreate(['name' => 'sede.eliminar']);
+        Permission::firstOrCreate(['name' => 'sede.ver']);
         //Permisos lapso
-        Permission::firstOrCreate(['name' => 'crear lapso']);
-        Permission::firstOrCreate(['name' => 'editar lapso']);
-        Permission::firstOrCreate(['name' => 'eliminar lapso']);
-        Permission::firstOrCreate(['name' => 'ver lapso']);
+        Permission::firstOrCreate(['name' => 'lapso.crear']);
+        Permission::firstOrCreate(['name' => 'lapso.editar']);
+        Permission::firstOrCreate(['name' => 'lapso.eliminar']);
+        Permission::firstOrCreate(['name' => 'lapso.ver']);
         //Permisos trayecto
-        Permission::firstOrCreate(['name' => 'crear trayecto']);
-        Permission::firstOrCreate(['name' => 'editar trayecto']);
-        Permission::firstOrCreate(['name' => 'eliminar trayecto']);
-        Permission::firstOrCreate(['name' => 'ver trayecto']);
+        Permission::firstOrCreate(['name' => 'trayecto.crear']);
+        Permission::firstOrCreate(['name' => 'trayecto.editar']);
+        Permission::firstOrCreate(['name' => 'trayecto.eliminar']);
+        Permission::firstOrCreate(['name' => 'trayecto.ver']);
         //Permisos unidad curricular
-        Permission::firstOrCreate(['name' => 'crear unidad']);
-        Permission::firstOrCreate(['name' => 'editar unidad']);
-        Permission::firstOrCreate(['name' => 'eliminar unidad']);
-        Permission::firstOrCreate(['name' => 'ver unidad']);
+        Permission::firstOrCreate(['name' => 'unidad Curricular.crear']);
+        Permission::firstOrCreate(['name' => 'unidad Curricular.editar']);
+        Permission::firstOrCreate(['name' => 'unidad Curricular.eliminar']);
+        Permission::firstOrCreate(['name' => 'unidad Curricular.ver']);
         // Permisos tipo de matricula
-        Permission::firstOrCreate(['name' => 'crear matricula']);
-        Permission::firstOrCreate(['name' => 'editar matricula']);
-        Permission::firstOrCreate(['name' => 'eliminar matricula']);
-        Permission::firstOrCreate(['name' => 'ver matricula']);
+        Permission::firstOrCreate(['name' => 'Tipo Matricula.crear']);
+        Permission::firstOrCreate(['name' => 'Tipo Matricula.editar']);
+        Permission::firstOrCreate(['name' => 'Tipo Matricula.eliminar']);
+        Permission::firstOrCreate(['name' => 'Tipo Matricula.ver']);
         // Permisos seccion
-        Permission::firstOrCreate(['name' => 'crear seccion']);
-        Permission::firstOrCreate(['name' => 'editar seccion']);
-        Permission::firstOrCreate(['name' => 'eliminar seccion']);
-        Permission::firstOrCreate(['name' => 'ver seccion']);
+        Permission::firstOrCreate(['name' => 'seccion.crear']);
+        Permission::firstOrCreate(['name' => 'seccion.editar']);
+        Permission::firstOrCreate(['name' => 'seccion.eliminar']);
+        Permission::firstOrCreate(['name' => 'seccion.ver']);
         // Permisos espacios
         Permission::firstOrCreate(['name' => 'Gestionar Espacios']);
         // Permisos aulas
-        Permission::firstOrCreate(['name' => 'crear aula']);
-        Permission::firstOrCreate(['name' => 'editar aula']);
-        Permission::firstOrCreate(['name' => 'eliminar aula']);
-        Permission::firstOrCreate(['name' => 'ver aula']);
+        Permission::firstOrCreate(['name' => 'aula.crear']);
+        Permission::firstOrCreate(['name' => 'aula.editar']);
+        Permission::firstOrCreate(['name' => 'aula.eliminar']);
+        Permission::firstOrCreate(['name' => 'aula.ver']);
         // Permisos laboratorios
-        Permission::firstOrCreate(['name' => 'crear laboratorio']);
-        Permission::firstOrCreate(['name' => 'editar laboratorio']);
-        Permission::firstOrCreate(['name' => 'eliminar laboratorio']);
-        Permission::firstOrCreate(['name' => 'ver laboratorio']);
+        Permission::firstOrCreate(['name' => 'laboratorio.crear']);
+        Permission::firstOrCreate(['name' => 'laboratorio.editar']);
+        Permission::firstOrCreate(['name' => 'laboratorio.eliminar']);
+        Permission::firstOrCreate(['name' => 'laboratorio.ver']);
         // Permisos turno
-        Permission::firstOrCreate(['name' => 'crear turno']);
-        Permission::firstOrCreate(['name' => 'editar turno']);
-        Permission::firstOrCreate(['name' => 'eliminar turno']);
-        Permission::firstOrCreate(['name' => 'ver turno']);
+        Permission::firstOrCreate(['name' => 'turno.crear']);
+        Permission::firstOrCreate(['name' => 'turno.editar']);
+        Permission::firstOrCreate(['name' => 'turno.eliminar']);
+        Permission::firstOrCreate(['name' => 'turno.ver']);
         // Permisos malla de Pnf
-        Permission::firstOrCreate(['name' => 'crear malla']);
-        Permission::firstOrCreate(['name' => 'editar malla']);
-        Permission::firstOrCreate(['name' => 'eliminar malla']);
-        Permission::firstOrCreate(['name' => 'ver malla']);
+        Permission::firstOrCreate(['name' => 'malla.crear']);
+        Permission::firstOrCreate(['name' => 'malla.editar']);
+        Permission::firstOrCreate(['name' => 'malla.eliminar']);
+        Permission::firstOrCreate(['name' => 'malla.ver']);
         // Permisos gestionar Persona
         Permission::firstOrCreate(['name' => 'gestionar persona']);
         // Permisos personas
-        Permission::firstOrCreate(['name' => 'crear persona']);
-        Permission::firstOrCreate(['name' => 'editar persona']);
-        Permission::firstOrCreate(['name' => 'eliminar persona']);
-        Permission::firstOrCreate(['name' => 'ver persona']);
+        Permission::firstOrCreate(['name' => 'persona.crear']);
+        Permission::firstOrCreate(['name' => 'persona.editar']);
+        Permission::firstOrCreate(['name' => 'persona.eliminar']);
+        Permission::firstOrCreate(['name' => 'persona.ver']);
         // Permisos docentes
-        Permission::firstOrCreate(['name' => 'crear docente']);
-        Permission::firstOrCreate(['name' => 'editar docente']);
-        Permission::firstOrCreate(['name' => 'eliminar docente']);
-        Permission::firstOrCreate(['name' => 'ver docente']);
+        Permission::firstOrCreate(['name' => 'docente.crear']);
+        Permission::firstOrCreate(['name' => 'docente.editar']);
+        Permission::firstOrCreate(['name' => 'docente.eliminar']);
+        Permission::firstOrCreate(['name' => 'docente.ver']);
         // Permisos coordinador municipales
-        Permission::firstOrCreate(['name' => 'crear coordinador']);
-        Permission::firstOrCreate(['name' => 'editar coordinador']);
-        Permission::firstOrCreate(['name' => 'eliminar coordinador']);
-        Permission::firstOrCreate(['name' => 'ver coordinador']);
+        Permission::firstOrCreate(['name' => 'coordinador.crear']);
+        Permission::firstOrCreate(['name' => 'coordinador.editar']);
+        Permission::firstOrCreate(['name' => 'coordinador.eliminar']);
+        Permission::firstOrCreate(['name' => 'coordinador.ver']);
         // Permisos asistente
-        Permission::firstOrCreate(['name' => 'crear asistente']);
-        Permission::firstOrCreate(['name' => 'editar asistente']);
-        Permission::firstOrCreate(['name' => 'eliminar asistente']);
-        Permission::firstOrCreate(['name' => 'ver asistente']);
+/*         Permission::firstOrCreate(['name' => 'asistente.crear']);
+        Permission::firstOrCreate(['name' => 'asistente.editar']);
+        Permission::firstOrCreate(['name' => 'asistente.eliminar']);
+        Permission::firstOrCreate(['name' => 'asistente.ver']); */
         // Permisos vocero
-        Permission::firstOrCreate(['name' => 'crear vocero']);
-        Permission::firstOrCreate(['name' => 'editar vocero']);
-        Permission::firstOrCreate(['name' => 'eliminar vocero']);
-        Permission::firstOrCreate(['name' => 'ver vocero']);
+        Permission::firstOrCreate(['name' => 'vocero.crear']);
+        Permission::firstOrCreate(['name' => 'vocero.editar']);
+        Permission::firstOrCreate(['name' => 'vocero.eliminar']);
+        Permission::firstOrCreate(['name' => 'vocero.ver']);
         // Permisos para ver Estadisticas
 /*         Permission::create(['name' => 'ver estadisticas']);
         Permission::create(['name' => 'ver general']);
@@ -125,6 +125,6 @@ class RolesAndPermissionsSeeder extends Seeder
         // Rol de Asistente
         $asistenteRole = Role::firstOrCreate(['name' => 'ASISTENTE']);
         // Asignar permisos al rol de Asistente
-        $asistenteRole->givePermissionTo(['ver pnf', 'ver sede', 'ver lapso']);
+        $asistenteRole->givePermissionTo(['pnf.ver', 'sede.ver', 'lapso.ver']);
     }
 }

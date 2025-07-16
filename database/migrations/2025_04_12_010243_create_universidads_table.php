@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('adscrita_noadscritas', function (Blueprint $table) {
+        Schema::create('universidads', function (Blueprint $table) {
             $table->id();
-            // Relacion con PNF
-            $table->foreignId('pnf_id')
-                ->constrained('pnfs')
-                ->onDelete('cascade');
+            $table->string('nombre_univ');
+            $table->string('abreviado_univ');
+            $table->string('rif_univ')->unique();
+            $table->string('direccion');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('adscrita_noadscritas');
+        Schema::dropIfExists('universidads');
     }
 };
