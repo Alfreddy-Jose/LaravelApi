@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 // Ruta del login
 Route::post('/login', [AutenticacionController::class, 'login']);
+Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF
 
 // Rutas protegidas por middleware de Sanctum
 Route::middleware('auth:sanctum')->group(function () {
@@ -38,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rutas de PNF
     Route::get('/pnf', [PnfController::class, 'index']);
+    Route::get('/pnf/espacios', [PnfController::class, 'getEspacios']);
     Route::post('/pnf', [PnfController::class, 'store']);
     Route::get('/pnf/{pnf}', [PnfController::class, 'show']);
     Route::put('/pnf/{pnf}', [PnfController::class, 'update']);
@@ -53,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rutas de Sedes
     Route::get('/sedes', [SedeController::class, 'index']);
     Route::post('/sede', [SedeController::class, 'store']);
+    Route::post('/sedes/{sede}/asignarPnfs', [SedeController::class, 'asignarPnfs']);
+    Route::get('/sede/getPnf', [SedeController::class, 'getPnf']);
+    Route::get('/sedes/{sede}/pnf', [SedeController::class, 'getPnfSede']);
     Route::get('/sede/{sede}', [SedeController::class, 'show']);
     Route::put('/sede/{sede}', [SedeController::class, 'update']);
     Route::delete('/sede/{sede}', [SedeController::class, 'destroy']);

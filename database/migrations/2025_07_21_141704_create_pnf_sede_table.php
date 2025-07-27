@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('espacio_pnf', function (Blueprint $table) {
+        Schema::create('pnf_sede', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pnf_id')->constrained('pnfs')->onDelete('cascade');
-            $table->foreignId('espacio_id')->constrained('espacios')->onDelete('cascade');
+            $table->foreignId('pnf_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sede_id')->constrained()->onDelete('cascade');
+            $table->unique(['sede_id', 'pnf_id']);
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('espacio_pnf');
+        Schema::dropIfExists('pnf_sede');
     }
 };

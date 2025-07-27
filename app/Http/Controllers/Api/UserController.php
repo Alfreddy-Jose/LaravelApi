@@ -88,13 +88,28 @@ class UserController extends Controller
     // Metodo para Actualizar Contraseña
     public function updatePassword(Request $request, User $usuario)
     {
-        // Actualizando Contraseña 
-        $usuario->password = Hash::make($request->newPassword);
+        $validated = $request->validate([
+            'current_password' => [
+                'required',
+                function ($attribute, $value, $fail) use ($usuario) {
+                    if (!Hash::check($value, $usuario->password)) {
+                        $fail('La contraseña actual es incorrecta');
+                    }
+                }
+            ],
+            'new_password' => [
+                'required',
+                'different:current_password',
+                'confirmed',
+            ]
+        ]);
 
-        // Guardando cambios
+        $usuario->password = Hash::make($validated['new_password']);
         $usuario->save();
 
-        return response()->json(['message' => 'Contraseña Editada'], 200);
+        return response()->json([
+            'message' => 'Contraseña Editada'
+        ], 200);
     }
 
     /**

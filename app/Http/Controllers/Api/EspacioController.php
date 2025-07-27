@@ -19,14 +19,16 @@ class EspacioController extends Controller
     public function indexAula()
     {
         $aulas = Espacio::with('sede:id,nombre_sede')
-        ->where('tipo_espacio', 'AULA')
-        ->select('id', 
-        'codigo', 
-        'nombre_aula', 
-        'etapa', 
-        'nro_aula',
-        'sede_id')
-        ->get();
+            ->where('tipo_espacio', 'AULA')
+            ->select(
+                'id',
+                'codigo',
+                'nombre_aula',
+                'etapa',
+                'nro_aula',
+                'sede_id'
+            )
+            ->get();
         return response()->json($aulas);
     }
 
@@ -62,7 +64,7 @@ class EspacioController extends Controller
     public function updateAula(UpdateAulaRequest $request, Espacio $espacio)
     {
         $espacio->update($request->validated());
-        
+
         return response()->json(["message" => "Aula Editada"], 201);
     }
 
@@ -76,21 +78,23 @@ class EspacioController extends Controller
         return response()->json(["message" => "Aula Eliminada"], 201);
     }
 
-        /**
+    /**
      * Display a listing of the resource.
      */
     public function indexLaboratorio()
     {
         $laboratorios = Espacio::with('sede:id,nombre_sede')
-        ->select('id',
-        'codigo', 
-        'nombre_aula', 
-        'etapa', 
-        'abreviado_lab', 
-        'equipos',
-        'sede_id')
-        ->where('tipo_espacio', 'LABORATORIO')
-        ->get();
+            ->select(
+                'id',
+                'codigo',
+                'nombre_aula',
+                'etapa',
+                'abreviado_lab',
+                'equipos',
+                'sede_id'
+            )
+            ->where('tipo_espacio', 'LABORATORIO')
+            ->get();
 
         return response()->json($laboratorios);
     }

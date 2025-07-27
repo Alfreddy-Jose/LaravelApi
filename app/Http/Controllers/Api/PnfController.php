@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePnfRequest;
 use App\Http\Requests\UpdatePnfRequest;
+use App\Models\Espacio;
 use App\Models\Pnf;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,7 @@ class PnfController extends Controller
     public function store(StorePnfRequest $request)
     {
 
-        Pnf::create($request->all()); 
+        Pnf::create($request->all());
 
         return response()->json(["message" => "PNF Registrado"], 200);
     }
@@ -57,12 +58,34 @@ class PnfController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pnf $pnf) {
+    public function destroy(Pnf $pnf)
+    {
 
         // Eliminando el pnf
         $pnf->delete();
-        
+
         // Enviando respuesta a la api
         return response()->json(['message' => 'PNF Eliminado'], 200);
+    }
+
+    public function getEspacios($pnfId = null)
+    {
+        $query = Espacio::query();
+
+        if ($pnfId) {
+            // Asumo que hay una relación entre PNF y sedes, y entre sedes y espacios
+            // Ajusta esto según tu modelo de datos real
+            $query->whereHas('sede.pnfs', function ($q) use ($pnfId) {
+                $q->where('pnfs.id', $pnfId);
+            });
+        }
+
+        $aulas = $query->clone()->where('tipo_espacio', 'AULA')->get();
+        $laboratorios = $query->clone()->where('tipo_espacio', 'LABORATORIO')->get();
+
+        return response()->json([
+            "aulas" => $aulas,
+            "laboratorios" => $laboratorios
+        ], 200);
     }
 }

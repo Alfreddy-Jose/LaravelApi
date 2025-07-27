@@ -24,4 +24,10 @@ class Sede extends Model
     {
         return $this->hasMany(Seccion::class);
     }
+
+    // Relacion con el modelo de PNF
+    public function pnfs()
+    {
+        return $this->belongsToMany(Pnf::class);
+    }
 }

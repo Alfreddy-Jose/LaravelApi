@@ -10,6 +10,7 @@ use App\Models\Pnf;
 use App\Models\Seccion;
 use App\Models\Sede;
 use App\Models\Trayecto;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class SeccionController extends Controller
@@ -17,15 +18,42 @@ class SeccionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $secciones = Seccion::with([
+        /*         $secciones = Seccion::with([
             'pnf:id,nombre',
             'matricula:id,nombre',
             'trayecto:id,nombre',
             'sede:id,nombre_sede',
             'lapso:id,nombre_lapso,ano'
         ])->select('id', 'pnf_id', 'matricula_id', 'trayecto_id', 'sede_id', 'lapso_id', 'nombre', 'numero_seccion')->get();
+
+        return response()->json($secciones); */
+        $query = Seccion::query();
+
+        // Filtrar por lapso
+        if ($request->lapso) {
+            $query->where('lapso_id', $request->lapso);
+        }
+        // Filtrar por sede
+        if ($request->sede) {
+            $query->where('sede_id', $request->sede);
+        }
+        // Filtrar por pnf
+        if ($request->pnf) {
+            $query->where('pnf_id', $request->pnf);
+        }
+        // Filtrar por trayecto
+        if ($request->trayecto) {
+            $query->where('trayecto_id', $request->trayecto);
+        }
+        // Filtrar por tipo de matrícula
+        if ($request->matricula) {
+            $query->where('matricula_id', $request->matricula);
+        }
+
+        // Relaciona los datos para la tabla
+        $secciones = $query->with(['pnf', 'matricula', 'trayecto', 'sede', 'lapso'])->get();
 
         return response()->json($secciones);
     }
@@ -98,5 +126,35 @@ class SeccionController extends Controller
             "sedes" => $sedes,
             "lapsos" => $lapsos
         ]);
+    }
+
+    public function pdf(Request $request)
+    {
+        // Puedes recibir parámetros para filtrar igual que en index
+        $query = Seccion::query();
+
+        if ($request->lapso) {
+            $query->where('lapso_id', $request->lapso);
+        }
+        if ($request->sede) {
+            $query->where('sede_id', $request->sede);
+        }
+        if ($request->pnf) {
+            $query->where('pnf_id', $request->pnf);
+        }
+        if ($request->trayecto) {
+            $query->where('trayecto_id', $request->trayecto);
+        }
+        if ($request->matricula) {
+            $query->where('matricula_id', $request->matricula);
+        }
+
+        $secciones = $query->with(['pnf', 'matricula', 'trayecto', 'sede', 'lapso'])->get();
+
+        // Renderiza una vista blade para el PDF
+        $pdf = Pdf::loadView('pdf.secciones', compact('secciones'));
+
+        // Descarga el PDF
+        return $pdf->download('secciones.pdf');
     }
 }
