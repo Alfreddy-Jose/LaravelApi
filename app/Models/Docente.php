@@ -16,4 +16,14 @@ class Docente extends Model
     {
         return $this->hasOne(CondicionContrato::class);
     }
+
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class);
+    }
+
+    public function unidades_curriculares()
+    {
+        return $this->belongsToMany(UnidadCurricular::class);
+    }
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('unidad_credito');
             $table->integer('hora_acad');
             $table->integer('hora_total_est');
-            $table->string('periodo', 50);
+            $table->string('periodo', 50); 
             // Llave foranea de trimestre
             $table->foreignId('trimestre_id')
                 ->constrained()

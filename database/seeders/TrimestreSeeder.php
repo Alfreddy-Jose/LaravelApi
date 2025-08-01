@@ -16,5 +16,9 @@ class TrimestreSeeder extends Seeder
         Trimestre::firstOrCreate(['nombre' => 'I']);
         Trimestre::firstOrCreate(['nombre' => 'II']);
         Trimestre::firstOrCreate(['nombre' => 'III']);
+        Trimestre::firstOrCreate(['nombre' => 'IV']);
+        Trimestre::firstOrCreate(['nombre' => 'V']);
+        Trimestre::firstOrCreate(['nombre' => 'VI']);
+        Trimestre::firstOrCreate(['nombre' => 'VII']);
     }
 }

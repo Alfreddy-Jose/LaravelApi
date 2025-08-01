@@ -6,10 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Seccion extends Model
 {
+    protected $fillable = [
+        'pnf_id',
+        'matricula_id',
+        'trayecto_id',
+        'sede_id',
+        'numero_seccion',
+        'lapso_id'
+    ];
+
     public function trayecto()
     {
         return $this->belongsTo(Trayecto::class);
-    } 
+    }
 
     public function pnf()
     {
@@ -19,17 +28,17 @@ class Seccion extends Model
     // Relación con el modelo LapsoAcademico
     public function lapso()
     {
-        return $this->belongsTo(LapsoAcademico::class); 
+        return $this->belongsTo(LapsoAcademico::class);
     }
 
     // Relación con el modelo Sede
     public function sede()
     {
-        return $this->belongsTo(Sede::class);  
+        return $this->belongsTo(Sede::class);
     }
     // Relación con el modelo Matricula
     public function matricula()
     {
-        return $this->belongsTo(Matricula::class);  
+        return $this->belongsTo(Matricula::class);
     }
 }

@@ -20,4 +20,9 @@ class UnidadCurricular extends Model
     {
         return $this->belongsTo(Trimestre::class);
     }
+
+    public function docentes()
+    {
+        return $this->belongsToMany(Docente::class);
+    }
 }

@@ -21,7 +21,7 @@ return new class extends Migration
             // Relacion con PNF
             $table->foreignId('pnf_id')
                 ->constrained('pnfs')
-                ->onDelete('cascade');
+                ->onDelete('cascade'); 
             $table->timestamps();
         });
     }

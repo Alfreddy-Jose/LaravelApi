@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             UsuarioSeeder::class,
             TipoLapsosSeeder::class,
-            TrimestreSeeder::class
+            //TrimestreSeeder::class
         ]);
     }
 }

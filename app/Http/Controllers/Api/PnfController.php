@@ -68,24 +68,26 @@ class PnfController extends Controller
         return response()->json(['message' => 'PNF Eliminado'], 200);
     }
 
-    public function getEspacios($pnfId = null)
+    public function getEspacios()
     {
-        $query = Espacio::query();
 
-        if ($pnfId) {
-            // Asumo que hay una relación entre PNF y sedes, y entre sedes y espacios
-            // Ajusta esto según tu modelo de datos real
-            $query->whereHas('sede.pnfs', function ($q) use ($pnfId) {
-                $q->where('pnfs.id', $pnfId);
-            });
-        }
+        $espacios = Espacio::select('id', 'nombre_aula')->get();
 
-        $aulas = $query->clone()->where('tipo_espacio', 'AULA')->get();
-        $laboratorios = $query->clone()->where('tipo_espacio', 'LABORATORIO')->get();
+        return response()->json($espacios);
+
+/*         $aulas = Espacio::where('tipo_espacio', 'AULA')->get();
+        $laboratorios = Espacio::where('tipo_espacio', 'LABORATORIO')->get();
 
         return response()->json([
             "aulas" => $aulas,
             "laboratorios" => $laboratorios
-        ], 200);
+        ], 200); */
+    }
+
+    public function getEspaciosPnf($pnfId)
+    {
+        $espacios = Espacio::with('pnf')->where('pnf_id', (int)$pnfId)->get();
+
+        return response()->json($espacios);
     }
 }

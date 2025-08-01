@@ -152,4 +152,15 @@ class EspacioController extends Controller
 
         return response()->json($sedes);
     }
+
+    public function asignarEspacios(Request $espacios, $pnfId)
+    {
+        Espacio::where('pnf_id', $pnfId)->update(['pnf_id' => null]); // Limpiar asignaciones previas
+        
+        // asignar espacios a un PNF
+        Espacio::whereIn('id', $espacios ->espacios_ids)
+            ->update(['pnf_id' => $pnfId]);
+
+        return response()->json(['message' => 'Espacios asignados'], 200);
+    }
 }

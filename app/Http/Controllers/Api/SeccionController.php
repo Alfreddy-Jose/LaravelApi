@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSeccionRequest;
+use App\Http\Requests\UpdateSeccionRequest;
 use App\Models\LapsoAcademico;
 use App\Models\Matricula;
 use App\Models\Pnf;
@@ -83,20 +84,41 @@ class SeccionController extends Controller
         $seccion->nombre = $nombre;
         $seccion->save();
 
-        return response()->json(['message' => 'Sección creada correctamente'], 201);
+        return response()->json(['message' => 'Sección creada'], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {}
+    public function show(Seccion $seccion) {
+        return response()->json($seccion);
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateSeccionRequest $request, Seccion $seccion)
     {
-        // 
+        $pnf = Pnf::findOrFail($request->pnf_id);
+        $matricula = Matricula::findOrFail($request->matricula_id);
+        $trayecto = Trayecto::findOrFail($request->trayecto_id);
+        $sede = Sede::findOrFail($request->sede_id);
+
+        // Construir el nombre de la sección
+        $nombre = $pnf->codigo . '' . $matricula->numero . '' . $trayecto->nombre . '' . $sede->nro_sede . '' . $request->numero_seccion;
+
+        // Crear la sección
+        $seccion = new Seccion();
+        $seccion->pnf_id = $request->pnf_id;
+        $seccion->matricula_id = $request->matricula_id;
+        $seccion->trayecto_id = $request->trayecto_id;
+        $seccion->sede_id = $request->sede_id;
+        $seccion->lapso_id = $request->lapso_id;
+        $seccion->numero_seccion = $request->numero_seccion;
+        $seccion->nombre = $nombre;
+        $seccion->save();
+
+        return response()->json(["message" => "Seccion Editada"], 201);
     }
 
     /**
