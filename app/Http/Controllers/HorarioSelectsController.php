@@ -83,11 +83,11 @@ class HorarioSelectsController extends Controller
      * Obtener unidades curriculares basadas en trimestre seleccionado
     */
 
-    public function getEspacios($pnfId)
+    public function getEspacios($sedeId)
     {
-        $pnf = Pnf::findOrFail($pnfId);
+        $sede = Sede::findOrFail($sedeId);
 
-        $aulas = $pnf->espacios()
+        $aulas = $sede->espacios()
             ->orderBy('nombre_aula')
             ->get(['id', 'nombre_aula']);
 

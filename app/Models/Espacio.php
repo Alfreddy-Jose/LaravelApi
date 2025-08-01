@@ -21,10 +21,4 @@ class Espacio extends Model
     {
         return $this->belongsTo(Sede::class);
     }
-
-    // Relación con el modelo Pnf
-    public function pnf()
-    {
-        return $this->belongsTo(Pnf::class);
-    }
 }

@@ -25,12 +25,6 @@ class Pnf extends Model
         return $this->hasMany(Seccion::class, 'pnf_id');
     }
 
-    // Relación con el modelo Espacio
-    public function espacios()
-    {   
-        return $this->hasMany(Espacio::class, 'pnf_id');
-    }
-
     // Relacion con el modelo de sedes
     public function sedes()
     {

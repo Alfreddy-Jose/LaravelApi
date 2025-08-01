@@ -149,5 +149,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/horarios/trayectos/{trayecto}/trimestres', [HorarioSelectsController::class, 'getTrimestres']);
     Route::get('/horarios/trimestres/{trimestres}/unidadesCurriculares', [HorarioSelectsController::class, 'getUnidadesCurriculares']);
     Route::get('/horarios/unidadesCurriculares/{unidadesCurriculares}/docentes', [HorarioSelectsController::class, 'getdocentes']);
-    Route::get('/horarios/pnf/{pnf}/espacios', [HorarioSelectsController::class, 'getEspacios']);
+    Route::get('/horarios/sede/{sede}/espacios', [HorarioSelectsController::class, 'getEspacios']);
 });
