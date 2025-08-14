@@ -18,8 +18,14 @@ class Persona extends Model
         'grado_inst'
     ];
     // Relación con el modelo Tipo_persona
-    public function tipo_persona()
+/*     public function tipo_persona()
     {
         return $this->hasMany(Tipo_persona::class, 'persona_id');
+    } */
+
+    // Relacion con el modelo Docente
+    public function docente()
+    {
+        return $this->hasOne(Docente::class);
     }
 }

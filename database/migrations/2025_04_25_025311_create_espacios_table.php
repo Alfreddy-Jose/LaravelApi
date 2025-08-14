@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('abreviado_lab')->nullable();
             $table->integer('equipos')->nullable();
             $table->string('tipo_espacio');
+            $table->foreignId('sede_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

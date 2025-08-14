@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AutenticacionController;
+use App\Http\Controllers\Api\BloquesTurnoController;
 use App\Http\Controllers\Api\EspacioController;
 use App\Http\Controllers\Api\DocenteController;
+use App\Http\Controllers\Api\HorarioController;
 use App\Http\Controllers\Api\LapsoAcademicoController;
 use App\Http\Controllers\Api\MatriculaController;
 use App\Http\Controllers\Api\PersonaController;
@@ -22,7 +24,8 @@ use Illuminate\Support\Facades\Route;
 
 // Ruta del login
 Route::post('/login', [AutenticacionController::class, 'login']);
-Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF
+Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF de secciones
+Route::get('/generar-horario-pdf', [HorarioController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios
 
 // Rutas protegidas por middleware de Sanctum
 Route::middleware('auth:sanctum')->group(function () {
@@ -40,8 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rutas de PNF
     Route::get('/pnf', [PnfController::class, 'index']);
-    Route::get('/pnf/espacios', [PnfController::class, 'getEspacios']);
-    Route::get('/pnf/{pnf}/espacios', [PnfController::class, 'getEspaciosPnf']);
     Route::post('/pnf', [PnfController::class, 'store']);
     Route::get('/pnf/{pnf}', [PnfController::class, 'show']);
     Route::put('/pnf/{pnf}', [PnfController::class, 'update']);
@@ -103,8 +104,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/persona/{persona}', [PersonaController::class, 'destroy']);
 
     // Rutas de Docentes
+    Route::get('/docentes', [DocenteController::class, 'index']);
     Route::get('/docente/getDataSelect', [DocenteController::class, 'getDataSelect']);
-    Route::post('/docente', [DocenteController::class, 'store']);
+    Route::get('/docente/{docente}', [DocenteController::class, 'show']);
+    Route::post('/docentes', [DocenteController::class, 'store']);
+    Route::put('/docente/{docente}', [DocenteController::class, 'update']);
+    Route::delete('/docente/{docente}', [DocenteController::class, 'destroy']);
 
     // Rutas de tipos de personas
     Route::get('/tipo_persona', [TipoPersonaController::class, 'getFormData']);
@@ -119,7 +124,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/aula/{espacio}', [EspacioController::class, 'destroyAula']);
     Route::get('/laboratorios', [EspacioController::class, 'indexLaboratorio']);
     Route::post('/laboratorio', [EspacioController::class, 'storeLaboratorio']);
-    Route::post('/espacios/{pnf}/asignarEspacios', [EspacioController::class, 'asignarEspacios']); // <- ruta para asignar espacios a un PNF
     Route::get('/laboratorio/{espacio}', [EspacioController::class, 'showLaboratorio']);
     Route::put('/laboratorio/{espacio}', [EspacioController::class, 'updateLaboratorio']);
     Route::delete('/laboratorio/{espacio}', [EspacioController::class, 'destroyLaboratorio']);
@@ -150,4 +154,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/horarios/trimestres/{trimestres}/unidadesCurriculares', [HorarioSelectsController::class, 'getUnidadesCurriculares']);
     Route::get('/horarios/unidadesCurriculares/{unidadesCurriculares}/docentes', [HorarioSelectsController::class, 'getdocentes']);
     Route::get('/horarios/sede/{sede}/espacios', [HorarioSelectsController::class, 'getEspacios']);
+    Route::get('/docentes/unidadesPnfs', [DocenteController::class, 'getDocentesByFilters']);
+
+    // Rutas para los bloques de Horas
+    Route::get('/bloques', [BloquesTurnoController::class, 'index']);
+
+    // Rutas para Horarios
+    Route::get('/eventos', [HorarioController::class, 'index']);
+    Route::post('/eventos', [HorarioController::class, 'store']);
+    Route::delete('/evento/{evento}', [HorarioController::class, 'destroy']);
 });

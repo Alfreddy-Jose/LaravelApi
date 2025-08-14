@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 class HorarioSelectsController extends Controller
 {
     /**
-     * Obtener trimestres basados en trayecto seleccionado
+     * Obtener todas las sedes
      */
     public function getSedes()
     {
@@ -66,7 +66,7 @@ class HorarioSelectsController extends Controller
     }
 
     /**
-     * Obtener unidades curriculares basadas en trimestre seleccionado
+     * Obtener docentes basados en unidad curricular seleccionada
     */
 
     public function getDocentes($unidadCurriclarId)
@@ -74,13 +74,13 @@ class HorarioSelectsController extends Controller
         $unidadesCurriculares = UnidadCurricular::findOrFail($unidadCurriclarId);
 
         $docentes = $unidadesCurriculares->docentes()
-            ->orderBy('id');
+            ->orderBy('id', 'asc')->get();
         
         return response()->json($docentes);
     }
 
     /**
-     * Obtener unidades curriculares basadas en trimestre seleccionado
+     * Obtener espacios basadas en sede seleccionada
     */
 
     public function getEspacios($sedeId)

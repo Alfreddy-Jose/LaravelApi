@@ -26,4 +26,11 @@ class Docente extends Model
     {
         return $this->belongsToMany(UnidadCurricular::class);
     }
+
+    public function pnf()
+    {
+        return $this->belongsTo(Pnf::class);
+    }
+
+    
 }

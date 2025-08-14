@@ -23,7 +23,7 @@ class StoreUnidadCurricularRequest extends FormRequest
     {
         return [
             "nombre" => "required|string|unique:unidad_curriculars,nombre",
-            "descripcion" => "required",
+            "descripcion" => "nullable|string",
             "unidad_credito" => "required|numeric",
             "hora_acad" => "required|numeric",
             "hora_total_est" => "required|numeric",

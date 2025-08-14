@@ -21,15 +21,6 @@ class SeccionController extends Controller
      */
     public function index(Request $request)
     {
-        /*         $secciones = Seccion::with([
-            'pnf:id,nombre',
-            'matricula:id,nombre',
-            'trayecto:id,nombre',
-            'sede:id,nombre_sede',
-            'lapso:id,nombre_lapso,ano'
-        ])->select('id', 'pnf_id', 'matricula_id', 'trayecto_id', 'sede_id', 'lapso_id', 'nombre', 'numero_seccion')->get();
-
-        return response()->json($secciones); */
         $query = Seccion::query();
 
         // Filtrar por lapso

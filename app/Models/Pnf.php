@@ -30,4 +30,9 @@ class Pnf extends Model
     {
         return $this->belongsToMany(Sede::class);
     }
+
+    public function docentes()
+    {
+        return $this->hasMany(Docente::class);
+    }
 }

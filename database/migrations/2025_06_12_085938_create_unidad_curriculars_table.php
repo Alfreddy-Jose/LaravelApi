@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('unidad_curriculars', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 50);
-            $table->text('descripcion', 255);
+            $table->text('descripcion', 255)->nullable();
             $table->integer('unidad_credito');
             $table->integer('hora_acad');
             $table->integer('hora_total_est');

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePnfRequest;
 use App\Http\Requests\UpdatePnfRequest;
-use App\Models\Espacio;
 use App\Models\Pnf;
 use Illuminate\Http\Request;
 
@@ -68,26 +67,4 @@ class PnfController extends Controller
         return response()->json(['message' => 'PNF Eliminado'], 200);
     }
 
-    public function getEspacios()
-    {
-
-        $espacios = Espacio::select('id', 'nombre_aula')->get();
-
-        return response()->json($espacios);
-
-/*         $aulas = Espacio::where('tipo_espacio', 'AULA')->get();
-        $laboratorios = Espacio::where('tipo_espacio', 'LABORATORIO')->get();
-
-        return response()->json([
-            "aulas" => $aulas,
-            "laboratorios" => $laboratorios
-        ], 200); */
-    }
-
-    public function getEspaciosPnf($pnfId)
-    {
-        $espacios = Espacio::with('pnf')->where('pnf_id', (int)$pnfId)->get();
-
-        return response()->json($espacios);
-    }
 }

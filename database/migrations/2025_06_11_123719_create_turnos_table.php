@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('nombre', 50);
             $table->string('inicio');
             $table->string('final');
+            $table->string('inicio_periodo');
+            $table->string('final_periodo');
             $table->timestamps();
         });
     }
