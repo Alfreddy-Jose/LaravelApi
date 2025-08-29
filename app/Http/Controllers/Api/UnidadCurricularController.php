@@ -26,6 +26,7 @@ class UnidadCurricularController extends Controller
      */
     public function store(StoreUnidadCurricularRequest $request)
     {
+        // Guardando el registro
         UnidadCurricular::create($request->all());
 
         return response()->json(['message' => 'Unidad Curricular Registrada']);

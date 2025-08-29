@@ -9,7 +9,8 @@ class Docente extends Model
     public $fillable = [
         'categoria',
         'pnf_id',
-        'persona_id'
+        'persona_id',
+        'horas_dedicacion',
     ];
 
     public function condicionContrato()

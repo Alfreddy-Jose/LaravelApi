@@ -60,7 +60,7 @@ class HorarioSelectsController extends Controller
     {
         $unidadesCurriculares = UnidadCurricular::where('trimestre_id', $trimestreId)
             ->orderBy('nombre')
-            ->get(['id', 'nombre as text']);
+            ->get(['id', 'nombre as text', 'hora_total_est as horas']);
 
         return response()->json($unidadesCurriculares);
     }

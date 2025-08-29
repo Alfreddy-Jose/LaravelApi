@@ -25,8 +25,8 @@ class StoreUnidadCurricularRequest extends FormRequest
             "nombre" => "required|string|unique:unidad_curriculars,nombre",
             "descripcion" => "nullable|string",
             "unidad_credito" => "required|numeric",
-            "hora_acad" => "required|numeric",
-            "hora_total_est" => "required|numeric",
+            "hora_teorica" => "required|numeric",
+            "hora_practica" => "required|numeric",
             "periodo" => "required",
             "trimestre_id" => "required"
         ];
@@ -36,8 +36,8 @@ class StoreUnidadCurricularRequest extends FormRequest
     {
         return [
             "unidad_credito" => "required|numeric",
-            "hora_acad" => "horas academicas",
-            "hora_total_est" => "horas total estimadas",
+            "hora_teorica" => "horas teorícas",
+            "hora_practica" => "horas practícas",
             "trimestre_id" => "trimestre"
         ];
     }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('pnf_id')
                 ->constrained('pnfs')
                 ->onDelete('cascade'); 
+                $table->integer('horas_dedicacion');
             $table->timestamps();
         });
     }

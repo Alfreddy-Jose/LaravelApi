@@ -27,7 +27,6 @@ class StoreSeccionRequest extends FormRequest
             "matricula_id" => "required",
             "trayecto_id" => "required",
             "sede_id" => "required",
-            "numero_seccion" => "required"
         ];
     }
 
@@ -39,7 +38,6 @@ class StoreSeccionRequest extends FormRequest
             "matricula_id" => "tipo matricula",
             "trayecto_id" => "trayecto",
             "sede_id" => "sede",
-            "numero_seccion" => "numero de seccion"
         ];
     }
 }

@@ -43,8 +43,9 @@ class HorarioController extends Controller
     public function store(StoreHorarioRequest $request)
     {
         try {
+
             $horario = Horario::create($request->all());
-            return response()->json($horario, 201);
+            return response()->json(array("message" => "evento registrado", "horario" => $horario, 201));
         } catch (\Exception $e) {
             return response()->json(['No se pudo crear el horario' => $e->getMessage()], 500);
         }
@@ -69,9 +70,20 @@ class HorarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Horario $c)
+    public function update(Request $request, Horario $evento)
     {
-        //
+
+        try {
+            $evento->update([
+                "bloque_id" => $request->bloque_id,
+                "duracion" => $request->duracion,
+                "dia" => $request->dia,
+            ]);
+            Log::info('Horario updated successfully');
+            return response()->json(['message' => 'Evento editado'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar Evento'], 500);
+        }
     }
 
     /**
@@ -81,46 +93,56 @@ class HorarioController extends Controller
     {
         // Eliminando evento
         $evento->delete();
+
         // Devolviendo respuesta a la api
         return response()->json(['message' => 'Evento eliminado con exito'], 200);
     }
 
     public function generarPDF(Request $request)
     {
+
+        Log::info('Generando PDF', $request->all());
         try {
-
-
-            // Validar datos recibidos
-            $validated = $request->validate([
-                'encabezado' => 'sometimes|array', // Cambiado a 'sometimes'
-                'bloques' => 'required|array',
-                'eventos' => 'required|array',
-                'dias' => 'required|array' // Sin tilde
-            ]);
-
             // Proporcionar valores por defecto para encabezado
             $encabezado = $request->input('encabezado', []);
+            Log::info("Encabezado recibido:", $request->input('encabezado', []));
 
-            // Fusionar con valores por defecto
-            $encabezado = array_merge([
-                'sede' => 'SEDE CENTRAL (UPTYAB)',
-                'trayecto' => 'III',
-                'trimestre' => 'II',
-                'seccion' => '753501',
-                'lapso' => '2025-4',
-                'laboratorios' => [
-                    'LABORATORIO SIMON BOLIVAR: ELECTIVA III',
-                    'LABORATORIO HUGO CHAVEZ: ING SW II',
-                    'LABORATORIO HUGO CHAVEZ: MODELADO BD'
-                ]
-            ], $encabezado);
+            $bloques = $request->input('bloques', []);
+            $eventos = $request->input('eventos', []);
+
+            // Creamos un array de horas de inicio de cada bloque para buscar el índice fácilmente
+            $bloqueHoras = array_map(function ($bloque) {
+                // Extrae la hora de inicio del rango
+                return trim(explode('-', $bloque['rango'])[0]);
+            }, $bloques);
+
+            // Procesamos los eventos para agregar bloque_inicio y bloque_fin
+            $eventosProcesados = [];
+            foreach ($eventos as $evento) {
+                // Busca el índice del bloque donde inicia el evento
+                $bloque_inicio = $evento['bloque'];
+                if ($bloque_inicio === false) {
+                    // Si no encuentra el bloque, puedes omitir el evento o lanzar un error
+                    continue;
+                }
+                $bloque_fin = $bloque_inicio + $evento['duracion'] - 1;
+
+                $eventosProcesados[] = array_merge($evento, [
+                    'bloque_inicio' => $bloque_inicio,
+                    'bloque_fin' => $bloque_fin,
+                ]);
+            }
 
             $data = [
                 'encabezado' => $encabezado,
-                'bloques' => $request->input('bloques', []),
-                'eventos' => $request->input('eventos', []),
-                'dias' => $request->input('dias', [])
+                'bloques' => $bloques,
+                'eventos' => $eventosProcesados,
+                'dias' => $request->input('dias', []),
+                'bloqueHeight' => 25
             ];
+
+            // En el controlador
+            Log::info('Datos enviados a la vista:', $data);
 
             // Generar PDF
             $pdf = Pdf::loadView('pdf.horario', $data)

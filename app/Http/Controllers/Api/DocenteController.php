@@ -10,6 +10,7 @@ use App\Models\Persona;
 use App\Models\Pnf;
 use App\Models\UnidadCurricular;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DocenteController extends Controller
 {
@@ -36,6 +37,7 @@ class DocenteController extends Controller
         $docente->persona_id = $request->persona_id;
         $docente->pnf_id = $request->pnf_id;
         $docente->categoria = $request->categoria;
+        $docente->horas_dedicacion = $request->horas_dedicacion;
 
         if ($docente->save()) {
             $condicion_contrato = new CondicionContrato();
@@ -77,11 +79,13 @@ class DocenteController extends Controller
     {
         $docente = Docente::find($id);
 
-        // Actualizar el Docente
-        $docente->update([
+        $updateData = [
             'pnf_id' => $request->pnf_id,
             'categoria' => $request->categoria
-        ]);
+        ];
+
+        // Actualizar el Docente
+        $docente->update($updateData);
 
         // Actualizar persona relacionada
         $docente->condicionContrato()->where('docente_id', $docente->id)->update([
@@ -164,6 +168,7 @@ class DocenteController extends Controller
             return [
                 'id' => $docente->id,
                 'categoria' => $docente->categoria,
+                'horas_dedicacion' => $docente->horas_dedicacion,
                 'pnf' => [
                     'id' => $docente->pnf_id,
                     'nombre' => $docente->pnf->nombre ?? null
@@ -178,6 +183,32 @@ class DocenteController extends Controller
             ];
         });
 
+
         return response()->json($docentes);
+    }
+
+
+
+    public function actualizarHorasDedicacion(Request $request, $id)
+    {
+        $docente = Docente::findOrFail($id);
+
+        // Recibe la diferencia de horas por query param
+        $diferencia = intval($request->query('horas_dedicacion', 0));
+
+        // Suma o resta según el valor recibido
+        $docente->horas_dedicacion += $diferencia;
+
+        // Opcional: asegúrate de que no sea negativo
+        if ($docente->horas_dedicacion < 0) {
+            $docente->horas_dedicacion = 0;
+        }
+
+        $docente->save();
+
+        return response()->json([
+            'success' => true,
+            'horas_disponibles' => $docente->horas_dedicacion,
+        ]);
     }
 }

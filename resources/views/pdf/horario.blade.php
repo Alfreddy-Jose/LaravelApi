@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <title>Horario Académico</title>
@@ -23,7 +22,7 @@
         }
 
         th {
-            background-color: #f0f0f0;
+            background-color: #e3f2fd;
             font-weight: bold;
         }
 
@@ -38,7 +37,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: {{ $bloqueHeight }}px;
+            height: {{ $bloqueHeight }}px; */
         }
 
         .header-section {
@@ -63,6 +62,9 @@
 </head>
 
 <body>
+    <div style="display: flex; justify-content: center; align-items: center; margin: 10px 0;">
+        <img src="{{ public_path('img/PDF.jpg') }}" alt="Logo de la institución." style="max-width: 100%; margin: 0 8px;">
+    </div>
     <div class="header-section">
         <div class="header-main">COORDINACION DEL PROGRAMA NACIONAL DE FORMACION EN INFORMATICA</div>
         <div class="header-sub">SEDE: SEDE CENTRAL (UPTYAB)</div>
@@ -78,27 +80,39 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 8%">HORA</th>
+                <th style="width: 16%">HORA</th>
                 @foreach ($dias as $dia)
                     <th>{{ $dia }}</th>
                 @endforeach
             </tr>
         </thead>
         <tbody>
-            @foreach ($bloques as $bloque)
+            @foreach ($bloques as $i => $bloque)
                 <tr>
                     <td>{{ $bloque['rango'] }}</td>
                     @foreach ($dias as $dia)
-                        <td style="position: relative; height: 40px;">
-                            @foreach ($eventos as $evento)
-                                @if ($evento['dia'] == $dia && $evento['bloque'] == $bloque['id'])
-                                    <div class="evento"
-                                        style="background-color: {{ $evento['color'] }}; height: {{ $evento['duracion'] * 40 - 4 }}px;">
-                                        {{ $evento['texto'] }}
-                                    </div>
-                                @endif
-                            @endforeach
-                        </td>
+                        @php
+                            // Buscar si hay un evento que inicia en este bloque y día
+                            $evento = collect($eventos)->first(function($e) use ($dia, $i) {
+                                return $e['dia'] == $dia && $e['bloque_inicio'] == $i;
+                            });
+                            // Verificar si este bloque está cubierto por un evento que empezó antes (para no repetir la celda)
+                            $eventoEnCurso = collect($eventos)->first(function($e) use ($dia, $i) {
+                                return $e['dia'] == $dia && $e['bloque_inicio'] < $i && $e['bloque_fin'] >= $i;
+                            });
+                        @endphp
+
+                        @if ($evento)
+                            <td rowspan="{{ $evento['bloque_fin'] - $evento['bloque_inicio'] + 1 }}" style="vertical-align: middle; text-align: center; background-color: {{ $evento['color'] }}; padding: 0;">
+                                <div class="evento">
+                                    {{ $evento['texto'] }}
+                                </div>
+                            </td>
+                        @elseif ($eventoEnCurso)
+                            {{-- No renderizar celda, ya que está cubierta por un rowspan --}}
+                        @else
+                            <td></td>
+                        @endif
                     @endforeach
                 </tr>
             @endforeach
@@ -112,3 +126,6 @@
 </body>
 
 </html>
+
+
+

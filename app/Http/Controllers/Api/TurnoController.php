@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTurnoRequest;
 use App\Models\Turno;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class TurnoController extends Controller
@@ -19,17 +20,25 @@ class TurnoController extends Controller
 
     // metodo para crear un turno
     public function store(StoreTurnoRequest $request)
-    {
-        $turno = Turno::create($request->all());
+{
+    try {
+        DB::transaction(function () use ($request) {
+            $turno = Turno::create($request->all());
 
-        // Generar y guardar bloques
-        $bloques = $turno->generarBloquesTurno($request->nombre, $request->inicio, $request->final, $request->inicio_periodo, $request->final_periodo);
-        foreach ($bloques as $bloque) {
-            $turno->bloques()->create($bloque);
-        }
-
-        return response()->json(['message' => 'Turno Registrado'], 200);
+            // Generar y guardar bloques
+            $bloques = $turno->generarBloquesTurno($request->nombre, $request->inicio, $request->final, $request->inicio_periodo, $request->final_periodo);
+            foreach ($bloques as $bloque) {
+                $turno->bloques()->create($bloque);
+            }
+        });
+    } catch (\Exception $e) {
+        // Eliminar el turno si la transacción falla
+        $turno->delete();
+        throw $e;
     }
+
+    return response()->json(['message' => 'Turno Registrado'], 200);
+}
 
     //metodo traer los datos de un unico turno
     public function show(Turno $turno) {}

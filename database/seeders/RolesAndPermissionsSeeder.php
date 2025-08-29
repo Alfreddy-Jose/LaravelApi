@@ -79,10 +79,10 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'turno.eliminar']);
         Permission::firstOrCreate(['name' => 'turno.ver']);
         // Permisos malla de Pnf
-        Permission::firstOrCreate(['name' => 'malla.crear']);
+/*         Permission::firstOrCreate(['name' => 'malla.crear']);
         Permission::firstOrCreate(['name' => 'malla.editar']);
         Permission::firstOrCreate(['name' => 'malla.eliminar']);
-        Permission::firstOrCreate(['name' => 'malla.ver']);
+        Permission::firstOrCreate(['name' => 'malla.ver']); */
         // Permisos gestionar Persona
         Permission::firstOrCreate(['name' => 'gestionar persona']);
         // Permisos personas

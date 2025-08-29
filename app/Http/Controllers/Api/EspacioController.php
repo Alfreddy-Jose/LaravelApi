@@ -40,11 +40,11 @@ class EspacioController extends Controller
         // Guardando datos de aula
         $aula = new Espacio();
         $aula->codigo = $request->codigo;
-        $aula->nombre_aula = $request->nombre_aula;
         $aula->etapa = $request->etapa;
         $aula->nro_aula = $request->nro_aula;
         $aula->sede_id = $request->sede_id;
         $aula->tipo_espacio = "AULA";
+        $aula->nombre_aula = $request->etapa . '-' . $request->nro_aula;
         $aula->save();
 
         return response()->json(["message" => "Aula Registrada"], 201);
@@ -63,7 +63,15 @@ class EspacioController extends Controller
      */
     public function updateAula(UpdateAulaRequest $request, Espacio $espacio)
     {
-        $espacio->update($request->validated());
+        $espacio->update(
+            [
+                "etapa" => $request->etapa,
+                "nro_aula" => $request->nro_aula,
+                "sede_id" => $request->sede_id,
+                "codigo" => $request->codigo,
+                "nombre_aula" => $request->etapa . '-' . $request->nro_aula
+            ]
+        );
 
         return response()->json(["message" => "Aula Editada"], 201);
     }

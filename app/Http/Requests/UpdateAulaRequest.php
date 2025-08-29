@@ -23,7 +23,6 @@ class UpdateAulaRequest extends FormRequest
     {
         return [
             "codigo" => "required|unique:espacios,codigo," . $this->route('espacio')->id,
-            "nombre_aula" => "required|unique:espacios,nombre_aula," . $this->route('espacio')->id,
             "etapa" => "required|string",
             "nro_aula" => "required|numeric",
             "sede_id" => "required|exists:sedes,id"

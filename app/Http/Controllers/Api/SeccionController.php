@@ -61,8 +61,24 @@ class SeccionController extends Controller
         $trayecto = Trayecto::findOrFail($request->trayecto_id); // Para obtener el nombre
         $sede = Sede::findOrFail($request->sede_id); // Para obtener el nro_sede
 
+        /* Generar numero de la seccion dependiendo del trayecto y la sede
+            si no existe una seccion para ese trayecto y sede, se crea la primera seccion
+            si existe una seccion para ese trayecto y sede, se incrementa el numero de la seccion
+        */
+        $secciones = Seccion::where('trayecto_id', $request->trayecto_id)
+            ->where('sede_id', $request->sede_id)
+            ->get();
+
+        if ($secciones->isEmpty()) {
+            $numero_seccion = 1;
+        } else {
+            $ultima_seccion = $secciones->last();
+            $numero_seccion = $ultima_seccion->numero_seccion + 1;
+        }
+
+
         // Construir el nombre de la sección
-        $nombre = $pnf->codigo . '' . $matricula->numero . '' . $trayecto->nombre . '' . $sede->nro_sede . '' . $request->numero_seccion;
+        $nombre = $pnf->codigo . '' . $matricula->numero . '' . $trayecto->nombre . '' . $sede->nro_sede . '' . $numero_seccion;
 
         // Crear la sección
         $seccion = new Seccion();
@@ -71,7 +87,7 @@ class SeccionController extends Controller
         $seccion->trayecto_id = $request->trayecto_id;
         $seccion->sede_id = $request->sede_id;
         $seccion->lapso_id = $request->lapso_id;
-        $seccion->numero_seccion = $request->numero_seccion;
+        $seccion->numero_seccion = $numero_seccion;
         $seccion->nombre = $nombre;
         $seccion->save();
 
@@ -90,6 +106,17 @@ class SeccionController extends Controller
      */
     public function update(UpdateSeccionRequest $request, Seccion $seccion)
     {
+
+        // actualizando la sección
+        $seccion->update(
+            [
+                //"lapso_id" => $request->lapso_id,
+                "pnf_id" => $request->pnf_id,
+                "matricula_id" => $request->matricula_id,
+                "trayecto_id" => $request->trayecto_id,
+                "sede_id" => $request->sede_id,
+            ]
+        );
         $pnf = Pnf::findOrFail($request->pnf_id);
         $matricula = Matricula::findOrFail($request->matricula_id);
         $trayecto = Trayecto::findOrFail($request->trayecto_id);
@@ -98,14 +125,7 @@ class SeccionController extends Controller
         // Construir el nombre de la sección
         $nombre = $pnf->codigo . '' . $matricula->numero . '' . $trayecto->nombre . '' . $sede->nro_sede . '' . $request->numero_seccion;
 
-        // Crear la sección
-        $seccion = new Seccion();
-        $seccion->pnf_id = $request->pnf_id;
-        $seccion->matricula_id = $request->matricula_id;
-        $seccion->trayecto_id = $request->trayecto_id;
-        $seccion->sede_id = $request->sede_id;
-        $seccion->lapso_id = $request->lapso_id;
-        $seccion->numero_seccion = $request->numero_seccion;
+        // actualizando el nombre
         $seccion->nombre = $nombre;
         $seccion->save();
 
@@ -168,6 +188,12 @@ class SeccionController extends Controller
         $pdf = Pdf::loadView('pdf.secciones', compact('secciones'));
 
         // Descarga el PDF
-        return $pdf->download('secciones.pdf');
+        //return $pdf->download('secciones.pdf');
+
+
+        // Descargar con el nombre personalizado
+        return $pdf->stream("Secciones_".$request->lapso."pdf", [
+            'Attachment' => true // Fuerza la descarga
+        ]);
     }
 }

@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 // Ruta del login
 Route::post('/login', [AutenticacionController::class, 'login']);
 Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF de secciones
-Route::get('/generar-horario-pdf', [HorarioController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios
+Route::post('/generar_horario_pdf', [HorarioController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios
 
 // Rutas protegidas por middleware de Sanctum
 Route::middleware('auth:sanctum')->group(function () {
@@ -109,6 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/docente/{docente}', [DocenteController::class, 'show']);
     Route::post('/docentes', [DocenteController::class, 'store']);
     Route::put('/docente/{docente}', [DocenteController::class, 'update']);
+    Route::put('/docente_horas/{docente_id}', [DocenteController::class, 'actualizarHorasDedicacion']);
     Route::delete('/docente/{docente}', [DocenteController::class, 'destroy']);
 
     // Rutas de tipos de personas
@@ -143,6 +144,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rutas de Trayectos
     Route::get('/trayectos', [TrayectoController::class, 'index']);
+    Route::get('/trayecto/{trayecto}', [TrayectoController::class, 'show']);
     Route::post('/trayectos', [TrayectoController::class, 'store']);
     Route::delete('/trayecto/{trayecto}', [TrayectoController::class, 'destroy']);
 
@@ -162,5 +164,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rutas para Horarios
     Route::get('/eventos', [HorarioController::class, 'index']);
     Route::post('/eventos', [HorarioController::class, 'store']);
+    Route::put('/evento/{evento}', [HorarioController::class, 'update']);
     Route::delete('/evento/{evento}', [HorarioController::class, 'destroy']);
 });

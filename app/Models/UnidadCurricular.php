@@ -10,7 +10,8 @@ class UnidadCurricular extends Model
         "nombre",
         "descripcion",
         "unidad_credito",
-        "hora_acad",
+        "hora_teorica",
+        "hora_practica",
         "hora_total_est",
         "periodo",
         "trimestre_id"
