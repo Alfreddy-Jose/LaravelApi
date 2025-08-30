@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUnidadCurricularRequest;
 use App\Http\Requests\UpdateUnidadCurricularRequest;
 use App\Models\Trimestre;
 use App\Models\UnidadCurricular;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class UnidadCurricularController extends Controller
@@ -30,6 +31,15 @@ class UnidadCurricularController extends Controller
         UnidadCurricular::create($request->all());
 
         return response()->json(['message' => 'Unidad Curricular Registrada']);
+    }
+
+    public function exportarPDF()
+    {
+        $unidades = UnidadCurricular::with('trimestre')->get();
+
+        $pdf = Pdf::loadView('pdf.unidad_curricular', compact('unidades'));
+        
+        return $pdf->download('unidades_curriculares.pdf');
     }
 
     /**

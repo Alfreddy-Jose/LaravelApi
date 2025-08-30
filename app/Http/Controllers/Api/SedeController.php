@@ -7,6 +7,7 @@ use App\Http\Requests\StoreSedeRequest;
 use App\Http\Requests\UpdateSedeRequest;
 use App\Models\Pnf;
 use App\Models\Sede;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class SedeController extends Controller
@@ -105,5 +106,14 @@ class SedeController extends Controller
         $carrerasAsignadas = $sede->pnfs()->select('pnfs.id', 'pnfs.nombre')->get();
 
         return response()->json($carrerasAsignadas);
+    }
+
+    public function generaPDF()
+    {
+        $sedes = Sede::select('id', 'nro_sede', 'nombre_sede', 'nombre_abreviado', 'direccion', 'municipio')->get();
+
+        $pdf = Pdf::loadView('pdf.sedes', compact('sedes'));
+
+        return $pdf->download('sedes.pdf');
     }
 }

@@ -65,6 +65,7 @@
     <div style="display: flex; justify-content: center; align-items: center; margin: 10px 0;">
         <img src="{{ public_path('img/PDF.jpg') }}" alt="Logo de la institución." style="max-width: 100%; margin: 0 8px;">
     </div>
+    
     <div class="header-section">
         <div class="header-main">COORDINACION DEL PROGRAMA NACIONAL DE FORMACION EN INFORMATICA</div>
         <div class="header-sub">SEDE: SEDE CENTRAL (UPTYAB)</div>

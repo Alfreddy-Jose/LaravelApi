@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePnfRequest;
 use App\Http\Requests\UpdatePnfRequest;
 use App\Models\Pnf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class PnfController extends Controller
@@ -65,6 +66,15 @@ class PnfController extends Controller
 
         // Enviando respuesta a la api
         return response()->json(['message' => 'PNF Eliminado'], 200);
+    }
+
+    public function generarPDF()
+    {
+        $pnfs = Pnf::select('id', 'codigo', 'nombre', 'abreviado', 'abreviado_coord')->get();
+
+        $pdf = Pdf::loadView('pdf.pnf', compact('pnfs'));
+
+        return $pdf->download('pnfs.pdf'); 
     }
 
 }

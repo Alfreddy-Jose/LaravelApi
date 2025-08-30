@@ -24,8 +24,14 @@ use Illuminate\Support\Facades\Route;
 
 // Ruta del login
 Route::post('/login', [AutenticacionController::class, 'login']);
+
+// Rutas para generar PDF
 Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF de secciones
 Route::post('/generar_horario_pdf', [HorarioController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios
+Route::get('/unidad_curricular/pdf', [UnidadCurricularController::class, 'exportarPDF']); // <-- Ruta para generar PDF de Unidades Curriculares
+Route::get('/pnf/pdf', [PnfController::class, 'generarPDF']); // <-- Ruta para generar PDF de PNF
+Route::get('/sedes/pdf', [SedeController::class, 'generaPDF']); // <-- Ruta para generar PDF de Sedes
+Route::get('/lapsos/pdf', [LapsoAcademicoController::class, 'generarPDF']); // <-- Ruta para generar PDF de Lapsos Academicos
 
 // Rutas protegidas por middleware de Sanctum
 Route::middleware('auth:sanctum')->group(function () {

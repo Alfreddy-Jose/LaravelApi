@@ -7,6 +7,7 @@ use App\Http\Requests\StoreLapsoAcademicoRequest;
 use App\Http\Requests\UpdateLapsoAcademicoRequest;
 use App\Models\LapsoAcademico;
 use App\Models\TipoLapso;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class LapsoAcademicoController extends Controller
@@ -72,5 +73,12 @@ class LapsoAcademicoController extends Controller
         $tipoLapsos = TipoLapso::select('id', 'nombre')->get();
 
         return response()->json($tipoLapsos);
+    }
+
+    public function generarPDF()
+    {
+        $lapsos = LapsoAcademico::with('tipolapso')->get();
+        $pdf = Pdf::loadView('pdf.lapsos', compact('lapsos'));
+        return $pdf->download('LapsosAcademicos.pdf');
     }
 }
