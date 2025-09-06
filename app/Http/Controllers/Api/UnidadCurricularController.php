@@ -17,7 +17,7 @@ class UnidadCurricularController extends Controller
      */
     public function index()
     {
-        $unidades = UnidadCurricular::with('trimestre')->get();
+        $unidades = UnidadCurricular::with('trimestres')->get();
 
         return response()->json($unidades);
     }
@@ -28,7 +28,24 @@ class UnidadCurricularController extends Controller
     public function store(StoreUnidadCurricularRequest $request)
     {
         // Guardando el registro
-        UnidadCurricular::create($request->all());
+        $unidadCurricular = UnidadCurricular::create([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'unidad_credito' => $request->unidad_credito,
+            'hora_teorica' => $request->hora_teorica,
+            'hora_practica' => $request->hora_practica,
+            'hora_total_est' => $request->hora_total_est,
+            'periodo' => $request->periodo
+        ]);
+
+        // Asociar trimestres
+        if ($request->periodo === 'trimestral') {
+            // Para trimestral: un solo trimestre (número)
+            $unidadCurricular->trimestres()->sync([$request->trimestre_id]);
+        } else {
+            // Para semestral y anual: array de trimestres
+            $unidadCurricular->trimestres()->sync($request->trimestre_id);
+        }
 
         return response()->json(['message' => 'Unidad Curricular Registrada']);
     }
@@ -38,7 +55,7 @@ class UnidadCurricularController extends Controller
         $unidades = UnidadCurricular::with('trimestre')->get();
 
         $pdf = Pdf::loadView('pdf.unidad_curricular', compact('unidades'));
-        
+
         return $pdf->download('unidades_curriculares.pdf');
     }
 
@@ -48,8 +65,8 @@ class UnidadCurricularController extends Controller
     public function show(string $id)
     {
         // Obtener datos del registro a actualizar
-        $unidad_curricular = UnidadCurricular::with('trimestre')->findOrFail($id);
-        return response()->json($unidad_curricular);
+        $unidad_curricular = UnidadCurricular::with('trimestres')->findOrFail($id);
+        return response()->json($unidad_curricular, 200);
     }
 
     /**
@@ -57,9 +74,24 @@ class UnidadCurricularController extends Controller
      */
     public function update(UpdateUnidadCurricularRequest $request, UnidadCurricular $unidad_curricular)
     {
-        // Actualizando el registro
-        //$unidad_curricular = UnidadCurricular::findOrFail($id);
-        $unidad_curricular->update($request->all());
+        // Actualizar la unidad curricular
+        $unidad_curricular->update([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'unidad_credito' => $request->unidad_credito,
+            'hora_teorica' => $request->hora_teorica,
+            'hora_practica' => $request->hora_practica,
+            'hora_total_est' => $request->hora_total_est,
+            'periodo' => $request->periodo
+        ]);
+
+        // Sincronizar trimestres (elimina los antiguos y agrega los nuevos)
+        if ($request->periodo === 'trimestral') {
+            $unidad_curricular->trimestres()->sync([$request->trimestre_id]);
+        } else {
+            $unidad_curricular->trimestres()->sync($request->trimestre_id);
+        }
+
         return response()->json(['message' => 'Unidad Curricular Editada']);
     }
 

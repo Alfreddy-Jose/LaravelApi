@@ -1,65 +1,22 @@
-<!DOCTYPE html>
-<html>
+@extends('layout.layout_pdf')
 
-<head>
-    <meta charset="utf-8">
-    <title>Unidades Curriculares</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-        }
+@section('title', 'Unidad Curricular')
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+@section('title_lista', 'UNIDADES CURRICULARES')
 
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 4px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #e3f2fd;
-            font-weight: bold;
-        }
-
-        .header-section {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .header-main {
-            font-size: 16px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-
-<body>
-    <div style="display: flex; justify-content: center; align-items: center; margin: 10px 0;">
-        <img src="{{ public_path('img/PDF.jpg') }}" alt="Logo de la institución." style="max-width: 100%; margin: 0 8px;">
-    </div>
-    <div class="header-section">
-        <div class="header-main">LISTADO DE UNIDAD CURRICULAR</div>
-    </div>
-
+@section('table')
     <table>
         <thead>
             <tr>
                 <th>#</th>
-                <th>Nombre</th>
-                <th>Horas Prácticas</th>
-                <th>Horas Teóricas</th>
-                <th>Horas Total</th>
-                <th>Unidad Crédito</th>
-                <th>Período</th>
-                <th>Trimestre</th>
-                <th>Descripción</th>
+                <th>NOMBRE</th>
+                <th>HORAS PRÁCTICAS</th>
+                <th>HORAS TEÓRICAS</th>
+                <th>HORAS TOTAL</th>
+                <th>UNIDAD CRÉDITO</th>
+                <th>PERÍODO</th>
+                <th>TRIMESTRE</th>
+                <th>DESCRIPCIÓN</th>
             </tr>
         </thead>
         <tbody>
@@ -78,6 +35,4 @@
             @endforeach
         </tbody>
     </table>
-</body>
-
-</html>
+@endsection

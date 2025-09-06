@@ -9,7 +9,10 @@ class LapsoAcademico extends Model
     protected $fillable = [
         'nombre_lapso',
         'ano',
-        'tipo_lapso_id'
+        'tipo_lapso_id',
+        'fecha_inicio',
+        'fecha_fin',
+        'status'
     ];
     // Relación con el modelo Tipo_persona
     public function tipo_persona()

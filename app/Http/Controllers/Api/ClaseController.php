@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreHorarioRequest;
-use App\Models\Horario;
+use App\Http\Requests\StoreClaseRequest;
+use App\Models\Clase;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DragonCode\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class HorarioController extends Controller
+class ClaseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Horario::with([
+        return Clase::with([
             'sede',
             'pnf',
             'trayecto',
@@ -40,21 +40,21 @@ class HorarioController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreHorarioRequest $request)
+    public function store(StoreClaseRequest $request)
     {
         try {
 
-            $horario = Horario::create($request->all());
-            return response()->json(array("message" => "evento registrado", "horario" => $horario, 201));
+            $clase = Clase::create($request->all());
+            return response()->json(array("message" => "clase registrada", "clase" => $clase, 201));
         } catch (\Exception $e) {
-            return response()->json(['No se pudo crear el horario' => $e->getMessage()], 500);
+            return response()->json(['No se pudo crear la clase' => $e->getMessage()], 500);
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Horario $c)
+    public function show(Clase $c)
     {
         //
     }
@@ -62,7 +62,7 @@ class HorarioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Horario $c)
+    public function edit(Clase $c)
     {
         //
     }
@@ -70,7 +70,7 @@ class HorarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Horario $evento)
+    public function update(Request $request, Clase $evento)
     {
 
         try {
@@ -79,7 +79,7 @@ class HorarioController extends Controller
                 "duracion" => $request->duracion,
                 "dia" => $request->dia,
             ]);
-            Log::info('Horario updated successfully');
+            Log::info('clase updated successfully');
             return response()->json(['message' => 'Evento editado'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar Evento'], 500);
@@ -89,7 +89,7 @@ class HorarioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Horario $evento)
+    public function destroy(Clase $evento)
     {
         // Eliminando evento
         $evento->delete();

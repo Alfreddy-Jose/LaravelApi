@@ -20,10 +20,6 @@ return new class extends Migration
             $table->integer('hora_practica');
             $table->integer('hora_total_est');
             $table->string('periodo', 50); 
-            // Llave foranea de trimestre
-            $table->foreignId('trimestre_id')
-                ->constrained()
-                ->onDelete('cascade');
             $table->timestamps();
         });
     }

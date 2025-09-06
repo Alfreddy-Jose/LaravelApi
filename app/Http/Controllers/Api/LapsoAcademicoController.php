@@ -24,6 +24,15 @@ class LapsoAcademicoController extends Controller
         return response()->json($lapsos);
     }
 
+    public function lapsosActivos()
+    {
+        // Seleccionando datos del Lapso Academico
+        $lapsos = LapsoAcademico::with('tipolapso')->where('status', true)->get();
+
+        // Retornando los datos al Frontend
+        return response()->json($lapsos);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -80,5 +89,34 @@ class LapsoAcademicoController extends Controller
         $lapsos = LapsoAcademico::with('tipolapso')->get();
         $pdf = Pdf::loadView('pdf.lapsos', compact('lapsos'));
         return $pdf->download('LapsosAcademicos.pdf');
+    }
+
+    public function cambiarEstado($id)
+    {
+        try {
+            $lapso = LapsoAcademico::findOrFail($id);
+
+            // Cambiar el estado
+            $lapso->status = !$lapso->status;
+            $lapso->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Estado actualizado correctamente',
+                'data' => [
+                    'id' => $lapso->id,
+                    'estado' => $lapso->status // Asegúrate de que esto sea boolean
+                ]
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Lapso académico no encontrado'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al actualizar el estado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

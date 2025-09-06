@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateAulaRequest;
 use App\Http\Requests\UpdateLaboratorioRequest;
 use App\Models\Espacio;
 use App\Models\Sede;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class EspacioController extends Controller
@@ -164,11 +165,47 @@ class EspacioController extends Controller
     public function asignarEspacios(Request $espacios, $pnfId)
     {
         Espacio::where('pnf_id', $pnfId)->update(['pnf_id' => null]); // Limpiar asignaciones previas
-        
+
         // asignar espacios a un PNF
-        Espacio::whereIn('id', $espacios ->espacios_ids)
+        Espacio::whereIn('id', $espacios->espacios_ids)
             ->update(['pnf_id' => $pnfId]);
 
         return response()->json(['message' => 'Espacios asignados'], 200);
+    }
+
+    public function aulasPDF()
+    {
+        $aulas = Espacio::with('sede:id,nombre_sede')
+            ->where('tipo_espacio', 'AULA')
+            ->select(
+                'id',
+                'codigo',
+                'nombre_aula',
+                'etapa',
+                'nro_aula',
+                'sede_id'
+            )->get();
+
+        $pdf = Pdf::loadView('pdf.aulas', compact('aulas'));
+        return $pdf->download('aulas.pdf');
+    }
+
+    public function laboratoriosPDF()
+    {
+        $laboratorios = Espacio::with('sede:id,nombre_sede')
+            ->select(
+                'id',
+                'codigo',
+                'nombre_aula',
+                'etapa',
+                'abreviado_lab',
+                'equipos',
+                'sede_id'
+            )
+            ->where('tipo_espacio', 'LABORATORIO')
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.laboratorios', compact('laboratorios'));
+        return $pdf->download('laboratorios.pdf');
     }
 }

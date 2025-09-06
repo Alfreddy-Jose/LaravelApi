@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\Auth\AutenticacionController;
 use App\Http\Controllers\Api\BloquesTurnoController;
 use App\Http\Controllers\Api\EspacioController;
 use App\Http\Controllers\Api\DocenteController;
-use App\Http\Controllers\Api\HorarioController;
+use App\Http\Controllers\Api\ClaseController;
 use App\Http\Controllers\Api\LapsoAcademicoController;
 use App\Http\Controllers\Api\MatriculaController;
 use App\Http\Controllers\Api\PersonaController;
@@ -27,11 +27,14 @@ Route::post('/login', [AutenticacionController::class, 'login']);
 
 // Rutas para generar PDF
 Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF de secciones
-Route::post('/generar_horario_pdf', [HorarioController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios
+Route::post('/generar_horario_pdf', [ClaseController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios
 Route::get('/unidad_curricular/pdf', [UnidadCurricularController::class, 'exportarPDF']); // <-- Ruta para generar PDF de Unidades Curriculares
 Route::get('/pnf/pdf', [PnfController::class, 'generarPDF']); // <-- Ruta para generar PDF de PNF
 Route::get('/sedes/pdf', [SedeController::class, 'generaPDF']); // <-- Ruta para generar PDF de Sedes
 Route::get('/lapsos/pdf', [LapsoAcademicoController::class, 'generarPDF']); // <-- Ruta para generar PDF de Lapsos Academicos
+Route::get('/matricula/pdf', [MatriculaController::class, 'generarPDF']); // <-- Ruta para generar PDF de Tipo Matricula
+Route::get('/aula/pdf', [EspacioController::class, 'aulasPDF']); // <-- Ruta para generar PDF de Aulas
+Route::get('/laboratorio/pdf', [EspacioController::class, 'laboratoriosPDF']); // <-- Ruta para generar PDF de Laboratorios
 
 // Rutas protegidas por middleware de Sanctum
 Route::middleware('auth:sanctum')->group(function () {
@@ -95,9 +98,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rutas de los Lapso
     Route::get('/lapsos', [LapsoAcademicoController::class, 'index']);
+    Route::get('/lapsos/activos', [LapsoAcademicoController::class, 'lapsosActivos']);
     Route::post('/lapsos', [LapsoAcademicoController::class, 'store']);
     Route::get('/lapso/{lapso_academico}', [LapsoAcademicoController::class, 'show']);
     Route::put('/lapso/{lapso_academico}', [LapsoAcademicoController::class, 'update']);
+    Route::put('/lapsos/{id}/estado', [LapsoAcademicoController::class, 'cambiarEstado']);
     Route::get('/get_tipoLapsos', [LapsoAcademicoController::class, 'get_tipoLapsos']);
     Route::delete('/lapso/{lapso_academico}', [LapsoAcademicoController::class, 'destroy']);
 
@@ -167,9 +172,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rutas para los bloques de Horas
     Route::get('/bloques', [BloquesTurnoController::class, 'index']);
 
-    // Rutas para Horarios
-    Route::get('/eventos', [HorarioController::class, 'index']);
-    Route::post('/eventos', [HorarioController::class, 'store']);
-    Route::put('/evento/{evento}', [HorarioController::class, 'update']);
-    Route::delete('/evento/{evento}', [HorarioController::class, 'destroy']);
+    // Rutas para las clases
+    Route::get('/eventos', [ClaseController::class, 'index']);
+    Route::post('/eventos', [ClaseController::class, 'store']);
+    Route::put('/evento/{evento}', [ClaseController::class, 'update']);
+    Route::delete('/evento/{evento}', [ClaseController::class, 'destroy']);
 });

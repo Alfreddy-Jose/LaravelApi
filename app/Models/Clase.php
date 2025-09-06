@@ -8,7 +8,7 @@ use App\Models\Pnf;
 use App\Models\Trayecto;
 use App\Models\BloquesTurno;
 
-class Horario extends Model
+class Clase extends Model
 {
     protected $fillable = [
         'sede_id',

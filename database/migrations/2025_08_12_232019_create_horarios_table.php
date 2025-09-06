@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('horarios', function (Blueprint $table) {
+        Schema::create('clases', function (Blueprint $table) {
             // Identificador único
             $table->id();
 

@@ -1,68 +1,21 @@
-<!DOCTYPE html>
-<html>
+@extends('layout.layout_pdf')
 
-<head>
-    <meta charset="utf-8">
-    <title>Secciones PDF</title>
-    <!-- Bootstrap CSS -->
-    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-        }
+@section('title', 'Sección')
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+@section('title_lista', 'SECCIONES')
 
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 4px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #e3f2fd;
-            font-weight: bold;
-        }
-
-        .header-section {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .header-main {
-            font-size: 16px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-
-<body>
-    {{-- <h2>Listado de Secciones</h2> --}}
-    <div style="display: flex; justify-content: center; align-items: center; margin: 10px 0;">
-        <img src="{{ public_path('img/PDF.jpg') }}" alt="Logo de la institución." style="max-width: 100%; margin: 0 8px;">
-    </div>
-    <div class="header-section">
-        <div class="header-main">LISTADO DE SECCIONES</div>
-    </div>
-
-    <div class="container-fluid">
-        <table class="table text-center">
+@section('table')
+            <table class="table text-center">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Nombre</th>
+                    <th>NOMBRE</th>
                     <th>PNF</th>
-                    <th>Matricula</th>
-                    <th>Trayecto</th>
-                    <th>Sede</th>
-                    <th>Lapso</th>
-                    <th>N° Sección</th>
+                    <th>MATRICULA</th>
+                    <th>TRAYECTO</th>
+                    <th>SEDE</th>
+                    <th>LAPSO</th>
+                    <th>N° SECCIÓN</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,7 +33,6 @@
                 @endforeach
             </tbody>
         </table>
-    </div>
-</body>
+@endsection
 
-</html>
+
