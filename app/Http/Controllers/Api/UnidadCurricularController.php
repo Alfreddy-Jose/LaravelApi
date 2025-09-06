@@ -52,7 +52,7 @@ class UnidadCurricularController extends Controller
 
     public function exportarPDF()
     {
-        $unidades = UnidadCurricular::with('trimestre')->get();
+        $unidades = UnidadCurricular::with('trimestres')->get();
 
         $pdf = Pdf::loadView('pdf.unidad_curricular', compact('unidades'));
 

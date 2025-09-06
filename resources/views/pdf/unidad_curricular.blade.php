@@ -15,7 +15,7 @@
                 <th>HORAS TOTAL</th>
                 <th>UNIDAD CRÉDITO</th>
                 <th>PERÍODO</th>
-                <th>TRIMESTRE</th>
+                <th>TRIMESTRES</th>
                 <th>DESCRIPCIÓN</th>
             </tr>
         </thead>
@@ -29,7 +29,12 @@
                     <td>{{ $unidad->hora_total_est }}</td>
                     <td>{{ $unidad->unidad_credito }}</td>
                     <td>{{ $unidad->periodo }}</td>
-                    <td>{{ $unidad->trimestre->nombre ?? '' }}</td>
+                    {{-- mostrar todos los trimestres --}}
+                    <td>
+                        @foreach ($unidad->trimestres as $trimestre)
+                            {{ $trimestre->nombre }}, 
+                        @endforeach
+                    </td>
                     <td>{{ $unidad->descripcion ?? 'SIN DESCRIPCIÓN' }}</td>
                 </tr>
             @endforeach
