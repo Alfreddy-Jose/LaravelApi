@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSedeRequest;
 use App\Http\Requests\UpdateSedeRequest;
+use App\Models\Estado;
+use App\Models\Municipio;
 use App\Models\Pnf;
 use App\Models\Sede;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -18,7 +20,9 @@ class SedeController extends Controller
     public function index()
     {
         // Obtener todas las sedes
-        $sedes = Sede::select('id', 'nro_sede', 'nombre_sede', 'nombre_abreviado', 'direccion', 'municipio')->get();
+        $sedes = Sede::with('municipio:municipio,id_municipio')
+            ->select('id', 'nro_sede', 'nombre_sede', 'nombre_abreviado', 'direccion', 'municipio_id')
+            ->get();
 
         // Enviando datos a la api
         return response()->json($sedes);
@@ -40,6 +44,13 @@ class SedeController extends Controller
      */
     public function show(Sede $sede)
     {
+        $sede->load(['municipio' => function ($query) {
+            $query->select('id_municipio', 'municipio', 'id_estado')
+                ->with(['estado' => function ($query) {
+                    $query->select('id_estado', 'estado');
+                }]);
+        }]);
+
         // enviando datos al frontend
         return response()->json($sede);
     }
@@ -68,19 +79,19 @@ class SedeController extends Controller
             'pnf_ids.*.exists' => 'Uno o más PNFs seleccionados no existen'
         ]);
 
-            // Buscar la sede
-            $sede = Sede::findOrFail($sedeId);
+        // Buscar la sede
+        $sede = Sede::findOrFail($sedeId);
 
-            // Sincronizar relaciones (sync elimina previos y agrega nuevos)
-            $sede->pnfs()->sync($validated['pnf_ids']);
+        // Sincronizar relaciones (sync elimina previos y agrega nuevos)
+        $sede->pnfs()->sync($validated['pnf_ids']);
 
-            // Obtener PNFs actualizados para respuesta
-            $pnfsAsignados = $sede->pnfs()->select('pnfs.id', 'pnfs.nombre')->get();
+        // Obtener PNFs actualizados para respuesta
+        $pnfsAsignados = $sede->pnfs()->select('pnfs.id', 'pnfs.nombre')->get();
 
-            return response()->json([
-                'message' => 'PNFs asignados',
-                'assigned_pnfs' => $pnfsAsignados
-            ], 200);
+        return response()->json([
+            'message' => 'PNFs asignados',
+            'assigned_pnfs' => $pnfsAsignados
+        ], 200);
     }
     /**
      * Remove the specified resource from storage.
@@ -110,10 +121,37 @@ class SedeController extends Controller
 
     public function generaPDF()
     {
-        $sedes = Sede::select('id', 'nro_sede', 'nombre_sede', 'nombre_abreviado', 'direccion', 'municipio')->get();
+        // Obtener todas las sedes
+        $sedes = Sede::with('municipio:municipio,id_municipio')
+            ->select('id', 'nro_sede', 'nombre_sede', 'nombre_abreviado', 'direccion', 'municipio_id')
+            ->get();
 
         $pdf = Pdf::loadView('pdf.sedes', compact('sedes'));
 
         return $pdf->download('sedes.pdf');
+    }
+
+    public function getEstados()
+    {
+        $estados = Estado::all();
+        // transformar todos los estados en mayusculas
+        $estados->transform(function ($estado) {
+            $estado->estado = strtoupper($estado->estado);
+            return $estado;
+        });
+        return response()->json($estados);
+    }
+
+    public function getMunicipios($estado)
+    {
+        // traer todos los municipios de un estado 
+        $municipios = Municipio::where('id_estado', $estado)->get();
+        // transformar todos los municipios en mayusculas
+        $municipios->transform(function ($municipio) {
+            $municipio->municipio = strtoupper($municipio->municipio);
+            return $municipio;
+        });
+
+        return response()->json($municipios);
     }
 }

@@ -50,6 +50,12 @@ class TrayectoController extends Controller
         $request->validate([
             'nombre' => 'required|string|unique:trayectos,nombre'
         ]);
+        // editar trayecto validado
+        $trayecto = Trayecto::findOrFail($id);
+        $trayecto->update($request->all());
+        
+        return response()->json(['message' => 'Trayecto Actualizado'], 201);
+        
     }
 
     /**

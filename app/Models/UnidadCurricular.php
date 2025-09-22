@@ -14,13 +14,17 @@ class UnidadCurricular extends Model
         "hora_practica",
         "hora_total_est",
         "periodo",
-        "trimestre_id"
     ];
 
     public function trimestres()
     {
         return $this->belongsToMany(Trimestre::class);
     }
+
+    public function clases()
+{
+    return $this->hasMany(Clase::class, 'unidad_curricular_id');
+}
 
     public function docentes()
     {

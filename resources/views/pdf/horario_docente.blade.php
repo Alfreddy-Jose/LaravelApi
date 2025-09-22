@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <title>Horario Académico</title>
+    <title>Horario del Docente</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            font-size: 10px;
         }
 
         table {
@@ -17,7 +19,7 @@
         th,
         td {
             border: 1px solid #000;
-            padding: 4px;
+            padding: 3px;
             text-align: center;
         }
 
@@ -25,19 +27,18 @@
             background-color: #e3f2fd;
             font-weight: bold;
         }
+        td {
+            font-size: 10px;
+        }
 
         .evento {
-            font-size: 8px;
+            font-size: 9px;
             line-height: 1.2;
             overflow: hidden;
             padding: 2px;
             margin: 1px;
             border-radius: 2px;
             text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: {{ $bloqueHeight }}px; */
         }
 
         .header-section {
@@ -46,7 +47,7 @@
         }
 
         .header-main {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
         }
 
@@ -57,31 +58,47 @@
         .info-section {
             font-size: 10px;
             margin-bottom: 5px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
+
+    {{-- Logo --}}
     <div style="display: flex; justify-content: center; align-items: center; margin: 10px 0;">
         <img src="{{ public_path('img/PDF.jpg') }}" alt="Logo de la institución." style="max-width: 100%; margin: 0 8px;">
     </div>
-    
+
+    {{-- Encabezado --}}
     <div class="header-section">
-        <div class="header-main">COORDINACION DEL PROGRAMA NACIONAL DE FORMACION EN INFORMATICA</div>
-        <div class="header-sub">SEDE: SEDE CENTRAL (UPTYAB)</div>
+        <div class="header-main">
+            HORARIO DEL DOCENTE
+        </div>
+        @if (is_object($docente))
+            <div class="header-sub">
+                {{ $docente->persona->nombre }} {{ $docente->persona->apellido }}
+            </div>
+        @else
+            <div class="header-sub">
+                Error: $docente no es un objeto
+            </div>
+        @endif
     </div>
 
+    {{-- Info adicional --}}
     <div class="info-section">
-        TRAYECTO: III | TRIMESTRE: II | SECCION: 753501<br>
-        LABORATORIO SIMON BOLIVAR | ELECTIVA III | LAPSO: 2025-4<br>
-        LABORATORIO HUGO CHAVEZ: ING SW II<br>
-        LABORATORIO HUGO CHAVEZ: MODELADO BD
+        LAPSO: {{ $encabezado['lapso'] ?? '' }}
+        TRAYECTO: {{ $encabezado['trayecto'] ?? '' }}
+        TRIMESTRE: {{ $encabezado['trimestre'] ?? '' }}
+        SECIÓN: {{ $encabezado['seccion'] ?? '' }}
     </div>
 
+    {{-- Tabla --}}
     <table>
         <thead>
             <tr>
-                <th style="width: 16%">HORA</th>
+                <th style="width: 15%">HORA</th>
                 @foreach ($dias as $dia)
                     <th>{{ $dia }}</th>
                 @endforeach
@@ -93,25 +110,35 @@
                     <td>{{ $bloque['rango'] }}</td>
                     @foreach ($dias as $dia)
                         @php
-                            // Buscar si hay un evento que inicia en este bloque y día
-                            $evento = collect($eventos)->first(function($e) use ($dia, $i) {
+                            $evento = collect($eventos)->first(function ($e) use ($dia, $i) {
                                 return $e['dia'] == $dia && $e['bloque_inicio'] == $i;
                             });
-                            // Verificar si este bloque está cubierto por un evento que empezó antes (para no repetir la celda)
-                            $eventoEnCurso = collect($eventos)->first(function($e) use ($dia, $i) {
+
+                            $eventoEnCurso = collect($eventos)->first(function ($e) use ($dia, $i) {
                                 return $e['dia'] == $dia && $e['bloque_inicio'] < $i && $e['bloque_fin'] >= $i;
                             });
                         @endphp
 
                         @if ($evento)
-                            <td rowspan="{{ $evento['bloque_fin'] - $evento['bloque_inicio'] + 1 }}" style="vertical-align: middle; text-align: center; background-color: {{ $evento['color'] }}; padding: 0;">
-                                <div class="evento">
-                                    {{ $evento['texto'] }}
+                            <td rowspan="{{ $evento['bloque_fin'] - $evento['bloque_inicio'] + 1 }}"
+                                style="vertical-align: middle; text-align: center; background-color: {{ $evento['color'] ?? '#f9f9f9' }};">
+                                <div class="evento"
+                                    style="font-size: 9px; line-height: 1.3; font-weight: bold; padding: 2px;">
+                                    <div style="font-size: 11px; font-weight: bold; text-transform: uppercase;">
+                                        {{ $evento['materia'] ?? '' }}
+                                    </div>
+                                    <div style="font-size: 10px;">
+                                        {{ $evento['aula'] ?? '' }}
+                                    </div>
+                                    <div style="font-size: 10px;">
+                                        {{ $evento['seccion'] ?? '' }}
+                                    </div>
                                 </div>
                             </td>
                         @elseif ($eventoEnCurso)
                             {{-- No renderizar celda, ya que está cubierta por un rowspan --}}
                         @else
+                            {{-- Celda vacía normal --}}
                             <td></td>
                         @endif
                     @endforeach
@@ -120,14 +147,13 @@
         </tbody>
     </table>
 
-    <div style="margin-top: 20px; text-align: right; font-size: 10px;">
-        ____________________________<br> <br>
-        COORDINACION DEL PNFI<br>
-        ING. ROBERTH MUJICA
+    {{-- Pie --}}
+    <div style="margin-top: 20px; text-align: right; font-size: 9px;">
+
+        ______________________________________ <br> <br>
+        COORDINACIÓN DEL PNFI
     </div>
+
 </body>
 
 </html>
-
-
-

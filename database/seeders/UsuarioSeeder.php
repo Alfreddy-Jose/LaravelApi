@@ -16,9 +16,9 @@ class UsuarioSeeder extends Seeder
     {  
         // Usuario Administrador
         $administrador = User::firstOrCreate(
-            ['email' => 'administrador@gmail.com'],
+            ['email' => 'ADMINISTRADOR@GMAIL.COM'],
             [
-                'name' => 'Administrador',
+                'name' => 'ADMINISTRADOR',
                 'password' => Hash::make('12345678'),
             ]
         );
@@ -26,9 +26,9 @@ class UsuarioSeeder extends Seeder
 
         // Usuario Asistente
         $asistente = User::firstOrCreate(
-            ['email' => 'romulo@gmail.com'],
+            ['email' => 'ROMULO@GMAIL.COM'],
             [
-                'name' => 'Romulo',
+                'name' => 'ROMULO',
                 'password' => Hash::make('romulo123'),
             ]
         );

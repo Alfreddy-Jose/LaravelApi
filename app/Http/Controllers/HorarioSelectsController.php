@@ -8,6 +8,7 @@ use App\Models\Sede;
 use App\Models\Trayecto;
 use App\Models\Trimestre;
 use App\Models\UnidadCurricular;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class HorarioSelectsController extends Controller
@@ -58,9 +59,12 @@ class HorarioSelectsController extends Controller
      */
     public function getUnidadesCurriculares($trimestreId)
     {
-        $unidadesCurriculares = UnidadCurricular::where('trimestre_id', $trimestreId)
+        $unidadesCurriculares = UnidadCurricular::whereHas('trimestres', function ($query) use ($trimestreId) {
+            $query->where('trimestre_id', $trimestreId);
+        })
             ->orderBy('nombre')
             ->get(['id', 'nombre as text', 'hora_total_est as horas']);
+
 
         return response()->json($unidadesCurriculares);
     }

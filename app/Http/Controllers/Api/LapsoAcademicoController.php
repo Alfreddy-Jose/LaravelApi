@@ -18,7 +18,7 @@ class LapsoAcademicoController extends Controller
     public function index()
     {
         // Seleccionando datos del Lapso Academico
-        $lapsos = LapsoAcademico::with('tipolapso')->get();
+        $lapsos = LapsoAcademico::with('tipolapso')->orderBy('nombre_lapso', 'desc')->get();
 
         // Retornando los datos al Frontend
         return response()->json($lapsos);

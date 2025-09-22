@@ -15,6 +15,11 @@ class Seccion extends Model
         'lapso_id'
     ];
 
+    public function horarios()
+{
+    return $this->hasMany(Horario::class);
+}
+
     public function trayecto()
     {
         return $this->belongsTo(Trayecto::class);
@@ -28,7 +33,7 @@ class Seccion extends Model
     // Relación con el modelo LapsoAcademico
     public function lapso()
     {
-        return $this->belongsTo(LapsoAcademico::class);
+        return $this->belongsTo(LapsoAcademico::class, 'lapso_id');
     }
 
     // Relación con el modelo Sede

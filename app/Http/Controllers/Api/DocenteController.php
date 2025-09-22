@@ -211,4 +211,16 @@ class DocenteController extends Controller
             'horas_disponibles' => $docente->horas_dedicacion,
         ]);
     }
+
+    public function conClases()
+    {
+        $docentes = Docente::whereHas('unidades_curriculares.clases')
+            ->with(['persona'])
+            ->withCount(['unidades_curriculares as clases_count' => function ($q) {
+                $q->withCount('clases');
+            }])
+            ->get();
+
+        return response()->json($docentes);
+    }
 }

@@ -108,7 +108,7 @@ class UnidadCurricularController extends Controller
     // Metodo para obtener los trimestres
     public function get_trimestres()
     {
-        $trimestres = Trimestre::select('id', 'nombre')->get();
+        $trimestres = Trimestre::select('id', 'nombre', 'trayecto_id')->get();
 
         return response()->json($trimestres);
     }

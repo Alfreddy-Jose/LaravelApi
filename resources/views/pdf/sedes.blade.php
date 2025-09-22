@@ -20,7 +20,8 @@
                 <td>{{ $sede->nro_sede }}</td>
                 <td>{{ $sede->nombre_sede }}</td>
                 <td>{{ $sede->nombre_abreviado }}</td>
-                <td>{{ $sede->municipio }}</td>
+                {{-- mostrar municipio en mayusculas --}}
+                <td>{{ strtoupper($sede->municipio->municipio) }}</td>
                 <td>{{ $sede->direccion }}</td>
             </tr>
         @endforeach

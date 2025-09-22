@@ -11,7 +11,7 @@ class Trimestre extends Model
 
     public function unidadCurriculares()
     {
-        return $this->hasMany(UnidadCurricular::class);
+        return $this->belongsToMany(UnidadCurricular::class);
     }
 
     public function trayecto()

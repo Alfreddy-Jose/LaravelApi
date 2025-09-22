@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreClaseRequest;
 use App\Models\Clase;
-use App\Models\Horario;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DragonCode\Contracts\Cache\Store;
 use Illuminate\Http\Request;
@@ -18,13 +17,16 @@ class ClaseController extends Controller
      */
     public function index()
     {
-        $clase = Clase::with([
+        return Clase::with([
+            'sede',
+            'pnf',
+            'trayecto',
+            'trimestre',
             'unidadCurricular',
             'docente.persona',
             'espacio',
+            'bloque'
         ])->get();
-
-        return response()->json($clase);
     }
 
     /**
@@ -38,49 +40,15 @@ class ClaseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-public function store(StoreClaseRequest $request)
-{
-    try {
-        $data = $request->validated();
-
-        // Verificamos el horario
-        $horario = Horario::findOrFail($data['horario_id']);
-        Log::info($data);
-
-        // Validar solapamiento: misma sección, mismo día, mismo rango de bloques
-        $haySolapamiento = $horario->Clase()
-            ->where('dia', $data['dia'])
-            ->where('docente_id', $data['docente_id'])
-            ->where(function($q) use ($data) {
-                $q->whereBetween('bloque_id', [
-                    $data['bloque_id'],
-                    $data['bloque_id'] + $data['duracion'] - 1
-                ]);
-            })
-            ->exists();
-
-        if ($haySolapamiento) {
-            return response()->json([
-                'message' => 'Ya existe una clase en ese rango de bloques en este horario.'
-            ], 422);
+    public function store(StoreClaseRequest $request)
+    {
+        try {
+            $clase = Clase::create($request->all());
+            return response()->json(array("message" => "clase registrada", "clase" => $clase, 201));
+        } catch (\Exception $e) {
+            return response()->json(['No se pudo crear la clase' => $e->getMessage()], 500);
         }
-
-        // Crear la clase
-        $clase = $horario->Clase()->create($data);
-
-        return response()->json([
-            "message" => "Clase registrada correctamente",
-            "clase"   => $clase
-        ], 201);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'No se pudo crear la clase',
-            'detalle' => $e->getMessage()
-        ], 500);
     }
-}
-
 
     /**
      * Display the specified resource.
@@ -120,10 +88,10 @@ public function store(StoreClaseRequest $request)
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Clase $clase)
+    public function destroy(Clase $evento)
     {
         // Eliminando evento
-        $clase->delete();
+        $evento->delete();
 
         // Devolviendo respuesta a la api
         return response()->json(['message' => 'Clase eliminada con exito'], 200);

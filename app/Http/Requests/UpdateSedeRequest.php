@@ -26,7 +26,7 @@ class UpdateSedeRequest extends FormRequest
             "nombre_sede" => "required|string",
             "nombre_abreviado" => "required|string|min:3",
             "direccion" => "required|string",
-            "municipio" => "required"
+            "municipio_id" => "required"
         ];
     }
 
@@ -36,7 +36,7 @@ class UpdateSedeRequest extends FormRequest
             "nro_sede" => "numero sede",
             "nombre_sede" => " nombre",
             "nombre_abreviado" => "nombre abreviado",
-            "municipio" => "municipio"
+            "municipio_id" => "municipio"
         ];
     }
 }

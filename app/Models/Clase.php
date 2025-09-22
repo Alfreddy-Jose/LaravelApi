@@ -11,6 +11,7 @@ use App\Models\BloquesTurno;
 class Clase extends Model
 {
     protected $fillable = [
+        'horario_id',
         'sede_id',
         'pnf_id',
         'trayecto_id',
@@ -22,6 +23,7 @@ class Clase extends Model
         'dia',
         'duracion'
     ];
+    public function horario() { return $this->belongsTo(Horario::class); }
     public function sede()
     {
         return $this->belongsTo(Sede::class);

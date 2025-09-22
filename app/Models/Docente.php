@@ -25,13 +25,16 @@ class Docente extends Model
 
     public function unidades_curriculares()
     {
-        return $this->belongsToMany(UnidadCurricular::class);
+        return $this->belongsToMany(
+            UnidadCurricular::class,
+            'docente_unidad_curricular',
+            'docente_id',
+            'unidad_curricular_id'
+        );
     }
 
     public function pnf()
     {
         return $this->belongsTo(Pnf::class);
     }
-
-    
 }

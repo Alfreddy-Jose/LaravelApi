@@ -5,6 +5,9 @@ use App\Http\Controllers\Api\BloquesTurnoController;
 use App\Http\Controllers\Api\EspacioController;
 use App\Http\Controllers\Api\DocenteController;
 use App\Http\Controllers\Api\ClaseController;
+use App\Http\Controllers\Api\HorarioController;
+use App\Http\Controllers\Api\HorarioDocenteController;
+use App\Http\Controllers\Api\HorarioPublicacionController;
 use App\Http\Controllers\Api\LapsoAcademicoController;
 use App\Http\Controllers\Api\MatriculaController;
 use App\Http\Controllers\Api\PersonaController;
@@ -28,6 +31,7 @@ Route::post('/login', [AutenticacionController::class, 'login']);
 // Rutas para generar PDF
 Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF de secciones
 Route::post('/generar_horario_pdf', [ClaseController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios
+Route::get('/docentes/{docente}/horario/pdf', [HorarioDocenteController::class, 'generarPDFDocente']); // <-- Ruta para generar PDF de horarios por docentes
 Route::get('/unidad_curricular/pdf', [UnidadCurricularController::class, 'exportarPDF']); // <-- Ruta para generar PDF de Unidades Curriculares
 Route::get('/pnf/pdf', [PnfController::class, 'generarPDF']); // <-- Ruta para generar PDF de PNF
 Route::get('/sedes/pdf', [SedeController::class, 'generaPDF']); // <-- Ruta para generar PDF de Sedes
@@ -70,6 +74,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/sedes/{sede}/asignarPnfs', [SedeController::class, 'asignarPnfs']);
     Route::get('/sede/getPnf', [SedeController::class, 'getPnf']);
     Route::get('/sedes/{sede}/pnf', [SedeController::class, 'getPnfSede']);
+    Route::get('/sede/getEstados', [SedeController::class, 'getEstados']);
+    Route::get('/sede/getMunicipios/{estado}', [SedeController::class, 'getMunicipios']);
     Route::get('/sede/{sede}', [SedeController::class, 'show']);
     Route::put('/sede/{sede}', [SedeController::class, 'update']);
     Route::delete('/sede/{sede}', [SedeController::class, 'destroy']);
@@ -157,6 +163,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/trayectos', [TrayectoController::class, 'index']);
     Route::get('/trayecto/{trayecto}', [TrayectoController::class, 'show']);
     Route::post('/trayectos', [TrayectoController::class, 'store']);
+    Route::put('/trayectos/{trayecto}', [TrayectoController::class, 'update']);
     Route::delete('/trayecto/{trayecto}', [TrayectoController::class, 'destroy']);
 
     // Rutas para selects de Horarios
@@ -173,8 +180,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bloques', [BloquesTurnoController::class, 'index']);
 
     // Rutas para las clases
-    Route::get('/eventos', [ClaseController::class, 'index']);
-    Route::post('/eventos', [ClaseController::class, 'store']);
-    Route::put('/evento/{evento}', [ClaseController::class, 'update']);
-    Route::delete('/evento/{evento}', [ClaseController::class, 'destroy']);
+    Route::get('/clases', [ClaseController::class, 'index']);
+    Route::post('/clases', [ClaseController::class, 'store']);
+    Route::put('/clase/{clase}', [ClaseController::class, 'update']);
+    Route::delete('/clase/{clase}', [ClaseController::class, 'destroy']);
+    Route::post('/horarios/{horario}/clases', [HorarioController::class, 'agregarClase']);
+
+
+    // Rutas para crear horarios por sección (con regla de 1 por trimestre)
+    Route::prefix('secciones/{seccion}')->group(function () {
+        Route::post('horarios', [HorarioController::class, 'store']);
+        Route::get('horarios', [HorarioController::class, 'index']);
+    });
+    Route::get('horarios/{horario}/clases', [HorarioController::class, 'show']);
+    Route::get('horarios', [HorarioController::class, 'index2']);
+    Route::get('horario/{horario}', [HorarioController::class, 'horario']);
+    Route::delete('/horarios/{horario}', [HorarioController::class, 'destroy']);
+    Route::post('/horarios/{horario}/publicar', [HorarioPublicacionController::class, 'publicar']);
+    
+    // Rutas para docentes con clases
+    Route::get('/docentes/con_clases', [DocenteController::class, 'conClases']);
 });

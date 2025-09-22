@@ -22,7 +22,6 @@ class StoreClaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'horario_id'           => 'required|exists:horarios,id',
             'sede_id' => 'required|exists:sedes,id',
             'pnf_id' => 'required|exists:pnfs,id',
             'trayecto_id' => 'required|exists:trayectos,id',
