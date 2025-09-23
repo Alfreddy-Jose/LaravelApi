@@ -69,6 +69,13 @@ class UnidadCurricularController extends Controller
         return response()->json($unidad_curricular, 200);
     }
 
+    public function horasUnidadCurricular($id)
+    {
+        // Obtener las horas totales de la unidad curricular (Solo las horas y el nombre)
+        $unidad_curricular = UnidadCurricular::get(['id', 'nombre', 'hora_total_est'])->findOrFail($id);
+        return response()->json($unidad_curricular, 200);
+    }
+
     /**
      * Update the specified resource in storage.
      */

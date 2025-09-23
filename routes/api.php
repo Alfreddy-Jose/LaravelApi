@@ -158,6 +158,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/unidad_curricular/{unidad_curricular}', [UnidadCurricularController::class, 'show']);
     Route::put('/unidad_curricular/{unidad_curricular}', [UnidadCurricularController::class, 'update']);
     Route::delete('/unidad_curricular/{unidad_curricular}', [UnidadCurricularController::class, 'destroy']);
+    Route::get('/unidad_curricular/{unidad_curricular}/horas', [UnidadCurricularController::class, 'horasUnidadCurricular']);
 
     // Rutas de Trayectos
     Route::get('/trayectos', [TrayectoController::class, 'index']);

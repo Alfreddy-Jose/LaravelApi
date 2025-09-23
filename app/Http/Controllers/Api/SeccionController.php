@@ -91,7 +91,7 @@ class SeccionController extends Controller
         $seccion->nombre = $nombre;
         $seccion->save();
 
-        return response()->json(['message' => 'Sección creada'], 201);
+        return response()->json(['message' => 'Sección Registrada'], 201);
     }
 
     /**
@@ -141,7 +141,7 @@ class SeccionController extends Controller
         $seccion->delete();
 
         // retornar una respuesta de éxito
-        return response()->json(['message' => 'Sección eliminada'], 200);
+        return response()->json(['message' => 'Sección Eliminada'], 200);
     }
 
     public function getDataSelect()

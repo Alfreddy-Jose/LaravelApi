@@ -101,16 +101,14 @@ public function store(StoreClaseRequest $request)
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Clase $evento)
+    public function update(Request $request, Clase $clase)
     {
-
         try {
-            $evento->update([
+            $clase->update([
                 "bloque_id" => $request->bloque_id,
                 "duracion" => $request->duracion,
                 "dia" => $request->dia,
             ]);
-            Log::info('clase updated successfully');
             return response()->json(['message' => 'Evento editado'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar Evento'], 500);
