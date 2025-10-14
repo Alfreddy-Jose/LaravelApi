@@ -11,17 +11,21 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instala Composer
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-# Copia el código de la aplicación
+# Copia solo los archivos de composer primero (para mejor uso de cache)
 WORKDIR /var/www/html
-COPY . .
+COPY composer.json composer.lock ./
 
-# Instala dependencias de PHP
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+# Instala dependencias de PHP con mayor memoria
+RUN php -d memory_limit=-1 /usr/bin/composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Copia el resto del código de la aplicación
+COPY . .
 
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html \
