@@ -11,6 +11,7 @@ use App\Models\Pnf;
 use App\Models\Sede;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SedeController extends Controller
 {
@@ -98,11 +99,48 @@ class SedeController extends Controller
      */
     public function destroy(Sede $sede)
     {
-        // Eliminando la Sede
-        $sede->delete();
 
-        // Enviando respuesta a la api
-        return response()->json(['message' => 'Sede Eliminada'], 200);
+
+        try {
+            DB::beginTransaction();
+            
+            // Eliminando registro
+            $sede->delete();
+            
+            DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Sede Eliminada'
+            ], 200);
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            
+            // Código de error de restricción de clave foránea en PostgreSQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar la sede porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la sede',
+                'error' => $e->getMessage()
+            ], 500);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getPnf()

@@ -22,7 +22,6 @@ class UpdateAulaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "codigo" => "required|unique:espacios,codigo," . $this->route('espacio')->id,
             "etapa" => "required|string",
             "nro_aula" => "required|numeric",
             "sede_id" => "required|exists:sedes,id"

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateLaboratorioRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,20 +22,19 @@ class UpdateLaboratorioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nombre_aula" => "required|unique:espacios,nombre_aula,". $this->route('espacio')->id ,
-            "etapa" => "required|string",
-            "abreviado_lab" => "required|string",
-            "equipos" => "required|numeric",
-            "sede_id" => "required|exists:sedes,id"
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'rol' => 'required|exists:roles,id'
         ];
     }
 
-    public function attributes()
+    public function messages()
     {
         return [
-            "nombre_aula" => "nombre de laboratorio",
-            "abreviado_lab" => "abreviado laboratorio",
-            "sede_id" => "sede"
+            'rol.exists' => 'El rol seleccionado no es válido.',
+            'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+            'email.unique' => 'El correo electrónico ya está registrado.',
         ];
     }
 }

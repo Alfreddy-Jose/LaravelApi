@@ -24,6 +24,11 @@ class CreateTrayectoTrimestreTrigger extends Migration
                 i INTEGER;
                 trimestre_base INTEGER;
             BEGIN
+                -- Para UPDATE, eliminar trimestres existentes antes de crear nuevos
+                IF TG_OP = \'UPDATE\' THEN
+                    DELETE FROM public.trimestres WHERE trayecto_id = NEW.id;
+                END IF;
+                
                 -- Extraer el número del trayecto del nombre
                 BEGIN
                     trayecto_num := CAST(NEW.nombre AS INTEGER);
@@ -37,6 +42,7 @@ class CreateTrayectoTrimestreTrigger extends Migration
                     RAISE EXCEPTION \'No hay suficientes números romanos definidos para el trayecto %\', trayecto_num;
                 END IF;
                 
+                -- Crear los 3 trimestres para el trayecto
                 FOR i IN 1..3 LOOP
                     INSERT INTO public.trimestres (
                         nombre, 
@@ -56,7 +62,7 @@ class CreateTrayectoTrimestreTrigger extends Migration
             $$ LANGUAGE plpgsql;
 
             CREATE TRIGGER after_trayecto_insert
-            AFTER INSERT ON trayectos
+            AFTER INSERT OR UPDATE ON trayectos
             FOR EACH ROW
             EXECUTE FUNCTION crear_trimestres_para_trayecto();
         ');

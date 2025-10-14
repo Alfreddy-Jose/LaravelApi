@@ -69,7 +69,7 @@ public function store(StoreClaseRequest $request)
         $clase = $horario->Clase()->create($data);
 
         return response()->json([
-            "message" => "Clase registrada correctamente",
+            "message" => "Clase Registrada",
             "clase"   => $clase
         ], 201);
 
@@ -109,9 +109,9 @@ public function store(StoreClaseRequest $request)
                 "duracion" => $request->duracion,
                 "dia" => $request->dia,
             ]);
-            return response()->json(['message' => 'Evento editado'], 200);
+            return response()->json(['message' => 'Clase editada'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar Evento'], 500);
+            return response()->json(['error' => 'Error al editar la clase'], 500);
         }
     }
 
@@ -124,7 +124,7 @@ public function store(StoreClaseRequest $request)
         $clase->delete();
 
         // Devolviendo respuesta a la api
-        return response()->json(['message' => 'Clase eliminada con exito'], 200);
+        return response()->json(['message' => 'Clase Eliminada'], 200);
     }
 
     public function generarPDF(Request $request)
@@ -138,6 +138,7 @@ public function store(StoreClaseRequest $request)
 
             $bloques = $request->input('bloques', []);
             $eventos = $request->input('eventos', []);
+            Log::info("Eventos recibidos:", $request->input('eventos', []));
 
             // Creamos un array de horas de inicio de cada bloque para buscar el índice fácilmente
             $bloqueHoras = array_map(function ($bloque) {
@@ -172,6 +173,7 @@ public function store(StoreClaseRequest $request)
 
             // En el controlador
             Log::info('Datos enviados a la vista:', $data);
+            Log::info('Eventos procesados:', $eventosProcesados);
 
             // Generar PDF
             $pdf = Pdf::loadView('pdf.horario', $data)

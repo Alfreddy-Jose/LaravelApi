@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Seccion extends Model
 {
@@ -45,5 +46,11 @@ class Seccion extends Model
     public function matricula()
     {
         return $this->belongsTo(Matricula::class);
+    }
+
+    // Relación con el modelo Vocero
+    public function vocero()
+    {
+        return $this->hasOne(Vocero::class);
     }
 }

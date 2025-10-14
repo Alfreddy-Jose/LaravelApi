@@ -15,33 +15,21 @@ class PnfSeeder extends Seeder
     {
         Pnf::firstOrCreate([
             'codigo' => '07',
-            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN INGENIERÍA DE SISTEMAS',
-            'abreviado' => 'PNFIS',
-            'abreviado_coord' => 'NFIS',
+            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN INGENIERÍA EN IFORMÁTICA',
+            'abreviado' => 'PNFI',
+            'abreviado_coord' => 'NFI',
         ]);
         Pnf::firstOrCreate([
             'codigo' => '08',
-            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN INGENIERÍA INDUSTRIAL',
-            'abreviado' => 'PNFII',
-            'abreviado_coord' => 'NFII',
+            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN ADMINISTRACION',
+            'abreviado' => 'PNFA',
+            'abreviado_coord' => 'NFA',
         ]);
         Pnf::firstOrCreate([
-            'codigo' => '09',
-            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN INGENIERÍA CIVIL',
-            'abreviado' => 'PNFIC',
-            'abreviado_coord' => 'NFIC',
-        ]);
-        Pnf::firstOrCreate([
-            'codigo' => '10',
-            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN INGENIERÍA ELECTRÓNICA',
-            'abreviado' => 'PNFIE',
-            'abreviado_coord' => 'NFIE',
-        ]);
-        Pnf::firstOrCreate([
-            'codigo' => '11',
-            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN INGENIERÍA MECÁNICA',
-            'abreviado' => 'PNFIM',
-            'abreviado_coord' => 'NFIM',
+            'codigo' => '09', 
+            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN PROCESOS QUIMICOS',
+            'abreviado' => 'PNFPQ',
+            'abreviado_coord' => 'NFPQ',
         ]);
     }
 }

@@ -23,7 +23,7 @@ class LapsoSeeder extends Seeder
         ]);
 
         LapsoAcademico::firstOrcreate([
-            'nombre_lapso' => '20244',
+            'nombre_lapso' => '20244', 
             'ano' => '2024',
             'fecha_inicio' => '2024-01-10',
             'fecha_fin' => '2024-12-10',

@@ -9,6 +9,7 @@ use App\Models\Docente;
 use App\Models\Persona;
 use App\Models\Pnf;
 use App\Models\UnidadCurricular;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -20,8 +21,8 @@ class DocenteController extends Controller
     public function index()
     {
         // Obtener todos los docentes con sus relaciones
-        $docentes = Docente::with(['persona', 'pnf', 'unidades_curriculares:id,nombre'])
-            ->orderBy('created_at', 'desc')
+        $docentes = Docente::with(['persona', 'pnf', 'unidades_curriculares:id,nombre', 'condicionContrato:id,docente_id,fecha_inicio,fecha_fin,dedicacion,tipo'])
+            ->orderBy('created_at', 'asc')
             ->get();
 
         // Retornar la lista de docentes
@@ -115,7 +116,7 @@ class DocenteController extends Controller
 
     public function getDataSelect()
     {
-        $docentesIds = Persona::where('tipo_persona', 'DOCENTE')->select('id', 'cedula_persona', 'nombre')->get();
+        $docentesIds = Persona::where('tipo_persona', 'DOCENTE')->select('id', 'cedula_persona', 'nombre', 'apellido')->get();
         $pnfs = Pnf::select('id', 'nombre')->get();
         $docentes = Persona::where('tipo_persona', 'DOCENTE')
             ->whereDoesntHave('docente')
@@ -125,13 +126,13 @@ class DocenteController extends Controller
         $docentesEdit = $docentesIds->map(function ($persona) {
             return [
                 'id' => $persona->id,
-                'nombre' => $persona->nombre . ' - ' . $persona->cedula_persona,
+                'nombre' => $persona->nombre . ' ' . $persona->apellido . ' - ' . $persona->cedula_persona,
             ];
         });
         $docentes = $docentes->map(function ($docente) {
             return [
                 'id' => $docente->id,
-                'nombre' => $docente->nombre . ' - ' . $docente->cedula_persona,
+                'nombre' => $docente->nombre . ' ' . $docente->apellido . ' - ' . $docente->cedula_persona,
             ];
         });
 
@@ -222,5 +223,23 @@ class DocenteController extends Controller
             ->get();
 
         return response()->json($docentes);
+    }
+
+    public function generarPDF()
+    {
+        // Obtener todos los docentes con sus relaciones
+        $docentes = Docente::with([
+            'persona',
+            'pnf',
+            'unidades_curriculares:id,nombre',
+            'condicionContrato:id,docente_id,fecha_inicio,fecha_fin,dedicacion,tipo'])
+            ->orderBy('created_at', 'asc')
+            ->get();
+        
+        // Generar el PDF
+        $pdf = Pdf::loadView('pdf.docentes', compact('docentes'));
+        
+        // Descargar el PDF
+        return $pdf->download('docentes.pdf');
     }
 }

@@ -16,23 +16,23 @@ return new class extends Migration
             // Foreign keys de PNF
             $table->foreignId('pnf_id')
                 ->constrained('pnfs')
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Foreign keys de Tipo de Matricula
             $table->foreignId('matricula_id')
                 ->constrained()
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Foreign keys de Trayecto
             $table->foreignId('trayecto_id')
                 ->constrained('trayectos')
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Foreign keys de Sede
             $table->foreignId('sede_id')
                 ->constrained('sedes')
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Foreign keys de Lapso
             $table->foreignId('lapso_id')
                 ->constrained('lapso_academicos')
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Campo de numero de seccion
             $table->bigInteger('numero_seccion');
             // Campo de nombre

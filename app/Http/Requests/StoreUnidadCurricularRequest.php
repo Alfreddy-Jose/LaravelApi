@@ -26,7 +26,7 @@ class StoreUnidadCurricularRequest extends FormRequest
             "descripcion" => "nullable|string",
             "unidad_credito" => "required|numeric",
             "hora_teorica" => "required|numeric",
-            "hora_practica" => "required|numeric",
+            "hora_practica" => "numeric|nullable",
             "periodo" => "required",
             "trimestre_id" => "required"
         ];

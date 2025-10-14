@@ -22,7 +22,6 @@ class StoreLaboratoriosRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "codigo" => "required|unique:espacios,codigo",
             "nombre_aula" => "required|unique:espacios,nombre_aula",
             "etapa" => "required|string",
             "abreviado_lab" => "required|string",

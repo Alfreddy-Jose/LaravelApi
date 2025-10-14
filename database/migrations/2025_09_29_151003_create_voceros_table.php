@@ -11,11 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('docente_unidad_curricular', function (Blueprint $table) {
+        Schema::create('voceros', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('docente_id')->constrained()->onDelete('restrict');
-            $table->foreignId('unidad_curricular_id')->constrained()->onDelete('restrict');
-            $table->unique(['docente_id', 'unidad_curricular_id']);
+            // Foreign keys de Persona
+            $table->foreignId('persona_id')
+                ->constrained()
+                ->onDelete('restrict');
+            // Foreign keys de Seccion
+            $table->foreignId('seccion_id')
+                ->constrained()
+                ->onDelete('restrict');
             $table->timestamps();
         });
     }
@@ -25,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('docente_unidad_curricular');
+        Schema::dropIfExists('voceros');
     }
 };

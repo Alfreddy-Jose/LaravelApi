@@ -19,7 +19,7 @@ class MatriculaSeeder extends Seeder
         ]);
 
         Matricula::firstOrcreate([
-            'numero' => '8',
+            'numero' => '8', 
             'nombre' => 'PROSECUCION'
         ]);
     }

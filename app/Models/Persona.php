@@ -28,4 +28,10 @@ class Persona extends Model
     {
         return $this->hasOne(Docente::class);
     }
+
+    // Relacion con el modelo Vocero
+    public function vocero()
+    {
+        return $this->hasOne(Vocero::class);
+    }
 }

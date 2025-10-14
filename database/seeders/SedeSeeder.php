@@ -21,7 +21,7 @@ class SedeSeeder extends Seeder
             'municipio_id' => '409',
             'universidad_id' => '1'
         ]);
-        Sede::firstOrcreate([
+        Sede::firstOrcreate([ 
             'nro_sede' => '100',
             'nombre_sede' => 'SEDE PEÑA',
             'nombre_abreviado' => 'PEÑ',

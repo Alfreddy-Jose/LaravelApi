@@ -129,7 +129,7 @@ class SeccionController extends Controller
         $seccion->nombre = $nombre;
         $seccion->save();
 
-        return response()->json(["message" => "Seccion Editada"], 201);
+        return response()->json(["message" => "Sección Editada"], 201);
     }
 
     /**

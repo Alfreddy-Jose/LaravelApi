@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Trayecto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TrayectoController extends Controller
 {
@@ -45,13 +46,13 @@ class TrayectoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $trayecto)
     {
         $request->validate([
             'nombre' => 'required|string|unique:trayectos,nombre'
         ]);
         // editar trayecto validado
-        $trayecto = Trayecto::findOrFail($id);
+        $trayecto = Trayecto::findOrFail($trayecto);
         $trayecto->update($request->all());
         
         return response()->json(['message' => 'Trayecto Actualizado'], 201);
@@ -63,10 +64,45 @@ class TrayectoController extends Controller
      */
     public function destroy(Trayecto $trayecto)
     {
-        // Eliminando trayecto
-        $trayecto->delete();
-        
-        // Enviando respuesta
-        return response()->json(['message' => 'Trayecto Eliminado']);
+        try {
+            DB::beginTransaction();
+            
+            // Eliminando el registro
+            $trayecto->delete();
+            
+            DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Trayecto Eliminado'
+            ], 200);
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            
+            // Código de error de restricción de clave foránea en PostgreSQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar el trayecto porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el trayecto',
+                'error' => $e->getMessage()
+            ], 500);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

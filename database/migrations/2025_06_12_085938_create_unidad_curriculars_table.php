@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('nombre', 50);
             $table->text('descripcion', 255)->nullable();
             $table->integer('unidad_credito');
-            $table->integer('hora_teorica');
-            $table->integer('hora_practica');
+            $table->integer('hora_teorica')->nullable();
+            $table->integer('hora_practica')->nullable();
             $table->integer('hora_total_est');
             $table->string('periodo', 50); 
             $table->timestamps();

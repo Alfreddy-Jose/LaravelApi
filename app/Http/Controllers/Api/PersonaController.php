@@ -4,19 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePersonaRequest;
-use App\Models\AdscritaNoadscrita;
 use App\Models\Persona;
 use App\Models\Pnf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use PDOException;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\DB;
+/* use PDOException;
+use PhpParser\Node\Stmt\TryCatch; */
 
 class PersonaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    /*     public function index()
     {
         // Seleccionar las Personas
         $persona = Persona::select(
@@ -36,6 +37,21 @@ class PersonaController extends Controller
 
         // Enviar a la vista del listado de Personas con la variable
         return response()->json($persona);
+    } */
+    public function index(Request $request)
+    {
+        $query = Persona::query();
+
+        if ($request->tipo_persona) {
+            $query->where('tipo_persona', $request->tipo_persona);
+        }
+        if ($request->grado_inst) {
+            $query->where('grado_inst', $request->grado_inst);
+        }
+
+        $personas = $query->get();
+
+        return response()->json($personas);
     }
 
     /**
@@ -75,11 +91,44 @@ class PersonaController extends Controller
      */
     public function destroy(Persona $persona)
     {
-        // Eliminando Persona
-        $persona->delete();
+        try {
+            DB::beginTransaction();
 
-        // Enviando respuesta a la api
-        return response()->json(['message' => 'Persona Eliminada'], 200);
+            // Eliminando el registro
+            $persona->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Persona Eliminada'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+
+            // Código de error de restricción de clave foránea en PostgreSQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar la persona porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la persona',
+                'error' => $e->getMessage()
+            ], 500);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getPnf()
@@ -87,5 +136,60 @@ class PersonaController extends Controller
         $pnfs = Pnf::select('id', 'nombre')->get();
 
         return response()->json($pnfs);
+    }
+
+/*         public function import(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xls,xlsx,ods|max:10240'
+        ]);
+
+        try {
+            $import = new PersonasImport();
+            
+            Excel::import($import, $request->file('excel_file'));
+            
+            $importedCount = $import->getImportedCount();
+            $errors = $import->getErrors();
+
+            $response = [
+                'success' => true,
+                'message' => "Archivo procesado correctamente.",
+                'imported_count' => $importedCount,
+            ];
+
+            if (!empty($errors)) {
+                $response['errors'] = $errors;
+                $response['message'] = "Archivo procesado con algunos errores. {$importedCount} registros importados.";
+            }
+
+            return response()->json($response);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al procesar el archivo: ' . $e->getMessage(),
+                'errors' => [$e->getMessage()]
+            ], 500);
+        }
+    } */
+
+    public function generarPDF(Request $request)
+    {
+        // Seleccionar las Personas
+        $query = Persona::query();
+
+        if ($request->tipo_persona) {
+            $query->where('tipo_persona', $request->tipo_persona);
+        }
+        if ($request->grado_inst) {
+            $query->where('grado_inst', $request->grado_inst);
+        }
+
+        $personas = $query->get();
+        // Renderiza una vista blade para el PDF
+        $pdf = Pdf::loadView('pdf.personas', compact('personas'));
+
+        return $pdf->download('personas.pdf');
     }
 }

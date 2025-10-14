@@ -23,7 +23,7 @@ class TrayectoSeeder extends Seeder
 
         Trayecto::firstOrcreate([
             'nombre' => '3'
-        ]);
+        ]); 
 
         Trayecto::firstOrcreate([
             'nombre' => '4'

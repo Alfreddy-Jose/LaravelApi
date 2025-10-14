@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateLaboratorioRequest extends FormRequest
+class UpdateVoceroRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,20 +22,16 @@ class UpdateLaboratorioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nombre_aula" => "required|unique:espacios,nombre_aula,". $this->route('espacio')->id ,
-            "etapa" => "required|string",
-            "abreviado_lab" => "required|string",
-            "equipos" => "required|numeric",
-            "sede_id" => "required|exists:sedes,id"
+            'seccion_id' => 'required|exists:seccions,id',
+            'persona_id' => 'required|exists:personas,id'
         ];
     }
 
     public function attributes()
     {
         return [
-            "nombre_aula" => "nombre de laboratorio",
-            "abreviado_lab" => "abreviado laboratorio",
-            "sede_id" => "sede"
+            'seccion_id' => 'sección',
+            'persona_id' => 'vocero'
         ];
     }
 }

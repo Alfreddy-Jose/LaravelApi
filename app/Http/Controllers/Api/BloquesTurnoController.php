@@ -12,6 +12,8 @@ class BloquesTurnoController extends Controller
     {
 
         // Obtener todos los bloques
+        // Ordenar los desde primero los de mañana luego los de tarde y luego los de noche
+
         $bloques = BloquesTurno::select('id', 'rango')->get();
 
         // Enviando datos a la api

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePnfRequest;
 use App\Models\Pnf;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PnfController extends Controller
 {
@@ -60,12 +61,44 @@ class PnfController extends Controller
      */
     public function destroy(Pnf $pnf)
     {
+        try {
+            DB::beginTransaction();
 
-        // Eliminando el pnf
-        $pnf->delete();
+            // Eliminando pnf
+            $pnf->delete();
 
-        // Enviando respuesta a la api
-        return response()->json(['message' => 'PNF Eliminado'], 200);
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'PNF Eliminado'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+
+            // Código de error de restricción de clave foránea en MySQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar el PNF porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el PNF',
+                'error' => $e->getMessage()
+            ], 500);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function generarPDF()
@@ -74,7 +107,6 @@ class PnfController extends Controller
 
         $pdf = Pdf::loadView('pdf.pnf', compact('pnfs'));
 
-        return $pdf->download('pnfs.pdf'); 
-    }
-
+        return $pdf->download('pnfs.pdf');
+    } 
 }

@@ -22,7 +22,6 @@ class StoreAulaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "codigo" => "required|unique:espacios,codigo",
             "etapa" => "required|string",
             "nro_aula" => "required|numeric",
             "sede_id" => "required|exists:sedes,id"

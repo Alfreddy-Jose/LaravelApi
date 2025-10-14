@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateMatriculaRequest;
 use App\Models\Matricula;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MatriculaController extends Controller
 {
@@ -60,9 +61,46 @@ class MatriculaController extends Controller
      */
     public function destroy(Matricula $matricula)
     {
-        $matricula->delete();
-
-        return response()->json(["message" => "Matricula Eliminada"], 200);
+        try {
+            DB::beginTransaction();
+            
+            // Eliminando el registro
+            $matricula->delete();
+            
+            DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Matricula Eliminada'
+            ], 200);
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            
+            // Código de error de restricción de clave foránea en MySQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar la matricula porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el matricula',
+                'error' => $e->getMessage()
+            ], 500);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function generarPDF()

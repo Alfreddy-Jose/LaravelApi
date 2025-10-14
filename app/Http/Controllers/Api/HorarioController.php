@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreHorarioRequest;
 use App\Models\Horario;
+use App\Models\Seccion;
+use App\Models\Trimestre;
 use DragonCode\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 
@@ -19,7 +21,7 @@ class HorarioController extends Controller
     }
 
 
-        public function show(Horario $horario)
+    public function show(Horario $horario)
     {
         $evento = $horario->Clase()
             ->with(['unidadCurricular', 'docente.persona', 'espacio', 'sede', 'pnf', 'trimestre', 'trayecto'])
@@ -62,10 +64,28 @@ class HorarioController extends Controller
     public function horario(Horario $horario)
     {
         // retornar horario con todas sus relaciones y datos de la seccion
-        return response()->json($horario->load('trimestre', 'seccion'));
+        /* return response()->json($horario->load('trimestre', 'seccion', 'seccion.sede[id, nombre_sede]', 'seccion.pnf', 'seccion.trayecto')); */
+        return response()->json($horario->load([
+            'trimestre' => function ($query) {
+                $query->select('id', 'nombre', 'trayecto_id');
+            },
+            'seccion' => function ($query) {
+                $query->select('id', 'nombre', 'pnf_id', 'matricula_id', 'trayecto_id', 'sede_id', 'lapso_id', 'numero_seccion', 'nombre')
+                    ->with(['pnf' => function ($query) {
+                        $query->select('id', 'nombre');
+                    }, 'trayecto' => function ($query) {
+                        $query->select('id', 'nombre');
+                    }]);
+            },
+            'seccion.pnf',
+            'seccion.trayecto',
+            'seccion.sede' => function ($query) {
+                $query->select('id', 'nombre_sede');
+            }
+        ]));
     }
 
-        public function destroy(Horario $horario)
+    public function destroy(Horario $horario)
     {
         // Eliminando Horario
         $horario->delete();

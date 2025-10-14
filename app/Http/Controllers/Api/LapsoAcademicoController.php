@@ -9,6 +9,7 @@ use App\Models\LapsoAcademico;
 use App\Models\TipoLapso;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LapsoAcademicoController extends Controller
 {
@@ -70,10 +71,44 @@ class LapsoAcademicoController extends Controller
      */
     public function destroy(LapsoAcademico $lapso_academico)
     {
-        // Eliminando Lapso Academico
-        $lapso_academico->delete();
-        // Enviando respuesta al frontend
-        return response()->json(["message" => "Lapso Academico Eliminado"]);
+        try {
+            DB::beginTransaction();
+
+            // Eliminando registro
+            $lapso_academico->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lapso Académico Eliminado'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+
+            // Código de error de restricción de clave foránea en PostgreSQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar el lapso académico porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el lapso académico',
+                'error' => $e->getMessage()
+            ], 500);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // Obtener los tipos de lapsos
