@@ -11,49 +11,25 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip
 
-# Instala Composer - usa la versión más reciente
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Instala Composer
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-# Configura variables de entorno
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV COMPOSER_MEMORY_LIMIT=-1
-ENV COMPOSER_PROCESS_TIMEOUT=600
-
+# Copia el código de la aplicación
 WORKDIR /var/www/html
-
-# PRIMERO: Copia solo los archivos de composer
-COPY composer.json composer.lock ./
-
-# SEGUNDO: Instala dependencias con verificación
-RUN echo "=== INICIANDO COMPOSER INSTALL ===" && \
-    # Verifica que los archivos existen
-    ls -la composer.* && \
-    # Limpia cache de composer
-    composer clear-cache && \
-    # Instala dependencias con verificación de éxito
-    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev || \
-    (echo "=== PRIMER INTENTO FALLÓ ===" && \
-     sleep 10 && \
-     echo "=== REINTENTANDO ===" && \
-     composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev)
-
-# VERIFICA que las dependencias se instalaron
-RUN echo "=== VERIFICANDO INSTALACIÓN ===" && \
-    ls -la vendor/ && \
-    ls -la vendor/composer/ && \
-    echo "=== DEPENDENCIAS INSTALADAS ==="
-
-# TERCERO: Copia el resto del código
 COPY . .
+
+# Instala dependencias de PHP
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
+# Expone el puerto 8000
 EXPOSE 8000
 
+# Refresca la base de datos y ejecuta seeders en cada despliegue
 CMD php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=8000
