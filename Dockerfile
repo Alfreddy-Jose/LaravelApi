@@ -1,35 +1,52 @@
-FROM php:8.2-fpm
+FROM php:8.3-fpm-alpine
 
-# Instala dependencias del sistema
-RUN apt-get update && apt-get install -y \
+# Instalar dependencias del sistema
+RUN apk update && apk add --no-cache \
     git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
     unzip \
+    libpng-dev \
     libzip-dev \
-    libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip
+    postgresql-dev \
+    oniguruma-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libxml2-dev \
+    netcat-openbsd
 
-# Instala Composer
+# Configurar extensiones de PHP
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install \
+    pdo \
+    pdo_pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip \
+    xml
+
+# Instalar Composer
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-# Copia el código de la aplicación
+# Configurar directorio de trabajo
 WORKDIR /var/www/html
-COPY . .
 
-# Instala dependencias de PHP
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+# Copiar archivos de composer primero
+COPY composer.json composer.lock ./
+
+# Instalar dependencias
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader
+
+# Copiar el resto del código
+COPY . .
 
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Expone el puerto 8000
 EXPOSE 8000
 
-# Refresca la base de datos y ejecuta seeders en cada despliegue
-CMD php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=8000
+# Comando de inicio
+CMD sh -c "while ! nc -z \$DB_HOST \$DB_PORT; do sleep 1; done && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000"
