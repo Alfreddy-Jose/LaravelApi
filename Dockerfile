@@ -14,34 +14,39 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instala Composer
-COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+# Instala Composer - usa la versión más reciente
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configura variables de entorno para debugging
+# Configura variables de entorno
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_MEMORY_LIMIT=-1
-ENV COMPOSER_DEBUG=1
-ENV COMPOSER_PROCESS_TIMEOUT=2000
+ENV COMPOSER_PROCESS_TIMEOUT=600
 
 WORKDIR /var/www/html
 
-# Copia archivos de composer
+# PRIMERO: Copia solo los archivos de composer
 COPY composer.json composer.lock ./
 
-# Intenta instalar con múltiples estrategias y logging
-RUN echo "=== INICIANDO INSTALACIÓN DE COMPOSER ===" && \
-    php -v && \
-    composer --version && \
-    composer diagnose && \
-    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --verbose 2>&1 | tee /tmp/composer.log || \
-    (echo "=== PRIMER INTENTO FALLÓ, REINTENTANDO ===" && \
+# SEGUNDO: Instala dependencias con verificación
+RUN echo "=== INICIANDO COMPOSER INSTALL ===" && \
+    # Verifica que los archivos existen
+    ls -la composer.* && \
+    # Limpia cache de composer
     composer clear-cache && \
-    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --verbose 2>&1 | tee /tmp/composer_retry.log)
+    # Instala dependencias con verificación de éxito
+    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev || \
+    (echo "=== PRIMER INTENTO FALLÓ ===" && \
+     sleep 10 && \
+     echo "=== REINTENTANDO ===" && \
+     composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev)
 
-# Muestra el log de composer
-RUN if [ -f /tmp/composer.log ]; then echo "=== LOG DEL PRIMER INTENTO ===" && cat /tmp/composer.log; fi
-RUN if [ -f /tmp/composer_retry.log ]; then echo "=== LOG DEL REINTENTO ===" && cat /tmp/composer_retry.log; fi
+# VERIFICA que las dependencias se instalaron
+RUN echo "=== VERIFICANDO INSTALACIÓN ===" && \
+    ls -la vendor/ && \
+    ls -la vendor/composer/ && \
+    echo "=== DEPENDENCIAS INSTALADAS ==="
 
+# TERCERO: Copia el resto del código
 COPY . .
 
 # Configurar permisos
