@@ -1,52 +1,47 @@
-FROM php:8.3-fpm-alpine
+# Etapa 1: Construcción (instala dependencias)
+FROM composer:2.7 AS build
 
-# Instalar dependencias del sistema
-RUN apk update && apk add --no-cache \
-    git \
-    unzip \
-    libpng-dev \
-    libzip-dev \
-    postgresql-dev \
-    oniguruma-dev \
-    freetype-dev \
-    libjpeg-turbo-dev \
-    libxml2-dev \
-    netcat-openbsd
+WORKDIR /app
 
-# Configurar extensiones de PHP
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install \
-    pdo \
-    pdo_pgsql \
-    mbstring \
-    exif \
-    pcntl \
-    bcmath \
-    gd \
-    zip \
-    xml
-
-# Instalar Composer
-COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
-
-# Configurar directorio de trabajo
-WORKDIR /var/www/html
-
-# Copiar archivos de composer primero
+# Copiamos solo los archivos necesarios para que composer cachee dependencias correctamente
 COPY composer.json composer.lock ./
 
-# Instalar dependencias
-RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader
+# Instalamos dependencias de producción
+RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --optimize-autoloader
 
-# Copiar el resto del código
+# Copiamos el resto del proyecto
 COPY . .
 
-# Configurar permisos
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+---
 
+# Etapa 2: Imagen final con PHP-FPM
+FROM php:8.2-fpm
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    libpq-dev \
+    zip \
+    unzip \
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copiar archivos desde la etapa de build (ya con vendor)
+WORKDIR /var/www/html
+COPY --from=build /app ./
+
+# Configurar permisos correctos para Laravel
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
+
+# Exponer el puerto
 EXPOSE 8000
 
 # Comando de inicio
-CMD sh -c "while ! nc -z \$DB_HOST \$DB_PORT; do sleep 1; done && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000"
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
