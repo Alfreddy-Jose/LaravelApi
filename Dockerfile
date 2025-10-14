@@ -12,8 +12,6 @@ RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --opt
 # Copiamos el resto del proyecto
 COPY . .
 
----
-
 # Etapa 2: Imagen final con PHP-FPM
 FROM php:8.2-fpm
 
