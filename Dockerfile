@@ -17,14 +17,31 @@ RUN apt-get update && apt-get install -y \
 # Instala Composer
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-# Copia solo los archivos de composer primero (para mejor uso de cache)
+# Configura variables de entorno para debugging
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_MEMORY_LIMIT=-1
+ENV COMPOSER_DEBUG=1
+ENV COMPOSER_PROCESS_TIMEOUT=2000
+
 WORKDIR /var/www/html
+
+# Copia archivos de composer
 COPY composer.json composer.lock ./
 
-# Instala dependencias de PHP con mayor memoria
-RUN php -d memory_limit=-1 /usr/bin/composer install --no-interaction --prefer-dist --optimize-autoloader
+# Intenta instalar con múltiples estrategias y logging
+RUN echo "=== INICIANDO INSTALACIÓN DE COMPOSER ===" && \
+    php -v && \
+    composer --version && \
+    composer diagnose && \
+    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --verbose 2>&1 | tee /tmp/composer.log || \
+    (echo "=== PRIMER INTENTO FALLÓ, REINTENTANDO ===" && \
+    composer clear-cache && \
+    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --verbose 2>&1 | tee /tmp/composer_retry.log)
 
-# Copia el resto del código de la aplicación
+# Muestra el log de composer
+RUN if [ -f /tmp/composer.log ]; then echo "=== LOG DEL PRIMER INTENTO ===" && cat /tmp/composer.log; fi
+RUN if [ -f /tmp/composer_retry.log ]; then echo "=== LOG DEL REINTENTO ===" && cat /tmp/composer_retry.log; fi
+
 COPY . .
 
 # Configurar permisos
@@ -32,8 +49,6 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Expone el puerto 8000
 EXPOSE 8000
 
-# Refresca la base de datos y ejecuta seeders en cada despliegue
 CMD php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=8000
