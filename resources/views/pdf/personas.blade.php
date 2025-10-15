@@ -27,7 +27,7 @@
                     <td>{{ $persona->email }}</td>
                     <td>{{ $persona->tipo_persona }}</td>
                     <td>{{ $persona->grado_inst }}</td>
-                    <td>{{ $persona->municipio }}</td>
+                    <td>{{ $persona->municipio->municipio }}</td>
                     <td>{{ $persona->direccion }}</td>
                 </tr>
             @endforeach

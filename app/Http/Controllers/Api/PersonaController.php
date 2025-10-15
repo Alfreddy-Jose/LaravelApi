@@ -17,30 +17,9 @@ class PersonaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    /*     public function index()
-    {
-        // Seleccionar las Personas
-        $persona = Persona::select(
-            'id',
-            'cedula_persona',
-            'nombre',
-            'apellido',
-            'direccion',
-            'municipio',
-            'direccion',
-            'telefono',
-            'email',
-            'tipo_persona',
-            'grado_inst'
-        )
-            ->get();
-
-        // Enviar a la vista del listado de Personas con la variable
-        return response()->json($persona);
-    } */
     public function index(Request $request)
     {
-        $query = Persona::query();
+        $query = Persona::query()->with('municipio');
 
         if ($request->tipo_persona) {
             $query->where('tipo_persona', $request->tipo_persona);
@@ -70,6 +49,12 @@ class PersonaController extends Controller
      */
     public function show(Persona $persona)
     {
+        $persona->load(['municipio' => function ($query) {
+            $query->select('id_municipio', 'municipio', 'id_estado')
+                ->with(['estado' => function ($query) {
+                    $query->select('id_estado', 'estado');
+                }]);
+        }]);
         // enviando datos al frontend
         return response()->json($persona);
     }
@@ -138,46 +123,10 @@ class PersonaController extends Controller
         return response()->json($pnfs);
     }
 
-/*         public function import(Request $request)
-    {
-        $request->validate([
-            'excel_file' => 'required|file|mimes:xls,xlsx,ods|max:10240'
-        ]);
-
-        try {
-            $import = new PersonasImport();
-            
-            Excel::import($import, $request->file('excel_file'));
-            
-            $importedCount = $import->getImportedCount();
-            $errors = $import->getErrors();
-
-            $response = [
-                'success' => true,
-                'message' => "Archivo procesado correctamente.",
-                'imported_count' => $importedCount,
-            ];
-
-            if (!empty($errors)) {
-                $response['errors'] = $errors;
-                $response['message'] = "Archivo procesado con algunos errores. {$importedCount} registros importados.";
-            }
-
-            return response()->json($response);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al procesar el archivo: ' . $e->getMessage(),
-                'errors' => [$e->getMessage()]
-            ], 500);
-        }
-    } */
-
     public function generarPDF(Request $request)
     {
         // Seleccionar las Personas
-        $query = Persona::query();
+        $query = Persona::query()->with('municipio');
 
         if ($request->tipo_persona) {
             $query->where('tipo_persona', $request->tipo_persona);

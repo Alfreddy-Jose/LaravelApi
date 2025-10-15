@@ -21,7 +21,7 @@ class PersonaSeeder extends Seeder
             'email' => 'CARLA@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 409,
             'direccion' => 'EL ARCO'
         ]);
 
@@ -33,7 +33,7 @@ class PersonaSeeder extends Seeder
             'email' => 'CARLOS@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'NIRGUA',
+            'municipio_id' => 408,
             'direccion' => 'CASITA BLANCA'
         ]);
 
@@ -45,7 +45,7 @@ class PersonaSeeder extends Seeder
             'email' => 'DORA@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'DOCTORA',
-            'municipio' => 'YARITAGUA',
+            'municipio_id' => 415,
             'direccion' => 'EN FRENTE DEL ESCUELA'
         ]);
 
@@ -57,7 +57,7 @@ class PersonaSeeder extends Seeder
             'email' => 'TOM@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'PEÑA',
+            'municipio_id' => 413,
             'direccion' => 'CALLE 13 DIAGONAL AL ZAMÁN'
         ]);
 
@@ -69,7 +69,7 @@ class PersonaSeeder extends Seeder
             'email' => 'FRANCISCO@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'BRUZUAL',
+            'municipio_id' => 414,
             'direccion' => 'CALLE 15 DIAGONAL A LA PLAZA'
         ]);
 
@@ -81,7 +81,7 @@ class PersonaSeeder extends Seeder
             'email' => 'GUSTAVO@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'DOCTOR',
-            'municipio' => 'BRUZUAL',
+            'municipio_id' => 408,
             'direccion' => 'EN FRENTE DEL LICEO'
         ]);
 
@@ -93,7 +93,7 @@ class PersonaSeeder extends Seeder
             'email' => 'HEIMYS@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 409,
             'direccion' => 'EL ARCO NUEVO'
         ]);
 
@@ -105,7 +105,7 @@ class PersonaSeeder extends Seeder
             'email' => 'HERNAN@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 415,
             'direccion' => 'CASITA ROJA'
         ]);
 
@@ -117,7 +117,7 @@ class PersonaSeeder extends Seeder
             'email' => 'HERNEL@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADO',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 413,
             'direccion' => 'EL ARCO GRANDE'
         ]);
 
@@ -129,7 +129,7 @@ class PersonaSeeder extends Seeder
             'email' => 'ISABEL@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'DOCTORA',
-            'municipio' => 'SAN FELIPE',
+            'municipio_id' => 414,
             'direccion' => 'LUMAR'
         ]);
 
@@ -141,7 +141,7 @@ class PersonaSeeder extends Seeder
             'email' => 'JACKELINE@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 408,
             'direccion' => 'LA PAZ'
         ]);
 
@@ -153,7 +153,7 @@ class PersonaSeeder extends Seeder
             'email' => 'PAIVA@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'BRUZUAL',
+            'municipio_id' => 409,
             'direccion' => 'LA PALMA'
         ]);
 
@@ -165,7 +165,7 @@ class PersonaSeeder extends Seeder
             'email' => 'JESSIKA@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 408,
             'direccion' => 'CALLE ALBERTO'
         ]);
 
@@ -177,7 +177,7 @@ class PersonaSeeder extends Seeder
             'email' => 'JUSELLY@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'BRUZUAL',
+            'municipio_id' => 409,
             'direccion' => 'CALLE ROMA'
         ]);
 
@@ -189,7 +189,7 @@ class PersonaSeeder extends Seeder
             'email' => 'LEYDIS@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'VEROES',
+            'municipio_id' => 415,
             'direccion' => 'GUABINA'
         ]);
 
@@ -201,7 +201,7 @@ class PersonaSeeder extends Seeder
             'email' => 'LIDIA@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'NIRGUA',
+            'municipio_id' => 413,
             'direccion' => 'CASA BLANCA'
         ]);
 
@@ -213,7 +213,7 @@ class PersonaSeeder extends Seeder
             'email' => 'NORAIMA@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 414,
             'direccion' => 'LA ALDEA'
         ]);
 
@@ -225,7 +225,7 @@ class PersonaSeeder extends Seeder
             'email' => 'NULIBET@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'NIRGUA',
+            'municipio_id' => 408,
             'direccion' => 'LAS CAYENAS'
         ]);
 
@@ -237,7 +237,7 @@ class PersonaSeeder extends Seeder
             'email' => 'OSCAR@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADO',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 409,
             'direccion' => 'ARISTIDES BASTIDAS'
         ]);
 
@@ -249,7 +249,7 @@ class PersonaSeeder extends Seeder
             'email' => 'PEDRO@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'NIRGUA',
+            'municipio_id' => 415,
             'direccion' => 'CASITA AZUL'
         ]);
 
@@ -261,7 +261,7 @@ class PersonaSeeder extends Seeder
             'email' => 'RAMNER@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADO',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 413,
             'direccion' => 'LA ALDEITA'
         ]);
 
@@ -273,7 +273,7 @@ class PersonaSeeder extends Seeder
             'email' => 'ROBERTH@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'NIRGUA',
+            'municipio_id' => 414,
             'direccion' => 'CAMINO LARGO'
         ]);
 
@@ -285,7 +285,7 @@ class PersonaSeeder extends Seeder
             'email' => 'ROSMERY@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'VEROES',
+            'municipio_id' => 408,
             'direccion' => 'EL ARCO'
         ]);
 
@@ -297,7 +297,7 @@ class PersonaSeeder extends Seeder
             'email' => 'ROVER@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'NIRGUA',
+            'municipio_id' => 409,
             'direccion' => 'AGUA BLANCA'
         ]);
 
@@ -309,7 +309,7 @@ class PersonaSeeder extends Seeder
             'email' => 'YANYS@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADO',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 415,
             'direccion' => 'LA LAGUNA'
         ]);
 
@@ -321,7 +321,7 @@ class PersonaSeeder extends Seeder
             'email' => 'YENNY@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'VEROES',
+            'municipio_id' => 413,
             'direccion' => 'CASITA BLANCA'
         ]);
 
@@ -333,7 +333,7 @@ class PersonaSeeder extends Seeder
             'email' => 'YORFRE@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 414,
             'direccion' => 'EL ARCO'
         ]);
 
@@ -345,7 +345,7 @@ class PersonaSeeder extends Seeder
             'email' => 'DAYMAR@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'COCOROTE',
+            'municipio_id' => 408,
             'direccion' => 'CASITA BLANCA'
         ]);
 
@@ -357,7 +357,7 @@ class PersonaSeeder extends Seeder
             'email' => 'GUISERLY@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'INDEPENDENCIA',
+            'municipio_id' => 415,
             'direccion' => 'LA CASCADA'
         ]);
 
@@ -369,7 +369,7 @@ class PersonaSeeder extends Seeder
             'email' => 'HENRY@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'NIRGUA',
+            'municipio_id' => 413,
             'direccion' => 'AGUA NEGRA'
         ]);
 
@@ -381,7 +381,7 @@ class PersonaSeeder extends Seeder
             'email' => 'JEIDYS@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'SAN FELIPE',
+            'municipio_id' => 414,
             'direccion' => 'EL ARCO'
         ]);
 
@@ -393,7 +393,7 @@ class PersonaSeeder extends Seeder
             'email' => 'KIMBERLYN@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'NIRGUA',
+            'municipio_id' => 408,
             'direccion' => 'CALLE LA PALMA NEGRA'
         ]);
 
@@ -405,7 +405,7 @@ class PersonaSeeder extends Seeder
             'email' => 'NEYLA@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'LICENCIADA',
-            'municipio' => 'SUCRE',
+            'municipio_id' => 415,
             'direccion' => 'EL ARCO'
         ]);
 
@@ -417,7 +417,7 @@ class PersonaSeeder extends Seeder
             'email' => 'YULEYDI@GMAIL.COM',
             'tipo_persona' => 'DOCENTE',
             'grado_inst' => 'INGENIERO',
-            'municipio' => 'SUCRE',
+            'municipio_id' => 413,
             'direccion' => 'CASITA AMARILLA'
         ]);
 

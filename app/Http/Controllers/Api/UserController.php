@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -19,7 +20,7 @@ class UserController extends Controller
         // Obteniendo nombre de roles y id, nombre de usuarios
 
         $users = User::with('roles:id,name')
-            ->select('id', 'name', 'email')
+            ->select('id', 'name', 'email', 'avatar')
             ->get()
             ->map(function ($user) {
                 // Si solo tiene un rol, puedes tomar el primero
@@ -35,8 +36,13 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        // Procesar el avatar si existe
+        $avatarPath = null;
+        if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        }
         // Creando Usuario
-        $user = new User;
+        /*         $user = new User;
 
         $user->name = $request->nombre;
         $user->email = $request->email;
@@ -45,8 +51,40 @@ class UserController extends Controller
         if ($user->save()) {
             $user->assignRole($request->rol);
             return response()->json(['message' => 'Usuario Registrado'], 200);
+        } */
+        try {
+            // Procesar el avatar si existe
+            $avatarPath = null;
+            if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            }
+
+            // Crear el usuario
+            $user = User::create([
+                'name' => $request['nombre'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password']),
+                'avatar' => $avatarPath,
+            ]);
+
+            // Asignar el rol por ID (no por nombre)
+            $role = Role::find($request['rol']);
+            if ($role) {
+                $user->assignRole($role);
+            }
+
+            return response()->json([
+                'message' => 'Usuario Registrado',
+                'user' => $user
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al crear el usuario',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
+
 
     /**
      * Metodo para obtener Roles
@@ -61,7 +99,7 @@ class UserController extends Controller
     function show($usuario)
     {
         $user = User::with('roles:id,name')
-            ->select('id', 'name', 'email')
+            ->select('id', 'name', 'email', 'avatar')
             ->findOrFail($usuario);
 
         // Si solo tiene un rol, puedes tomar el primero
@@ -74,7 +112,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $usuario)
+    /*     public function update(Request $request, User $usuario)
     {
         $usuario->name = $request->nombre;
         $usuario->email = $request->email;
@@ -84,6 +122,51 @@ class UserController extends Controller
         $usuario->save();
 
         return response()->json(['message' => 'Usuario Editado'], 200);
+    } */
+    public function update(Request $request, $usuario)
+    {
+        $user = User::findOrFail($usuario);
+
+        try {
+            // Procesar el avatar
+            if ($request->has('remove_avatar') && $request->remove_avatar) {
+                // Eliminar avatar existente
+                if ($user->avatar) {
+                    Storage::disk('public')->delete($user->avatar);
+                    $user->avatar = null;
+                }
+            } elseif ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
+                // Eliminar avatar anterior si existe
+                if ($user->avatar) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
+                // Guardar nuevo avatar
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+                $user->avatar = $avatarPath;
+            }
+
+            // Actualizar usuario
+            $user->update([
+                'name' => $request['nombre'],
+                'email' => $request['email'],
+            ]);
+
+            // Actualizar rol
+            $role = Role::find($request['rol']);
+            if ($role) {
+                $user->syncRoles([$role]);
+            }
+
+            return response()->json([
+                'message' => 'Usuario Editado',
+                'user' => $user
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al actualizar el usuario',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // Metodo para Actualizar Contraseña

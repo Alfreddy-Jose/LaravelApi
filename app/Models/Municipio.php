@@ -18,7 +18,7 @@ class Municipio extends Model
         'id_municipio',
         'id_estado',
         'municipio'
-    ];
+    ]; 
 
     // Relacion con estado
     public function estado()
@@ -30,5 +30,11 @@ class Municipio extends Model
     public function sedes()
     {
         return $this->hasMany(Sede::class, 'municipio_id', 'id_municipio');
+    }
+
+    // Relacion con personas
+    public function personas()
+    {
+        return $this->hasMany(Persona::class, 'municipio_id', 'id_municipio');
     }
 }

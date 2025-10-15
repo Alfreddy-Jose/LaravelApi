@@ -11,11 +11,11 @@ class Persona extends Model
         'nombre',
         'apellido',
         'direccion',
-        'municipio',
         'telefono',
         'email',
         'tipo_persona',
-        'grado_inst'
+        'grado_inst',
+        'municipio_id',
     ];
     // Relación con el modelo Tipo_persona
 /*     public function tipo_persona()
@@ -33,5 +33,11 @@ class Persona extends Model
     public function vocero()
     {
         return $this->hasOne(Vocero::class);
+    }
+
+    // Relacion con la tabla de municipios
+    public function municipio()
+    {
+        return $this->belongsTo(Municipio::class, 'municipio_id', 'id_municipio');
     }
 }

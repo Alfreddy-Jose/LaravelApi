@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             UsuarioSeeder::class,
             DocenteSeeder::class,
-            SeccionSeeder::class
+            SeccionSeeder::class 
         ]);
     }
 }

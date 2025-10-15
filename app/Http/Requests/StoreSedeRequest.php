@@ -40,4 +40,15 @@ class StoreSedeRequest extends FormRequest
             "municipio_id" => "municipio"
         ];
     }
+
+    public function messages()
+    {
+        return [
+            "required" => "El campo :attribute es requerido",
+            "nro_sede.unique" => "El campo número sede ya ha sido registrado",
+            "nro_sede.required" => "El campo número sede es requerido",
+            "nro_sede.unique" => "El campo número sede ya ha sido registrado",
+            "integer" => "El campo :attribute debe ser un número entero"
+        ];
+    }
 }

@@ -26,4 +26,13 @@ class StoreMatriculaRequest extends FormRequest
             "numero" => "required|integer|unique:matriculas,numero"
         ];
     }
+
+    public function messages()
+    {
+        return [
+            "required" => "El campo :attribute es requerido",
+            "numero.unique" => "El campo número ya ha sido registrado",
+            "integer" => "El campo :attribute debe ser un número entero"
+        ];
+    }
 }

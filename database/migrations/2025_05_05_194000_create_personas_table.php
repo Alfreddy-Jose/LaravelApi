@@ -18,11 +18,15 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('apellido');
             $table->text('direccion');
-            $table->string('municipio');
             $table->string('telefono');
             $table->string('email')->unique();
             $table->string('tipo_persona');
             $table->string('grado_inst');
+            // Relacion con la tabla de municipios especificando llave primaria
+            $table->foreignId('municipio_id')
+                ->constrained('municipios', 'id_municipio')
+                ->onDelete('cascade');
+                
             $table->timestamps();
         });
     }
