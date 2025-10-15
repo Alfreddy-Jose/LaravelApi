@@ -33,7 +33,7 @@ class MatriculaController extends Controller
         Matricula::create($request->all());
 
         // Enviando respuesta a la api
-        return response()->json(['message' => 'Matricula Registrada'], 200);
+        return response()->json(['message' => 'Matrícula Registrada'], 200);
     }
 
     /**
@@ -53,7 +53,7 @@ class MatriculaController extends Controller
         // Actualizando registro
         $matricula->update($request->all()); // <-- variable $id es el registro captado
 
-        return response()->json(["message" => "Matricula Editada"], 200);
+        return response()->json(["message" => "Matrícula Editada"], 200);
     }
 
     /**
@@ -71,7 +71,7 @@ class MatriculaController extends Controller
             
             return response()->json([
                 'success' => true,
-                'message' => 'Matricula Eliminada'
+                'message' => 'Matrícula Eliminada'
             ], 200);
             
         } catch (\Illuminate\Database\QueryException $e) {
@@ -81,14 +81,14 @@ class MatriculaController extends Controller
             if ($e->getCode() == '23503') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se puede eliminar la matricula porque tiene registros relacionados',
+                    'message' => 'No se puede eliminar la matrícula porque tiene registros relacionados',
                     'error_type' => 'foreign_key_constraint'
                 ], 422);
             }
             
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar el matricula',
+                'message' => 'Error al eliminar la matrícula',
                 'error' => $e->getMessage()
             ], 500);
             
