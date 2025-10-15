@@ -11,7 +11,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,9 +21,10 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->route('usuario');
         return [
             'nombre' => 'required|string|max:255|regex:/^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$/',
-            'email' => 'required|email|unique:users,email,' . $this->route('user')->id,
+            'email' => 'required|email|unique:users,email,' . $userId,
             'rol' => 'required|exists:roles,id',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'remove_avatar' => 'sometimes|boolean'

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -123,7 +124,7 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Usuario Editado'], 200);
     } */
-    public function update(Request $request, $usuario)
+    public function update(UpdateUserRequest $request, $usuario)
     {
         $user = User::findOrFail($usuario);
 
