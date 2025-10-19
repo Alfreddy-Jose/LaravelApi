@@ -72,4 +72,15 @@ class UniversidadController extends Controller
     {
         //
     }
+
+    public function getUniversidad()
+    {
+        $universidad = Universidad::first(); // Usar first() en lugar de get()
+
+        if (!$universidad) {
+            return response()->json(['message' => 'No se encontró información de la universidad'], 404);
+        }
+
+        return response()->json($universidad);
+    }
 }

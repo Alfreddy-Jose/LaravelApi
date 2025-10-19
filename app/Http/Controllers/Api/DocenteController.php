@@ -80,9 +80,17 @@ class DocenteController extends Controller
     {
         $docente = Docente::find($id);
 
+        // Si dedicacion es tiempo completo, horas dedicacion debe ser 18 sino 12
+        if ($request->dedicacion == 'TIEMPO COMPLETO') {
+            $request->merge(['horas_dedicacion' => 18]);
+        }else{
+            $request->merge(['horas_dedicacion' => 12]);
+        }
+
         $updateData = [
             'pnf_id' => $request->pnf_id,
-            'categoria' => $request->categoria
+            'categoria' => $request->categoria,
+            'horas_dedicacion' => $request->horas_dedicacion
         ];
 
         // Actualizar el Docente

@@ -38,48 +38,47 @@ class ClaseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-public function store(StoreClaseRequest $request)
-{
-    try {
-        $data = $request->validated();
+    public function store(StoreClaseRequest $request)
+    {
+        try {
+            $data = $request->validated();
 
-        // Verificamos el horario
-        $horario = Horario::findOrFail($data['horario_id']);
-        Log::info($data);
+            // Verificamos el horario
+            $horario = Horario::findOrFail($data['horario_id']);
+            Log::info($data);
 
-        // Validar solapamiento: misma sección, mismo día, mismo rango de bloques
-        $haySolapamiento = $horario->Clase()
-            ->where('dia', $data['dia'])
-            ->where('docente_id', $data['docente_id'])
-            ->where(function($q) use ($data) {
-                $q->whereBetween('bloque_id', [
-                    $data['bloque_id'],
-                    $data['bloque_id'] + $data['duracion'] - 1
-                ]);
-            })
-            ->exists();
+            // Validar solapamiento: misma sección, mismo día, mismo rango de bloques
+            $haySolapamiento = $horario->Clase()
+                ->where('dia', $data['dia'])
+                ->where('docente_id', $data['docente_id'])
+                ->where(function ($q) use ($data) {
+                    $q->whereBetween('bloque_id', [
+                        $data['bloque_id'],
+                        $data['bloque_id'] + $data['duracion'] - 1
+                    ]);
+                })
+                ->exists();
 
-        if ($haySolapamiento) {
+            if ($haySolapamiento) {
+                return response()->json([
+                    'message' => 'Ya existe una clase en ese rango de bloques en este horario.'
+                ], 422);
+            }
+
+            // Crear la clase
+            $clase = $horario->Clase()->create($data);
+
             return response()->json([
-                'message' => 'Ya existe una clase en ese rango de bloques en este horario.'
-            ], 422);
+                "message" => "Clase Registrada",
+                "clase"   => $clase
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'No se pudo crear la clase',
+                'detalle' => $e->getMessage()
+            ], 500);
         }
-
-        // Crear la clase
-        $clase = $horario->Clase()->create($data);
-
-        return response()->json([
-            "message" => "Clase Registrada",
-            "clase"   => $clase
-        ], 201);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'No se pudo crear la clase',
-            'detalle' => $e->getMessage()
-        ], 500);
     }
-}
 
 
     /**
@@ -93,10 +92,20 @@ public function store(StoreClaseRequest $request)
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Clase $c)
+    public function edit(Request $request, Clase $clase)
     {
-        //
+        try {
+            $clase->update([
+                "unidad_curricular_id" => $request->unidad_curricular_id,
+                "docente_id" => $request->docente_id,
+                "espacio_id" => $request->espacio_id,
+            ]);
+            return response()->json(['message' => 'Clase editada'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al editar la clase'], 500);
+        }
     }
+
 
     /**
      * Update the specified resource in storage.

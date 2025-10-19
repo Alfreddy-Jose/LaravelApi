@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/universidad', [UniversidadController::class, 'store']);
     Route::get('/universidad', [UniversidadController::class, 'show']);
     Route::put('/universidad/{universidad}', [UniversidadController::class, 'update']);
+    Route::get('/get_universidad', [UniversidadController::class, 'getUniversidad']);
     //Route::delete('/universidad/{universidad}', [UniversidadController::class, 'destroy']);
 
     // Rutas de Sedes
@@ -204,6 +205,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/clases', [ClaseController::class, 'index']);
     Route::post('/clases', [ClaseController::class, 'store']);
     Route::put('/clase/{clase}', [ClaseController::class, 'update']);
+    Route::put('/claseEdit/{clase}', [ClaseController::class, 'edit']);
     Route::delete('/clase/{clase}', [ClaseController::class, 'destroy']);
     Route::post('/horarios/{horario}/clases', [HorarioController::class, 'agregarClase']);
 
