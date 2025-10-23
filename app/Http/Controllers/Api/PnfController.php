@@ -18,10 +18,15 @@ class PnfController extends Controller
     public function index()
     {
         // Seleccionar los pnf
-        $pnfs = Pnf::select('id', 'codigo', 'nombre', 'abreviado', 'abreviado_coord')->get();
+        $pnf = Pnf::select('id', 'codigo', 'nombre', 'abreviado', 'abreviado_coord')->get();
+
+        // Si no hay registros, devuelve un array vacío para que el frontend lo maneje
+        if ($pnf->isEmpty()) {
+            return response()->json([], 200);
+        }
 
         // Enviar a la vista del listado de PNF con la variable
-        return response()->json($pnfs);
+        return response()->json($pnf, 200);
     }
 
     /**
@@ -38,9 +43,15 @@ class PnfController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pnf $pnf)
+    public function show()
     {
-        return response()->json($pnf);
+        $pnf = Pnf::select('id')->first();
+
+        if (!$pnf) {
+            return response()->json([], 200);
+        }
+
+        return response()->json($pnf, 200);
     }
 
     /**
@@ -108,5 +119,5 @@ class PnfController extends Controller
         $pdf = Pdf::loadView('pdf.pnf', compact('pnfs'));
 
         return $pdf->download('pnfs.pdf');
-    } 
+    }
 }

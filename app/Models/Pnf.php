@@ -20,19 +20,19 @@ class Pnf extends Model
         return $this->hasMany(Tipo_persona::class, 'pnf_id');
     }
     // Relación con el modelo Seccion
-    public function secciones()
+/*    public function secciones()
     {
         return $this->hasMany(Seccion::class, 'pnf_id');
-    }
-
-    // Relacion con el modelo de sedes
-    public function sedes()
-    {
-        return $this->belongsToMany(Sede::class);
-    }
+    }  */
 
     public function docentes()
     {
         return $this->hasMany(Docente::class);
+    }
+
+    // Relacion con la tabla de sedes
+    public function sedes()
+    {
+        return $this->hasMany(Sede::class, 'pnf_id');
     }
 }

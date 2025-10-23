@@ -28,7 +28,7 @@ class SeccionController extends Controller
             $query->where('lapso_id', $request->lapso);
         }
         // Filtrar por sede
-        if ($request->sede) {
+        if ($request->sede) {   
             $query->where('sede_id', $request->sede);
         }
         // Filtrar por pnf

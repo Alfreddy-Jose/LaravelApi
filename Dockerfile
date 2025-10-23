@@ -23,13 +23,18 @@ COPY . .
 # Instala dependencias de PHP
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Configurar permisos
+# Configurar permisos para Render (optimizado)
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+    && chmod -R 755 /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache \
+    && chmod -R 777 /var/www/html/storage/framework/ \
+    && chmod 775 /var/www/html/storage/app/public/ \
+    && mkdir -p /var/www/html/storage/app/public/avatars \
+    && chmod 775 /var/www/html/storage/app/public/avatars
 
 # Expone el puerto 8000
 EXPOSE 8000
 
 # Refresca la base de datos y ejecuta seeders en cada despliegue
-CMD php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan storage:link && php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=8000

@@ -68,55 +68,27 @@ class SedeController extends Controller
         return response()->json(['message' => 'Sede Editada']);
     }
 
-    public function asignarPnfs(Request $request, $sedeId)
-    {
-        // Validar entrada
-        $validated = $request->validate([
-            'pnf_ids' => 'required|array',
-            'pnf_ids.*' => 'exists:pnfs,id'
-        ], [
-            'pnf_ids.required' => 'Debe seleccionar al menos un PNF',
-            'pnf_ids.array' => 'Los PNFs deben ser enviados como arreglo',
-            'pnf_ids.*.exists' => 'Uno o más PNFs seleccionados no existen'
-        ]);
-
-        // Buscar la sede
-        $sede = Sede::findOrFail($sedeId);
-
-        // Sincronizar relaciones (sync elimina previos y agrega nuevos)
-        $sede->pnfs()->sync($validated['pnf_ids']);
-
-        // Obtener PNFs actualizados para respuesta
-        $pnfsAsignados = $sede->pnfs()->select('pnfs.id', 'pnfs.nombre')->get();
-
-        return response()->json([
-            'message' => 'PNFs asignados',
-            'assigned_pnfs' => $pnfsAsignados
-        ], 200);
-    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Sede $sede)
     {
 
-
         try {
             DB::beginTransaction();
-            
+
             // Eliminando registro
             $sede->delete();
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Sede Eliminada'
             ], 200);
-            
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
-            
+
             // Código de error de restricción de clave foránea en PostgreSQL
             if ($e->getCode() == '23503') {
                 return response()->json([
@@ -125,36 +97,21 @@ class SedeController extends Controller
                     'error_type' => 'foreign_key_constraint'
                 ], 422);
             }
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al eliminar la sede',
                 'error' => $e->getMessage()
             ], 500);
-            
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Ocurrio un error inesperado',
                 'error' => $e->getMessage()
             ], 500);
         }
-    }
-
-    public function getPnf()
-    {
-        $pnf = Pnf::select('id', 'nombre')->get();
-
-        return response()->json($pnf);
-    }
-
-    public function getPnfSede(Sede $sede)
-    {
-        $carrerasAsignadas = $sede->pnfs()->select('pnfs.id', 'pnfs.nombre')->get();
-
-        return response()->json($carrerasAsignadas);
     }
 
     public function generaPDF()
@@ -172,11 +129,7 @@ class SedeController extends Controller
     public function getEstados()
     {
         $estados = Estado::all();
-        // transformar todos los estados en mayusculas
-        $estados->transform(function ($estado) {
-            $estado->estado = strtoupper($estado->estado);
-            return $estado;
-        });
+
         return response()->json($estados);
     }
 
@@ -184,11 +137,6 @@ class SedeController extends Controller
     {
         // traer todos los municipios de un estado 
         $municipios = Municipio::where('id_estado', $estado)->get();
-        // transformar todos los municipios en mayusculas
-        $municipios->transform(function ($municipio) {
-            $municipio->municipio = strtoupper($municipio->municipio);
-            return $municipio;
-        });
 
         return response()->json($municipios);
     }

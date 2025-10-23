@@ -12,7 +12,8 @@ class Sede extends Model
         'nombre_abreviado',
         'direccion',
         'municipio_id',
-        'universidad_id'
+        'universidad_id',
+        'pnf_id'
     ];
 
     public function espacios()
@@ -25,15 +26,15 @@ class Sede extends Model
         return $this->hasMany(Seccion::class);
     }
 
-    // Relacion con el modelo de PNF
-    public function pnfs()
-    {
-        return $this->belongsToMany(Pnf::class);
-    }
-
     // Relacion con la tabla de municipios
     public function municipio()
     {
         return $this->belongsTo(Municipio::class, 'municipio_id', 'id_municipio');
+    }
+
+    // Relacion con la tabla Pnf
+    public function pnf()
+    {
+        return $this->belongsTo(Pnf::class);
     }
 }

@@ -64,7 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rutas de PNF
     Route::get('/pnf', [PnfController::class, 'index']);
     Route::post('/pnf', [PnfController::class, 'store']);
-    Route::get('/pnf/{pnf}', [PnfController::class, 'show']);
+    Route::get('/pnfShow', [PnfController::class, 'show']);
     Route::put('/pnf/{pnf}', [PnfController::class, 'update']);
     Route::delete('/pnf/{pnf}', [PnfController::class, 'destroy']);
 
@@ -136,7 +136,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/docentes', [DocenteController::class, 'store']);
     Route::put('/docente/{docente}', [DocenteController::class, 'update']);
     Route::put('/docente_horas/{docente_id}', [DocenteController::class, 'actualizarHorasDedicacion']);
-    Route::delete('/docente/{docente}', [DocenteController::class, 'destroy']); 
+    Route::delete('/docente/{docente}', [DocenteController::class, 'destroy']);
 
     // Rutas para Voceros
     Route::get('/voceros', [VoceroController::class, 'index']);
@@ -214,13 +214,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('secciones/{seccion}')->group(function () {
         Route::post('horarios', [HorarioController::class, 'store']);
         Route::get('horarios', [HorarioController::class, 'index']);
+        Route::get('horarios/anterior', [HorarioController::class, 'verificarHorarioAnterior']);
     });
     Route::get('horarios/{horario}/clases', [HorarioController::class, 'show']);
     Route::get('horarios', [HorarioController::class, 'index2']);
     Route::get('horario/{horario}', [HorarioController::class, 'horario']);
     Route::delete('/horarios/{horario}', [HorarioController::class, 'destroy']);
     Route::post('/horarios/{horario}/publicar', [HorarioPublicacionController::class, 'publicar']);
+    Route::post('/horarios/{horario}/crear_automatico', [HorarioController::class, 'crearHorarioAutomatico']);
     
+
     // Rutas para docentes con clases
     Route::get('/docentes/con_clases', [DocenteController::class, 'conClases']);
 });

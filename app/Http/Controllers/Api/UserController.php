@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
@@ -37,27 +38,18 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        // Procesar el avatar si existe
-        $avatarPath = null;
-        if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-        }
-        // Creando Usuario
-        /*         $user = new User;
-
-        $user->name = $request->nombre;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-
-        if ($user->save()) {
-            $user->assignRole($request->rol);
-            return response()->json(['message' => 'Usuario Registrado'], 200);
-        } */
         try {
+            Log::info('Datos recibidos:', $request->all());
+            Log::info('Archivo recibido:', [
+                'hasFile' => $request->hasFile('avatar'),
+                'isValid' => $request->hasFile('avatar') ? $request->file('avatar')->isValid() : false,
+                'fileName' => $request->hasFile('avatar') ? $request->file('avatar')->getClientOriginalName() : null,
+            ]);
             // Procesar el avatar si existe
             $avatarPath = null;
             if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
                 $avatarPath = $request->file('avatar')->store('avatars', 'public');
+                Log::info('Avatar guardado en:', ['path' => $avatarPath]);
             }
 
             // Crear el usuario
@@ -67,6 +59,8 @@ class UserController extends Controller
                 'password' => Hash::make($request['password']),
                 'avatar' => $avatarPath,
             ]);
+
+            Log::info('Usuario creado:', $user->toArray());
 
             // Asignar el rol por ID (no por nombre)
             $role = Role::find($request['rol']);
@@ -113,17 +107,6 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    /*     public function update(Request $request, User $usuario)
-    {
-        $usuario->name = $request->nombre;
-        $usuario->email = $request->email;
-        // con el syncRoles se remplaza el rol actual por el nuevo
-        $usuario->syncRoles($request->rol);
-
-        $usuario->save();
-
-        return response()->json(['message' => 'Usuario Editado'], 200);
-    } */
     public function update(UpdateUserRequest $request, $usuario)
     {
         $user = User::findOrFail($usuario);

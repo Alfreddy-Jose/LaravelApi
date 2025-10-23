@@ -25,13 +25,13 @@ class DatabaseSeeder extends Seeder
             PersonaSeeder::class,
             UnidadCurricularSeeder::class,
             LapsoSeeder::class,
+            PnfSeeder::class,
             SedeSeeder::class,
             EspaciosSeeder::class,
-            PnfSeeder::class,
             RolesAndPermissionsSeeder::class,
             UsuarioSeeder::class,
-            DocenteSeeder::class,
+            DocenteSeeder::class, 
             SeccionSeeder::class 
-        ]);
+        ]); 
     }
 }

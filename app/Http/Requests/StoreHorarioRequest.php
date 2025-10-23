@@ -22,8 +22,17 @@ class StoreHorarioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'trimestre_id' => ['required', 'exists:trimestres,id'],
-            'nombre'       => ['nullable', 'string', 'max:150'],
+            'trimestre_id' => 'required|exists:trimestres,id',
+            'seccion_id'   => 'required|exists:seccions,id',
+            'nombre'       => 'nullable|string|max:150',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'trimestre_id.required' => 'Este campo es obligatorio',
+            'seccion_id.required'   => 'Este campo es obligatorio',
         ];
     }
 }

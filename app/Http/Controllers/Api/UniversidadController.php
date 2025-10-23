@@ -31,7 +31,7 @@ class UniversidadController extends Controller
         return response()->json($universidades, 200);
     }
 
-    /**
+    /** 
      * Store a newly created resource in storage.
      */
     public function store(StoreUniversidadRequest $request)

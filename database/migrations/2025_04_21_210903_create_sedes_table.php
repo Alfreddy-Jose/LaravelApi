@@ -25,7 +25,10 @@ return new class extends Migration
             $table->foreignId('municipio_id')
                 ->constrained('municipios', 'id_municipio')
                 ->onDelete('cascade');            
-
+            // Relacion con la tabla PNF
+            $table->foreignId('pnf_id')
+                ->constrained('pnfs')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

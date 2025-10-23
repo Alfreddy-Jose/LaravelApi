@@ -15,11 +15,11 @@ class PnfSeeder extends Seeder
     {
         Pnf::firstOrCreate([
             'codigo' => '07',
-            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN INGENIERÍA EN IFORMÁTICA',
+            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN INGENIERÍA EN INFORMÁTICA',
             'abreviado' => 'PNFI',
             'abreviado_coord' => 'NFI',
         ]);
-        Pnf::firstOrCreate([
+/*         Pnf::firstOrCreate([
             'codigo' => '08',
             'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN ADMINISTRACION',
             'abreviado' => 'PNFA',
@@ -30,6 +30,6 @@ class PnfSeeder extends Seeder
             'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN PROCESOS QUIMICOS',
             'abreviado' => 'PNFPQ',
             'abreviado_coord' => 'NFPQ',
-        ]);
+        ]); */
     }
 }

@@ -19,7 +19,8 @@ class SedeSeeder extends Seeder
             'nombre_abreviado' => 'IDN',
             'direccion' => 'AV RAVELL',
             'municipio_id' => '409',
-            'universidad_id' => '1'
+            'universidad_id' => '1',
+            'pnf_id' => 1
         ]);
         Sede::firstOrcreate([ 
             'nro_sede' => '100',
@@ -27,7 +28,8 @@ class SedeSeeder extends Seeder
             'nombre_abreviado' => 'PEÑ',
             'direccion' => 'INDEPENDENCIA',
             'municipio_id' => '414',
-            'universidad_id' => '1'
+            'universidad_id' => '1',
+            'pnf_id' => 1
         ]);
         Sede::firstOrcreate([
             'nro_sede' => '300',
@@ -35,7 +37,8 @@ class SedeSeeder extends Seeder
             'nombre_abreviado' => 'BRU',
             'direccion' => 'AV -----YARITAGUA',
             'municipio_id' => '413',
-            'universidad_id' => '1'
+            'universidad_id' => '1',
+            'pnf_id' => 1
         ]); 
     }
 }
