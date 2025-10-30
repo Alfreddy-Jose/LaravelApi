@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePersonaRequest;
+use App\Http\Requests\UpdatePersonaRequest;
 use App\Models\Persona;
 use App\Models\Pnf;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -62,7 +63,7 @@ class PersonaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Persona $persona)
+    public function update(UpdatePersonaRequest $request, Persona $persona)
     {
         // Editando registro
         $persona->update($request->all());

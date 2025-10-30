@@ -25,22 +25,22 @@ return new class extends Migration
             $table->foreignId('espacio_id')->constrained('espacios')->onDelete('cascade');
             $table->foreignId('bloque_id')->constrained('bloques_turnos')->onDelete('cascade');
             $table->foreignId('horario_id')
-                ->nullable()
                 ->after('id')
                 ->constrained('horarios')
-                ->nullOnDelete();
+                ->onDelete('cascade');
 
             // Datos del evento
             $table->string('dia', 10); // Ej: 'LUNES'
             $table->integer('duracion'); // Duración en bloques (1 bloque = 1 hora)
             $table->timestamps();
 
-            // Restricción única para evitar duplicados
+// Restricción única menos restrictiva (solo para evitar duplicados exactos)
             $table->unique([
                 'docente_id',
                 'espacio_id',
                 'dia',
-                'bloque_id'
+                'bloque_id',
+                'horario_id'
             ], 'horario_unique_espacio_dia_bloque');
 
             // Índices útiles para búsquedas

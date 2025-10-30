@@ -8,7 +8,6 @@
     <table>
         <thead>
             <th>#</th>
-            <th>CÓDIGO</th>
             <th>NOMBRE</th>
             <th>ETAPA</th>
             <th>NÚMERO</th>
@@ -18,7 +17,6 @@
             @foreach ($aulas as $i => $aula)
                 <tr>
                     <td>{{ $i++ }}</td>
-                    <td>{{ $aula->codigo }}</td>
                     <td>{{ $aula->nombre_aula }}</td>
                     <td>{{ $aula->etapa }}</td>
                     <td>{{ $aula->nro_aula }}</td>

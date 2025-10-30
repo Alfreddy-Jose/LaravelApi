@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAulaRequest extends FormRequest
+class UpdatePersonaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,20 +22,19 @@ class UpdateAulaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nombre_aula" => "required|unique:espacios,nombre_aula,". $this->route('espacio')->id ,
-            "etapa" => "required|string",
-            "nro_aula" => "required|numeric",
-            "sede_id" => "required|exists:sedes,id"
+            "cedula_persona" => "required|numeric|unique:personas,cedula_persona" . ',' . $this->route('persona')->id,
+            "nombre" => "required|string",
+            "apellido" => "required|string",
+            "email" => "email|unique:personas,email",
+            "direccion" => "max:255",
+            "telefono" => "numeric|unique:personas,telefono"
         ];
     }
 
-    public function attributes()
+    public function messages()
     {
         return [
-            "etapa" => "etapa",
-            "nombre_aula" => "nombre aula",
-            "nro_aula" => "numero de aula",
-            "sede_id" => "sede"
+            "cedula_persona.unique" => "La cédula ingresada ya se encuentra registrada",
         ];
     }
 }

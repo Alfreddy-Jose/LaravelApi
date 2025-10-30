@@ -8,7 +8,6 @@
     <table>
         <thead>
             <th>#</th>
-            <th>CÓDIGO</th>
             <th>NOMBRE</th>
             <th>ETAPA</th>
             <th>ABREVIADO</th>
@@ -19,7 +18,6 @@
             @foreach ($laboratorios as $i => $lab)
                 <tr>
                     <td>{{ $i++ }}</td>
-                    <td>{{ $lab->codigo }}</td>
                     <td>{{ $lab->nombre_aula }}</td>
                     <td>{{ $lab->etapa }}</td>
                     <td>{{ $lab->abreviado_lab }}</td>

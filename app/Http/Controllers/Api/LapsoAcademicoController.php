@@ -21,6 +21,13 @@ class LapsoAcademicoController extends Controller
         // Seleccionando datos del Lapso Academico
         $lapsos = LapsoAcademico::with('tipolapso')->orderBy('nombre_lapso', 'desc')->get();
 
+        // enviar fecha en forma DMY en lugar de Y-m-d
+        foreach ($lapsos as $lapso) {
+            $lapso->fecha_inicio = date('d/m/Y', strtotime($lapso->fecha_inicio));
+            $lapso->fecha_fin = date('d/m/Y', strtotime($lapso->fecha_fin));
+        }
+
+
         // Retornando los datos al Frontend
         return response()->json($lapsos);
     }
@@ -43,7 +50,7 @@ class LapsoAcademicoController extends Controller
         LapsoAcademico::create($request->all());
 
         // Enviando respuesta al frontend
-        return response()->json(["message" => "Lapso Academico Registrado"]);
+        return response()->json(["message" => "Lapso Académico Registrado"]);
     }
 
     /**
@@ -63,7 +70,7 @@ class LapsoAcademicoController extends Controller
         // Editando Registro
         $lapso_academico->update($request->all());
 
-        return response()->json(["message" => "Lapso Academico Editado"]);
+        return response()->json(["message" => "Lapso Académico Editado"]);
     }
 
     /**

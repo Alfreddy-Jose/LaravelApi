@@ -49,7 +49,7 @@ class EspacioController extends Controller
         $aula->nro_aula = $request->nro_aula;
         $aula->sede_id = $request->sede_id;
         $aula->tipo_espacio = "AULA";
-        $aula->nombre_aula = $request->etapa . '-' . $request->nro_aula;
+        $aula->nombre_aula = $request->nombre_aula;
         $aula->save();
 
         return response()->json(["message" => "Aula Registrada"], 201);
@@ -73,7 +73,7 @@ class EspacioController extends Controller
                 "etapa" => $request->etapa,
                 "nro_aula" => $request->nro_aula,
                 "sede_id" => $request->sede_id,
-                "nombre_aula" => $request->etapa . '-' . $request->nro_aula
+                "nombre_aula" => $request->nombre_aula
             ]
         );
 
@@ -319,12 +319,12 @@ class EspacioController extends Controller
             ->where('tipo_espacio', 'AULA')
             ->select(
                 'id',
-                'codigo',
                 'nombre_aula',
                 'etapa',
                 'nro_aula',
                 'sede_id'
-            )->get();
+            )
+            ->get();
 
         $pdf = Pdf::loadView('pdf.aulas', compact('aulas'));
         return $pdf->download('aulas.pdf');
@@ -335,7 +335,6 @@ class EspacioController extends Controller
         $laboratorios = Espacio::with('sede:id,nombre_sede')
             ->select(
                 'id',
-                'codigo',
                 'nombre_aula',
                 'etapa',
                 'abreviado_lab',

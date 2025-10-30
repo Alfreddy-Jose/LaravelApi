@@ -51,16 +51,22 @@ class HorarioController extends Controller
             ], 422);
         }
 
-        // (Opcional) Regla “máx 3 publicados por año”: se controla al publicar.
-        $horario = Horario::create([
-            'seccion_id'   => $seccionId,
-            'trimestre_id' => $request['trimestre_id'],
-            'nombre'       => $request['nombre'] ?? null,
-            'estado'       => 'borrador',
-            'lapso_academico' => $request->lapso_academico
-        ]);
-        // Retornar id del horario creado
-        return response()->json($horario->load('trimestre'), 201);
+        try {
+            // (Opcional) Regla “máx 3 publicados por año”: se controla al publicar.
+            $horario = Horario::create([
+                'seccion_id'   => $seccionId,
+                'trimestre_id' => $request['trimestre_id'],
+                'nombre'       => $request['nombre'] ?? null,
+                'estado'       => 'borrador',
+                'lapso_academico' => $request->lapso_academico
+            ]);
+            // Retornar id del horario creado
+            return response()->json($horario->load('trimestre'), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al crear el horario: ' . $e->getMessage()
+            ]);
+        }
     }
 
     public function horario(Horario $horario)
@@ -133,10 +139,6 @@ class HorarioController extends Controller
                 throw new \Exception('El horario no pertenece a la sección especificada');
             }
 
-            // En el controller, antes de ejecutar la función
-            Log::info("Ejecutando crear_horario_automatico para horario: " . $horario->id);
-            Log::info("Parámetros: seccion_id=$seccionId, trimestre_id=$trimestreId");
-
             // Ejecutar la función PostgreSQL
             $resultado = DB::select(
                 "SELECT crear_horario_automatico(?, ?, ?) as resultado",
@@ -160,7 +162,8 @@ class HorarioController extends Controller
                 'success' => false,
                 'error' => 'Error interno del servidor: ' . $e->getMessage(),
                 'clases_creadas' => 0,
-                'conflictos_resueltos' => 0,
+                'clases_omitidas' => 0,
+                'clases_nuevas_uc' => 0,
                 'advertencias' => []
             ], 500);
         }

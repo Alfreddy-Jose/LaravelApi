@@ -20,8 +20,8 @@ return new class extends Migration
             $table->enum('estado', ['borrador', 'publicado'])->default('borrador');
             $table->timestamps();
 
-            // Regla: una sección NO puede tener 2 horarios para el mismo trimestre
-            $table->unique(['seccion_id', 'trimestre_id']);
+            // Regla: una sección NO puede tener 2 horarios para el mismo trimestre en el mismo lapso academico
+            $table->unique(['seccion_id', 'trimestre_id', 'lapso_academico']);
         });
     }
 

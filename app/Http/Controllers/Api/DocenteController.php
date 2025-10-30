@@ -11,7 +11,6 @@ use App\Models\Pnf;
 use App\Models\UnidadCurricular;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class DocenteController extends Controller
 {
@@ -125,7 +124,6 @@ class DocenteController extends Controller
     public function getDataSelect()
     {
         $docentesIds = Persona::where('tipo_persona', 'DOCENTE')->select('id', 'cedula_persona', 'nombre', 'apellido')->get();
-        $pnfs = Pnf::select('id', 'nombre')->get();
         $docentes = Persona::where('tipo_persona', 'DOCENTE')
             ->whereDoesntHave('docente')
             ->get();
@@ -145,7 +143,6 @@ class DocenteController extends Controller
         });
 
         return response()->json([
-            'pnf' => $pnfs,
             'docentes' => $docentes,
             'docentesEdit' => $docentesEdit,
             'unidadesCurriculares' => $unidadesCurriculares,

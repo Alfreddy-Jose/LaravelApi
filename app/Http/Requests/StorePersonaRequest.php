@@ -30,4 +30,11 @@ class StorePersonaRequest extends FormRequest
             "telefono" => "numeric|unique:personas,telefono"
         ];
     }
+
+    public function messages()
+    {
+        return [
+            "cedula_persona.unique" => "La cédula ingresada ya se encuentra registrada",
+        ];
+    }
 }
