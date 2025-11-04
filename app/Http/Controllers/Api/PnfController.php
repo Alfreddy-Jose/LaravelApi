@@ -43,14 +43,8 @@ class PnfController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Pnf $pnf)
     {
-        $pnf = Pnf::select('id')->first();
-
-        if (!$pnf) {
-            return response()->json([], 200);
-        }
-
         return response()->json($pnf, 200);
     }
 

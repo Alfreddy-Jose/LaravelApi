@@ -128,6 +128,7 @@ class DocenteController extends Controller
             ->whereDoesntHave('docente')
             ->get();
         $unidadesCurriculares = UnidadCurricular::select('id', 'nombre')->get();
+        $pnf = Pnf::select('id', 'nombre')->get();
 
         $docentesEdit = $docentesIds->map(function ($persona) {
             return [
@@ -146,6 +147,7 @@ class DocenteController extends Controller
             'docentes' => $docentes,
             'docentesEdit' => $docentesEdit,
             'unidadesCurriculares' => $unidadesCurriculares,
+            'pnf' => $pnf
         ], 200);
     }
 

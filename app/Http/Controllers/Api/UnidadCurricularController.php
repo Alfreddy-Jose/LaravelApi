@@ -17,7 +17,31 @@ class UnidadCurricularController extends Controller
      */
     public function index()
     {
+        // Obtener todas las unidades curriculares con sus trimestres y el trayecto,
+        // pero el trayecto esta relaciona es con los trimestres
         $unidades = UnidadCurricular::with('trimestres')->get();
+
+        $unidades = $unidades->map(function ($unidad) {
+            return [
+                'id' => $unidad->id,
+                'nombre' => $unidad->nombre,
+                'hora_total_est' => $unidad->hora_total_est,
+                'hora_practica' => $unidad->hora_practica,
+                'periodo' => $unidad->periodo,
+                'hora_teorica' => $unidad->hora_teorica,
+                'unidad_credito' => $unidad->unidad_credito,
+                'descripcion' => $unidad->descripcion,
+                'trimestres' => $unidad->trimestres
+                    ->map(function ($trimestre) {
+                        return [
+                            'id' => $trimestre->id,
+                            'trayecto_id' => $trimestre->trayecto_id,
+                            'nombre' => $trimestre->nombre,
+                            'trayecto' => $trimestre->trayecto->nombre,
+                        ];
+                    })
+                ];
+        });
 
         return response()->json($unidades);
     }
@@ -115,7 +139,16 @@ class UnidadCurricularController extends Controller
     // Metodo para obtener los trimestres
     public function get_trimestres()
     {
-        $trimestres = Trimestre::select('id', 'nombre', 'trayecto_id')->get();
+        $trimestres = Trimestre::select('id', 'nombre', 'trayecto_id', 'numero_relativo')->get();
+
+        $trimestres = $trimestres->map(function ($trimestre) {
+            return [
+                'id' => $trimestre->id,
+                'nombre' => $trimestre->nombre_relativo, // Solo el nombre relativo
+                'trayecto_id' => $trimestre->trayecto_id,
+                'valor_real' => $trimestre->nombre
+            ];
+        });
 
         return response()->json($trimestres);
     }

@@ -64,7 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rutas de PNF
     Route::get('/pnf', [PnfController::class, 'index']);
     Route::post('/pnf', [PnfController::class, 'store']);
-    Route::get('/pnfShow', [PnfController::class, 'show']);
+    Route::get('/pnf/{pnf}', [PnfController::class, 'show']);
     Route::put('/pnf/{pnf}', [PnfController::class, 'update']);
     Route::delete('/pnf/{pnf}', [PnfController::class, 'destroy']);
 

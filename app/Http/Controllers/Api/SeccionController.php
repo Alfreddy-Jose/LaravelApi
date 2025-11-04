@@ -13,6 +13,7 @@ use App\Models\Sede;
 use App\Models\Trayecto;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SeccionController extends Controller
 {
@@ -28,7 +29,7 @@ class SeccionController extends Controller
             $query->where('lapso_id', $request->lapso);
         }
         // Filtrar por sede
-        if ($request->sede) {   
+        if ($request->sede) {
             $query->where('sede_id', $request->sede);
         }
         // Filtrar por pnf
@@ -62,11 +63,13 @@ class SeccionController extends Controller
         $sede = Sede::findOrFail($request->sede_id); // Para obtener el nro_sede
 
         /* Generar numero de la seccion dependiendo del trayecto y la sede
-            si no existe una seccion para ese trayecto y sede, se crea la primera seccion
-            si existe una seccion para ese trayecto y sede, se incrementa el numero de la seccion
+            si no existe una seccion para ese trayecto, pnf, sede y lapso, se crea la primera seccion
+            si existe una seccion para ese trayecto, pnf, sede y lapso, se incrementa el numero de la seccion
         */
         $secciones = Seccion::where('trayecto_id', $request->trayecto_id)
             ->where('sede_id', $request->sede_id)
+            ->where('lapso_id', $request->lapso_id)
+            ->where('pnf_id', $request->pnf_id)
             ->get();
 
         if ($secciones->isEmpty()) {
@@ -76,9 +79,11 @@ class SeccionController extends Controller
             $numero_seccion = $ultima_seccion->numero_seccion + 1;
         }
 
+        // numero de seccion compuesto con sede
+        $numero_final = $sede->nro_sede + $numero_seccion;
 
         // Construir el nombre de la sección
-        $nombre = $pnf->codigo . '' . $matricula->numero . '' . $trayecto->nombre . '' . $sede->nro_sede . '' . $numero_seccion;
+        $nombre = $pnf->codigo . '' . $matricula->numero . '' . $trayecto->nombre . '' . $numero_final;
 
         // Crear la sección
         $seccion = new Seccion();
@@ -97,15 +102,17 @@ class SeccionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Seccion $seccion) {
+    public function show(Seccion $seccion)
+    {
         return response()->json($seccion);
     }
 
     /**
      * Update the specified resource in storage.
      */
+
     public function update(UpdateSeccionRequest $request, Seccion $seccion)
-    {
+    {   
 
         // actualizando la sección
         $seccion->update(
@@ -122,11 +129,34 @@ class SeccionController extends Controller
         $trayecto = Trayecto::findOrFail($request->trayecto_id);
         $sede = Sede::findOrFail($request->sede_id);
 
+        /* Generar numero de la seccion dependiendo del trayecto y sede, pnf y lapso
+            si no existe una seccion para ese trayecto, pnf, sede y lapso, se crea la primera seccion
+            si existe una seccion para ese trayecto, pnf, sede y lapso, se incrementa el numero de la seccion
+        */
+        $secciones = Seccion::where('trayecto_id', $request->trayecto_id)
+            ->where('sede_id', $request->sede_id)
+            ->where('lapso_id', $request->lapso_id)
+            ->where('pnf_id', $request->pnf_id)
+            ->where('id', '!=', $seccion->id)
+            ->orderBy('numero_seccion', 'desc')
+            ->get();
+
+        if ($secciones->isEmpty()) {
+            $numero_seccion = 1;
+        } else {
+            $ultima_seccion = $secciones->first();
+            $numero_seccion = $ultima_seccion->numero_seccion + 1;
+        }
+
+        // numero de seccion compuesto con sede
+        $numero_final = $sede->nro_sede + $numero_seccion;
+
         // Construir el nombre de la sección
-        $nombre = $pnf->codigo . '' . $matricula->numero . '' . $trayecto->nombre . '' . $sede->nro_sede . '' . $request->numero_seccion;
+        $nombre = $pnf->codigo . $matricula->numero . $trayecto->nombre . $numero_final;
 
         // actualizando el nombre
         $seccion->nombre = $nombre;
+        $seccion->numero_seccion = $numero_seccion;
         $seccion->save();
 
         return response()->json(["message" => "Sección Editada"], 201);
@@ -137,11 +167,44 @@ class SeccionController extends Controller
      */
     public function destroy(Seccion $seccion)
     {
-        // eliminar la sección
-        $seccion->delete();
+        try {
+            DB::beginTransaction();
 
-        // retornar una respuesta de éxito
-        return response()->json(['message' => 'Sección Eliminada'], 200);
+            // Eliminando registro
+            $seccion->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Sección Eliminada'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+
+            // Código de error de restricción de clave foránea en PostgreSQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar la sección porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la sección',
+                'error' => $e->getMessage()
+            ], 500);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getDataSelect()
@@ -192,7 +255,7 @@ class SeccionController extends Controller
 
 
         // Descargar con el nombre personalizado
-        return $pdf->stream("Secciones_".$request->lapso."pdf", [
+        return $pdf->stream("Secciones_" . $request->lapso . "pdf", [
             'Attachment' => true // Fuerza la descarga
         ]);
     }

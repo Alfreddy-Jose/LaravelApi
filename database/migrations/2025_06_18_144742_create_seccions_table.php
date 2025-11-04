@@ -36,7 +36,7 @@ return new class extends Migration
             // Campo de numero de seccion
             $table->bigInteger('numero_seccion');
             // Campo de nombre
-            $table->string('nombre', 50)->unique();
+            $table->string('nombre', 50);
             $table->timestamps();
         });
     }

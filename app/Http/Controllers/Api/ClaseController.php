@@ -9,6 +9,7 @@ use App\Models\Horario;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DragonCode\Contracts\Cache\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ClaseController extends Controller
@@ -43,29 +44,29 @@ class ClaseController extends Controller
         try {
             $data = $request->validated();
 
-            // Verificamos el horario
             $horario = Horario::findOrFail($data['horario_id']);
-            Log::info($data);
+            $lapso_academico = $horario->lapso_academico;
 
-            // Validar solapamiento: misma sección, mismo día, mismo rango de bloques
-            $haySolapamiento = $horario->Clase()
-                ->where('dia', $data['dia'])
-                ->where('docente_id', $data['docente_id'])
-                ->where(function ($q) use ($data) {
-                    $q->whereBetween('bloque_id', [
-                        $data['bloque_id'],
-                        $data['bloque_id'] + $data['duracion'] - 1
-                    ]);
-                })
-                ->exists();
+            // Verificación con 8 parámetros (sin trayecto_id)
+            $disponible = DB::selectOne("
+            SELECT verificar_bloques_consecutivos_disponibles(?, ?, ?, ?, ?, ?, ?, ?) as disponible
+        ", [
+                $data['espacio_id'],
+                $data['docente_id'],
+                $data['dia'],
+                $data['bloque_id'],
+                $data['duracion'],
+                $data['trimestre_id'],
+                $lapso_academico,
+                $data['horario_id']
+            ]);
 
-            if ($haySolapamiento) {
+            if (!$disponible->disponible) {
                 return response()->json([
-                    'message' => 'Ya existe una clase en ese rango de bloques en este horario.'
+                    'message' => 'Verifique la disponibilidad del aula y el docente en el bloque de hora que se quieren ingresar en este trimestre.'
                 ], 422);
             }
 
-            // Crear la clase
             $clase = $horario->Clase()->create($data);
 
             return response()->json([
@@ -79,7 +80,6 @@ class ClaseController extends Controller
             ], 500);
         }
     }
-
 
     /**
      * Display the specified resource.

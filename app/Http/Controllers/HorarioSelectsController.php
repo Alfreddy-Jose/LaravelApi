@@ -48,9 +48,16 @@ class HorarioSelectsController extends Controller
     public function getTrimestres($trayectoId)
     {
         $trimestres = Trimestre::where('trayecto_id', $trayectoId)
-            ->orderBy('nombre')
-            ->get(['id', 'nombre']);
-        
+            ->orderBy('numero_relativo')
+            ->get(['id', 'nombre', 'numero_relativo']);
+
+        $trimestres = $trimestres->map(function ($trimestre) {
+            return [
+                'id' => $trimestre->id,
+                'nombre' => $trimestre->nombre_relativo, // Mostrar el nombre relativo en lugar del original
+            ];
+        });
+
         return response()->json($trimestres);
     }
 
@@ -71,7 +78,7 @@ class HorarioSelectsController extends Controller
 
     /**
      * Obtener docentes basados en unidad curricular seleccionada
-    */
+     */
 
     public function getDocentes($unidadCurriclarId)
     {
@@ -79,13 +86,13 @@ class HorarioSelectsController extends Controller
 
         $docentes = $unidadesCurriculares->docentes()
             ->orderBy('id', 'asc')->get();
-        
+
         return response()->json($docentes);
     }
 
     /**
      * Obtener espacios basadas en sede seleccionada
-    */
+     */
 
     public function getEspacios($sedeId)
     {
