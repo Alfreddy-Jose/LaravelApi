@@ -32,9 +32,9 @@ class Sede extends Model
         return $this->belongsTo(Municipio::class, 'municipio_id', 'id_municipio');
     }
 
-    // Relacion con la tabla Pnf
-    public function pnf()
+    // Relacion muchos a muchos con el modelo Pnf
+    public function pnfs()
     {
-        return $this->belongsTo(Pnf::class);
+        return $this->belongsToMany(Pnf::class);
     }
 }

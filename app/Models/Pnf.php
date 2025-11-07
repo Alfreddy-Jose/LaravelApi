@@ -30,9 +30,9 @@ class Pnf extends Model
         return $this->hasMany(Docente::class);
     }
 
-    // Relacion con la tabla de sedes
+    // Relación muchos a muchos con el modelo Sede
     public function sedes()
     {
-        return $this->hasMany(Sede::class, 'pnf_id');
+        return $this->belongsToMany(Sede::class);
     }
 }

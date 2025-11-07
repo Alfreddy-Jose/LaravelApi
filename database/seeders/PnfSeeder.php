@@ -19,9 +19,9 @@ class PnfSeeder extends Seeder
             'abreviado' => 'PNFI',
             'abreviado_coord' => 'NFI',
         ]);
-/*         Pnf::firstOrCreate([
+        Pnf::firstOrCreate([
             'codigo' => '08',
-            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN ADMINISTRACION',
+            'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN ADMINISTRACIÓN',
             'abreviado' => 'PNFA',
             'abreviado_coord' => 'NFA',
         ]);
@@ -30,6 +30,6 @@ class PnfSeeder extends Seeder
             'nombre' => 'PROGRAMA NACIONAL DE FORMACIÓN EN PROCESOS QUIMICOS',
             'abreviado' => 'PNFPQ',
             'abreviado_coord' => 'NFPQ',
-        ]); */
+        ]);
     }
 }

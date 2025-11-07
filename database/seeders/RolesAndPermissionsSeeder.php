@@ -115,6 +115,19 @@ class RolesAndPermissionsSeeder extends Seeder
                 Permission::firstOrCreate(['name' => 'vocero.eliminar']);
                 Permission::firstOrCreate(['name' => 'vocero.ver']);
                 Permission::firstOrCreate(['name' => 'vocero.pdf']);
+                // Permisos de Horarios
+                Permission::firstOrCreate(['name' => 'horario.crear']);
+                Permission::firstOrCreate(['name' => 'horario.editar']);
+                Permission::firstOrCreate(['name' => 'horario.eliminar']);
+                Permission::firstOrCreate(['name' => 'horario.ver']);
+                Permission::firstOrCreate(['name' => 'horario.pdf']);
+                // Permisos de Horarios de Docentes
+                Permission::firstOrCreate(['name' => 'horario_docente.crear']);
+                Permission::firstOrCreate(['name' => 'horario_docente.editar']);
+                Permission::firstOrCreate(['name' => 'horario_docente.eliminar']);
+                Permission::firstOrCreate(['name' => 'horario_docente.ver']);
+                Permission::firstOrCreate(['name' => 'horario_docente.pdf']);
+
 
                 // Permisos para ver Estadisticas
                 /*         Permission::create(['name' => 'ver estadisticas']);

@@ -34,7 +34,12 @@ class SedeController extends Controller
      */
     public function store(StoreSedeRequest $request)
     {
-        Sede::create($request->all());
+        $sede = Sede::create($request->validated());
+
+        // Asignar pnfs a la sede
+        if ($request->has('pnf_id')) {
+            $sede->pnfs()->sync($request->pnf_id);
+        }
 
         // Enviando respuesta al frontend
         return response()->json(['message' => 'Sede Registrada']);
@@ -45,11 +50,17 @@ class SedeController extends Controller
      */
     public function show(Sede $sede)
     {
-        $sede->load(['municipio' => function ($query) {
+        // Cargando relaciones con municipios
+        // Y con PNF 
+            $sede->load(['municipio' => function ($query) {
             $query->select('id_municipio', 'municipio', 'id_estado')
                 ->with(['estado' => function ($query) {
                     $query->select('id_estado', 'estado');
                 }]);
+        }]);
+
+        $sede->load(['pnfs' => function ($query) {
+            $query->select('pnf_id', 'nombre');
         }]);
 
         // enviando datos al frontend
@@ -62,7 +73,12 @@ class SedeController extends Controller
     public function update(UpdateSedeRequest $request, Sede $sede)
     {
         // Editando registro
-        $sede->update($request->all());
+        $sede->update($request->validated());
+
+        // Asignar pnfs a la sede
+        if ($request->has('pnf_id')) {
+            $sede->pnfs()->sync($request->pnf_id);
+        }
 
         // Enviando respuesta al frontend
         return response()->json(['message' => 'Sede Editada']);
@@ -112,6 +128,20 @@ class SedeController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function getPnf()
+    {
+        $pnf = Pnf::select('id', 'nombre')->get();
+
+        return response()->json($pnf);
+    }
+
+    public function getPnfSede(Sede $sede)
+    {
+        $carrerasAsignadas = $sede->pnfs()->select('pnfs.id', 'pnfs.nombre')->get();
+
+        return response()->json($carrerasAsignadas);
     }
 
     public function generaPDF()
