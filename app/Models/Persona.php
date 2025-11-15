@@ -40,4 +40,10 @@ class Persona extends Model
     {
         return $this->belongsTo(Municipio::class, 'municipio_id', 'id_municipio');
     }
+
+    // Relacion con la tabla de usuarios
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
 }

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('avatar')->nullable()->after('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            // Relacion con persona puede ser nulo
+            $table->foreignId('persona_id')->nullable()->constrained()->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -106,7 +106,7 @@ class VoceroController extends Controller
     public function getDataSelect()
     {
         $secciones = Seccion::select('id', 'nombre')->get();
-
+        
         $vocerosIds = Persona::where('tipo_persona', 'ESTUDIANTE')->select('id', 'cedula_persona', 'nombre', 'apellido')->get();
         $voceros = Persona::where('tipo_persona', 'ESTUDIANTE')
             ->whereDoesntHave('vocero')

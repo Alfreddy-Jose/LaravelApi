@@ -27,6 +27,7 @@
             background-color: #e3f2fd;
             font-weight: bold;
         }
+
         td {
             font-size: 10px;
         }
@@ -60,6 +61,18 @@
             margin-bottom: 5px;
             text-align: center;
         }
+
+        .materia {
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .aula {
+            font-size: 10px;
+            font-style: italic;
+        }
     </style>
 </head>
 
@@ -73,7 +86,10 @@
     {{-- Encabezado --}}
     <div class="header-section">
         <div class="header-main">
-            HORARIO DEL DOCENTE
+            COORDINACIÓN DEL {{ $encabezado['pnf'] ?? '' }}
+        </div>
+        <div class="header-main">
+            HORARIO DEL DOCENTE:
         </div>
         @if (is_object($docente))
             <div class="header-sub">
@@ -91,7 +107,7 @@
         LAPSO: {{ $encabezado['lapso'] ?? '' }}
         TRAYECTO: {{ $encabezado['trayecto'] ?? '' }}
         TRIMESTRE: {{ $encabezado['trimestre'] ?? '' }}
-        SECIÓN: {{ $encabezado['seccion'] ?? '' }}
+        SECCIÓN: {{ $encabezado['seccion'] ?? '' }}
     </div>
 
     {{-- Tabla --}}
@@ -111,27 +127,26 @@
                     @foreach ($dias as $dia)
                         @php
                             $evento = collect($eventos)->first(function ($e) use ($dia, $i) {
-                                return $e['dia'] == $dia && $e['bloque_inicio'] == $i;
+                                return $e['dia'] == $dia && $e['bloque_inicio'] == $i + 1;
                             });
 
                             $eventoEnCurso = collect($eventos)->first(function ($e) use ($dia, $i) {
-                                return $e['dia'] == $dia && $e['bloque_inicio'] < $i && $e['bloque_fin'] >= $i;
+                                return $e['dia'] == $dia && $e['bloque_inicio'] < $i + 1 && $e['bloque_fin'] >= $i + 1;
                             });
                         @endphp
 
                         @if ($evento)
                             <td rowspan="{{ $evento['bloque_fin'] - $evento['bloque_inicio'] + 1 }}"
                                 style="vertical-align: middle; text-align: center; background-color: {{ $evento['color'] ?? '#f9f9f9' }};">
-                                <div class="evento"
-                                    style="font-size: 9px; line-height: 1.3; font-weight: bold; padding: 2px;">
-                                    <div style="font-size: 11px; font-weight: bold; text-transform: uppercase;">
-                                        {{ $evento['materia'] ?? '' }}
+                                <div class="evento">
+                                    <div class="materia">
+                                        {{ $evento['materia'] ?? 'Sin materia' }}
                                     </div>
-                                    <div style="font-size: 10px;">
-                                        {{ $evento['aula'] ?? '' }}
+                                    <div class="seccion">
+                                        {{ $evento['seccion'] ?? 'Sin sección' }}
                                     </div>
-                                    <div style="font-size: 10px;">
-                                        {{ $evento['seccion'] ?? '' }}
+                                    <div class="aula">
+                                        {{ $evento['aula'] ?? 'Sin aula' }}
                                     </div>
                                 </div>
                             </td>
@@ -151,7 +166,7 @@
     <div style="margin-top: 20px; text-align: right; font-size: 9px;">
 
         ______________________________________ <br> <br>
-        COORDINACIÓN DEL PNFI
+        COORDINACIÓN DEL {{$encabezado['pnf_abreviado'] ?? ''}}
     </div>
 
 </body>

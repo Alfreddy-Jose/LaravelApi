@@ -74,7 +74,7 @@ class HorarioController extends Controller
         // retornar horario con todas sus relaciones y datos de la seccion
         return response()->json($horario->load([
             'trimestre' => function ($query) {
-                $query->select('id', 'nombre', 'trayecto_id');
+                $query->select('id', 'nombre', 'trayecto_id', 'numero_relativo');;
             },
             'seccion' => function ($query) {
                 $query->select('id', 'nombre', 'pnf_id', 'matricula_id', 'trayecto_id', 'sede_id', 'lapso_id', 'numero_seccion', 'nombre')

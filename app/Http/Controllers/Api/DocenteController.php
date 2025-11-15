@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDocenteRequest;
+use App\Models\Clase;
 use App\Models\CondicionContrato;
 use App\Models\Docente;
 use App\Models\Persona;
@@ -11,6 +12,7 @@ use App\Models\Pnf;
 use App\Models\UnidadCurricular;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DocenteController extends Controller
 {
@@ -82,7 +84,7 @@ class DocenteController extends Controller
         // Si dedicacion es tiempo completo, horas dedicacion debe ser 18 sino 12
         if ($request->dedicacion == 'TIEMPO COMPLETO') {
             $request->merge(['horas_dedicacion' => 18]);
-        }else{
+        } else {
             $request->merge(['horas_dedicacion' => 12]);
         }
 
@@ -222,31 +224,54 @@ class DocenteController extends Controller
 
     public function conClases()
     {
-        $docentes = Docente::whereHas('unidades_curriculares.clases')
-            ->with(['persona'])
-            ->withCount(['unidades_curriculares as clases_count' => function ($q) {
-                $q->withCount('clases');
-            }])
-            ->get();
+        $docentesPorTrimestre = DB::table('clases')
+            ->join('docentes', 'clases.docente_id', '=', 'docentes.id')
+            ->join('personas', 'docentes.persona_id', '=', 'personas.id')
+            ->join('horarios', 'clases.horario_id', '=', 'horarios.id')
+            ->join('trimestres', 'horarios.trimestre_id', '=', 'trimestres.id')
+            ->select(
+                'docentes.id as docente_id',
+                'docentes.categoria',
+                'docentes.horas_dedicacion',
+                'personas.nombre',
+                'personas.apellido',
+                'personas.cedula_persona',
+                'trimestres.id as trimestre_id',
+                'trimestres.nombre as trimestre_nombre',
+                'trimestres.numero_relativo',
+                DB::raw('COUNT(clases.id) as clases_count')
+            )
+            ->groupBy(
+                'docentes.id',
+                'docentes.categoria',
+                'docentes.horas_dedicacion',
+                'personas.nombre',
+                'personas.apellido',
+                'personas.cedula_persona',
+                'trimestres.id',
+                'trimestres.nombre',
+                'trimestres.numero_relativo'
+            )
+            ->get()
+            ->map(function ($item, $index) {
+            // Aplicamos la misma lógica del accessor
+            $romanos = [1 => 'I', 2 => 'II', 3 => 'III'];
+            $nombreRelativo = $romanos[$item->numero_relativo] ?? $item->trimestre_nombre;
 
-        return response()->json($docentes);
-    }
+                return [
+                    'id' => $index + 1, // ID secuencial para la tabla
+                    'docente_id' => $item->docente_id,
+                    'categoria' => $item->categoria,
+                    'horas_dedicacion' => $item->horas_dedicacion,
+                    'nombre_completo' => $item->nombre . ' ' . $item->apellido,
+                    'cedula' => $item->cedula_persona,
+                    'trimestre_id' => $item->trimestre_id,
+                    'trimestre_nombre' => $nombreRelativo, // Usamos el nombre relativo
+                    'trimestre_valor_real' => $item->trimestre_nombre, // Mantenemos el valor real
+                    'clases_count' => $item->clases_count
+                ];
+            });
 
-    public function generarPDF()
-    {
-        // Obtener todos los docentes con sus relaciones
-        $docentes = Docente::with([
-            'persona',
-            'pnf',
-            'unidades_curriculares:id,nombre',
-            'condicionContrato:id,docente_id,fecha_inicio,fecha_fin,dedicacion,tipo'])
-            ->orderBy('created_at', 'asc')
-            ->get();
-        
-        // Generar el PDF
-        $pdf = Pdf::loadView('pdf.docentes', compact('docentes'));
-        
-        // Descargar el PDF
-        return $pdf->download('docentes.pdf');
+        return response()->json($docentesPorTrimestre);
     }
 }

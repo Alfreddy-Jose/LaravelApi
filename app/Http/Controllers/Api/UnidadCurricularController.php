@@ -36,7 +36,7 @@ class UnidadCurricularController extends Controller
                         return [
                             'id' => $trimestre->id,
                             'trayecto_id' => $trimestre->trayecto_id,
-                            'nombre' => $trimestre->nombre,
+                            'nombre' => $trimestre->nombre_relativo,
                             'trayecto' => $trimestre->trayecto->nombre,
                         ];
                     })
@@ -144,9 +144,8 @@ class UnidadCurricularController extends Controller
         $trimestres = $trimestres->map(function ($trimestre) {
             return [
                 'id' => $trimestre->id,
-                'nombre' => $trimestre->nombre_relativo, // Solo el nombre relativo
+                'nombre' => $trimestre->nombre_relativo, // Nombre relativo
                 'trayecto_id' => $trimestre->trayecto_id,
-                'valor_real' => $trimestre->nombre
             ];
         });
 

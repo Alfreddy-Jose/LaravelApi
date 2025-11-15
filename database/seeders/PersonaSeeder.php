@@ -421,5 +421,40 @@ class PersonaSeeder extends Seeder
             'direccion' => 'CASITA AMARILLA'
         ]);
 
+        Persona::firstOrCreate([
+            'cedula_persona' => '17122100',
+            'nombre' => 'JOSÉ',
+            'apellido' => 'ALVAREZ',
+            'telefono' => '04240831449',
+            'email' => 'JOSE@GMAIL.COM',
+            'tipo_persona' => 'ESTUDIANTE',
+            'grado_inst' => 'BACHILLER',
+            'municipio_id' => 413,
+            'direccion' => 'CASITA VERDE'
+        ]);
+
+        Persona::firstOrCreate([
+            'cedula_persona' => '19122100',
+            'nombre' => 'MIGUEL',
+            'apellido' => 'GONZALES',
+            'telefono' => '04290831449',
+            'email' => 'MIGUEL@GMAIL.COM',
+            'tipo_persona' => 'ESTUDIANTE',
+            'grado_inst' => 'BACHILLER',
+            'municipio_id' => 413,
+            'direccion' => 'CASITA AZUL'
+        ]);
+
+        Persona::firstOrCreate([
+            'cedula_persona' => '19002100',
+            'nombre' => 'JESUS',
+            'apellido' => 'BERMUDA',
+            'telefono' => '04290111449',
+            'email' => 'JESUS@GMAIL.COM',
+            'tipo_persona' => 'DOCENTE',
+            'grado_inst' => 'INGENIERO',
+            'municipio_id' => 413,
+            'direccion' => 'CASITA FRENTE SU CASA'
+        ]);
     }
 }

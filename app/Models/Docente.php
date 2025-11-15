@@ -13,6 +13,10 @@ class Docente extends Model
         'horas_dedicacion',
     ];
 
+    public function clases()
+    {
+        return $this->hasMany(Clase::class, 'docente_id');
+    }
     public function condicionContrato()
     {
         return $this->hasOne(CondicionContrato::class);
@@ -36,5 +40,10 @@ class Docente extends Model
     public function pnf()
     {
         return $this->belongsTo(Pnf::class);
+    }
+
+    public function coordinador()
+    {
+        return $this->hasOne(Coordinador::class);
     }
 }

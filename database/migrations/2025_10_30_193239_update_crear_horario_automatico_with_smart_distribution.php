@@ -48,7 +48,7 @@ class UpdateCrearHorarioAutomaticoWithSmartDistribution extends Migration
                 v_distribucion_horas INTEGER[];
                 
                 -- Variables para búsqueda de horarios
-                v_dias TEXT[] := ARRAY[\'LUNES\', \'MARTES\', \'MIERCOLES\', \'JUEVES\', \'VIERNES\', \'SABADO\'];
+                v_dias TEXT[] := ARRAY[\'LUNES\', \'MARTES\', \'MIÉRCOLES\', \'JUEVES\', \'VIERNES\', \'SÁBADO\'];
                 v_intentos INTEGER;
                 v_max_intentos INTEGER := 100;
                 v_encontrado BOOLEAN;

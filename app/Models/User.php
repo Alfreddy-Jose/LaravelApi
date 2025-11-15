@@ -25,6 +25,7 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
+        'persona_id',
     ];
 
     /**
@@ -58,5 +59,11 @@ class User extends Authenticatable
         }
 
         return asset('default-avatar.png');
+    }
+
+    // Relacion con la tabla personas
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class);
     }
 }

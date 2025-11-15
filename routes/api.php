@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\BloquesTurnoController;
 use App\Http\Controllers\Api\EspacioController;
 use App\Http\Controllers\Api\DocenteController;
 use App\Http\Controllers\Api\ClaseController;
+use App\Http\Controllers\Api\CoordinadorController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\HorarioController;
 use App\Http\Controllers\Api\HorarioDocenteController;
@@ -32,8 +33,8 @@ Route::post('/login', [AutenticacionController::class, 'login']);
 
 // Rutas para generar PDF
 Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF de secciones
-Route::post('/generar_horario_pdf', [ClaseController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios
-Route::get('/docentes/{docente}/horario/pdf', [HorarioDocenteController::class, 'generarPDFDocente']); // <-- Ruta para generar PDF de horarios por docentes
+Route::get('/generar_horario_pdf/{horarioId}', [ClaseController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios por secciones
+Route::get('/generar_pdf_docente/{docenteId}/{trimestreId}', [HorarioDocenteController::class, 'generarPDFDocente']); // <-- Ruta para generar PDF de horarios por docentes
 Route::get('/unidad_curricular/pdf', [UnidadCurricularController::class, 'exportarPDF']); // <-- Ruta para generar PDF de Unidades Curriculares
 Route::get('/pnf/pdf', [PnfController::class, 'generarPDF']); // <-- Ruta para generar PDF de PNF
 Route::get('/sedes/pdf', [SedeController::class, 'generaPDF']); // <-- Ruta para generar PDF de Sedes
@@ -145,6 +146,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/voceros', [VoceroController::class, 'store']);
     Route::put('/vocero/{vocero}', [VoceroController::class, 'update']);
     Route::delete('/vocero/{vocero}', [VoceroController::class, 'destroy']);
+
+    // Rutas para Coordinadores
+    Route::get('/coordinadores', [CoordinadorController::class, 'index']);
+    Route::get('/coordinador/getDocentes/{boolean}', [CoordinadorController::class, 'getDocentes']);
+    // Route::get('/coordinador/{coordinador}', [CoordinadorController::class, 'show']);
+    Route::post('/coordinador', [CoordinadorController::class, 'store']);
+    // Route::put('/coordinador/{coordinador}', [CoordinadorController::class, 'update']);
+    Route::delete('/coordinador/{coordinador}', [CoordinadorController::class, 'destroy']);
 
     // Rutas de tipos de personas
     Route::get('/tipo_persona', [TipoPersonaController::class, 'getFormData']);

@@ -60,8 +60,6 @@ class UserController extends Controller
                 'avatar' => $avatarPath,
             ]);
 
-            Log::info('Usuario creado:', $user->toArray());
-
             // Asignar el rol por ID (no por nombre)
             $role = Role::find($request['rol']);
             if ($role) {
@@ -185,8 +183,13 @@ class UserController extends Controller
      */
     public function destroy(User $usuario)
     {
-        // Eliminar rol del usuario
-        $usuario->removeRole($usuario->roles->implode('name', ','));
+        // Eliminar rol del usuario en caso que tenga alguno
+        $usuario->roles()->detach();
+        
+        // Eliminar avatar
+        if ($usuario->avatar) {
+            Storage::disk('public')->delete($usuario->avatar);
+        }
 
         // Eliminar usuario
         $usuario->delete();

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -145,5 +144,64 @@ class RolesAndPermissionsSeeder extends Seeder
                 $asistenteRole = Role::firstOrCreate(['name' => 'ASISTENTE']);
                 // Asignar permisos al rol de Asistente
                 $asistenteRole->givePermissionTo(['pnf.ver', 'sede.ver', 'lapso.ver']);
+
+                // Rol de coordinador
+                $coordinadorRole = Role::firstOrCreate(['name' => 'COORDINADOR']);
+                // Asignar permisos al rol de coordinador podra hacer todo menos gestionar usuarios y roles
+                $coordinadorRole->givePermissionTo([
+                        'pnf.crear',
+                        'pnf.editar',
+                        'pnf.eliminar',
+                        'pnf.ver',
+                        'pnf.pdf',
+                        'sede.crear',
+                        'sede.editar',
+                        'sede.eliminar',
+                        'sede.ver',
+                        'sede.pdf',
+                        'lapso.crear',
+                        'lapso.editar',
+                        'lapso.eliminar',
+                        'lapso.ver',
+                        'lapso.pdf',
+                        'turno.crear',
+                        'turno.editar',
+                        'turno.eliminar',
+                        'turno.ver',
+                        'turno.pdf',
+                        'persona.crear',
+                        'persona.editar',
+                        'persona.eliminar',
+                        'persona.ver',
+                        'persona.pdf',
+                        'docente.crear',
+                        'docente.editar',
+                        'docente.eliminar',
+                        'docente.ver',
+                        'docente.pdf',
+                        'coordinador.crear',
+                        'coordinador.editar',
+                        'coordinador.eliminar',
+                        'coordinador.ver',
+                        'coordinador.pdf',
+                        'universidad.crear',
+                        'universidad.editar',
+                        'universidad.ver',
+                        'vocero.crear',
+                        'vocero.editar',
+                        'vocero.eliminar',
+                        'vocero.ver',
+                        'vocero.pdf',
+                        'horario.crear',
+                        'horario.editar',
+                        'horario.eliminar',
+                        'horario.ver',
+                        'horario.pdf',
+                        'horario_docente.crear',
+                        'horario_docente.editar',
+                        'horario_docente.eliminar',
+                        'horario_docente.ver',
+                        'horario_docente.pdf',
+                ]);
         }
 }
