@@ -11,10 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        
         Schema::create('trimestres', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->integer('numero_relativo');
+            $table->foreignId('trayecto_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->timestamps();
+
+
+             // Asegurar que no haya duplicados en el mismo trayecto
+            $table->unique(['trayecto_id', 'numero_relativo']);
         });
     }
 

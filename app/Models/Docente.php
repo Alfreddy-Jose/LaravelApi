@@ -9,11 +9,41 @@ class Docente extends Model
     public $fillable = [
         'categoria',
         'pnf_id',
-        'persona_id'
+        'persona_id',
+        'horas_dedicacion',
     ];
 
+    public function clases()
+    {
+        return $this->hasMany(Clase::class, 'docente_id');
+    }
     public function condicionContrato()
     {
         return $this->hasOne(CondicionContrato::class);
+    }
+
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class);
+    }
+
+    public function unidades_curriculares()
+    {
+        return $this->belongsToMany(
+            UnidadCurricular::class,
+            'docente_unidad_curricular',
+            'docente_id',
+            'unidad_curricular_id'
+        );
+    }
+
+    public function pnf()
+    {
+        return $this->belongsTo(Pnf::class);
+    }
+
+    public function coordinador()
+    {
+        return $this->hasOne(Coordinador::class);
     }
 }

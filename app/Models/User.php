@@ -24,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
+        'persona_id',
     ];
 
     /**
@@ -47,5 +49,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Accesor para obtener la URL completa del avatar
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        return asset('default-avatar.png');
+    }
+
+    // Relacion con la tabla personas
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class);
     }
 }

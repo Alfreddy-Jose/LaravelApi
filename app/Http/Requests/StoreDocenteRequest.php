@@ -19,7 +19,7 @@ class StoreDocenteRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(): array 
     {
         return [
             "persona_id" => "required|exists:personas,id",
@@ -28,7 +28,7 @@ class StoreDocenteRequest extends FormRequest
             "fecha_inicio" => "required|date",
             "fecha_fin" => "required|date",
             "dedicacion" => "required|string|max:50",
-            "tipo" => "required|string|max:50"
+            "tipo" => "required|string|max:50",
         ];
     }
 

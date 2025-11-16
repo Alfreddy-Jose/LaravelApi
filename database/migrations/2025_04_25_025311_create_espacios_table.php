@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('espacios', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo');
             $table->string('etapa');
             $table->integer('nro_aula')->nullable();
             $table->string('nombre_aula');

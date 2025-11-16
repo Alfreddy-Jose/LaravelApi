@@ -22,7 +22,6 @@ class UpdateLaboratorioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "codigo" => "required|unique:espacios,codigo,". $this->route('espacio')->id,
             "nombre_aula" => "required|unique:espacios,nombre_aula,". $this->route('espacio')->id ,
             "etapa" => "required|string",
             "abreviado_lab" => "required|string",

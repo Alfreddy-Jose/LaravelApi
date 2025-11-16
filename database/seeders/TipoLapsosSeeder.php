@@ -13,15 +13,15 @@ class TipoLapsosSeeder extends Seeder
      */
     public function run(): void
     {
-        TipoLapso::create([
+        TipoLapso::firstOrCreate([
             'id' => '4',
             'nombre' => 'REGULAR',
         ]);
-        TipoLapso::create([
+        TipoLapso::firstOrCreate([
             'id' => '5',
             'nombre' => 'INTENSIVO',
         ]);
-        TipoLapso::create([
+        TipoLapso::firstOrCreate([
             'id' => '7',
             'nombre' => 'PIU',
         ]);

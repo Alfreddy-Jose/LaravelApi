@@ -14,4 +14,9 @@ class Trayecto extends Model
     {
         return $this->hasMany(Seccion::class);
     }
+
+    public function trimestres()
+    {
+        return $this->hasMany(Trimestre::class);
+    }
 }

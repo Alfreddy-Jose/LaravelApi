@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMatriculaRequest;
 use App\Http\Requests\UpdateMatriculaRequest;
 use App\Models\Matricula;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MatriculaController extends Controller
 {
@@ -31,7 +33,7 @@ class MatriculaController extends Controller
         Matricula::create($request->all());
 
         // Enviando respuesta a la api
-        return response()->json(['message' => 'Matricula Registrada'], 200);
+        return response()->json(['message' => 'Matrícula Registrada'], 200);
     }
 
     /**
@@ -51,7 +53,7 @@ class MatriculaController extends Controller
         // Actualizando registro
         $matricula->update($request->all()); // <-- variable $id es el registro captado
 
-        return response()->json(["message" => "Matricula Editada"], 200);
+        return response()->json(["message" => "Matrícula Editada"], 200);
     }
 
     /**
@@ -59,8 +61,53 @@ class MatriculaController extends Controller
      */
     public function destroy(Matricula $matricula)
     {
-        $matricula->delete();
+        try {
+            DB::beginTransaction();
+            
+            // Eliminando el registro
+            $matricula->delete();
+            
+            DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Matrícula Eliminada'
+            ], 200);
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            
+            // Código de error de restricción de clave foránea en MySQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar la matrícula porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la matrícula',
+                'error' => $e->getMessage()
+            ], 500);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
-        return response()->json(["message" => "Matricula Eliminada"], 200);
+    public function generarPDF()
+    {
+        $matriculas = Matricula::select('id', 'nombre', 'numero')->get();
+
+        $pdf = Pdf::loadView('pdf.matricula', compact('matriculas'));
+        return $pdf->download('TipoMatricula.pdf');
     }
 }

@@ -16,7 +16,7 @@ class Espacio extends Model
         "tipo_espacio",
         "sede_id"
     ];
-
+    // Relación con el modelo Sede
     public function sede()
     {
         return $this->belongsTo(Sede::class);

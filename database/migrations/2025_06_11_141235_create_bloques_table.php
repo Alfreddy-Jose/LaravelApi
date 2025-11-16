@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bloques', function (Blueprint $table) {
+        Schema::create('bloques_turnos', function (Blueprint $table) {
             $table->id();
-            $table->string('bloque', 50);
-            $table->foreignId('turno_id')
-                ->constrained()
-                ->onDelete('cascade');
+            $table->foreignId('turno_id')->constrained()->onDelete('cascade');
+            $table->string('rango');  // Ej: "07:30 - 08:15"
+            $table->string('periodo'); // AM/PM
+            $table->string('tipo_turno'); // matutino/vespertino/nocturno
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bloques');
+        Schema::dropIfExists('bloques_turno');
     }
 };

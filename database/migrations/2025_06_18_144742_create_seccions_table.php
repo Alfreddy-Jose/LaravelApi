@@ -14,31 +14,29 @@ return new class extends Migration
         Schema::create('seccions', function (Blueprint $table) {
             $table->id();
             // Foreign keys de PNF
-            $table->string('pnf_id');
-            $table->foreign('pnf_id')
-                ->references('id')
-                ->on('pnfs')
-                ->onDelete('cascade');
+            $table->foreignId('pnf_id')
+                ->constrained('pnfs')
+                ->onDelete('restrict');
             // Foreign keys de Tipo de Matricula
             $table->foreignId('matricula_id')
                 ->constrained()
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Foreign keys de Trayecto
             $table->foreignId('trayecto_id')
                 ->constrained('trayectos')
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Foreign keys de Sede
             $table->foreignId('sede_id')
                 ->constrained('sedes')
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Foreign keys de Lapso
             $table->foreignId('lapso_id')
                 ->constrained('lapso_academicos')
-                ->onDelete('cascade');
+                ->onDelete('restrict');
             // Campo de numero de seccion
             $table->bigInteger('numero_seccion');
             // Campo de nombre
-            $table->string('nombre', 50)->unique();
+            $table->string('nombre', 50);
             $table->timestamps();
         });
     }

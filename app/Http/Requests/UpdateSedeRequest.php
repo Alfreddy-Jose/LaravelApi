@@ -26,7 +26,7 @@ class UpdateSedeRequest extends FormRequest
             "nombre_sede" => "required|string",
             "nombre_abreviado" => "required|string|min:3",
             "direccion" => "required|string",
-            "municipio" => "required"
+            "municipio_id" => "required"
         ];
     }
 
@@ -36,7 +36,18 @@ class UpdateSedeRequest extends FormRequest
             "nro_sede" => "numero sede",
             "nombre_sede" => " nombre",
             "nombre_abreviado" => "nombre abreviado",
-            "municipio" => "municipio"
+            "municipio_id" => "municipio"
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            "required" => "El campo :attribute es requerido",
+            "nro_sede.unique" => "El campo número sede ya ha sido registrado",
+            "nro_sede.required" => "El campo número sede es requerido",
+            "nro_sede.unique" => "El campo número sede ya ha sido registrado",
+            "integer" => "El campo :attribute debe ser un número entero"
         ];
     }
 }

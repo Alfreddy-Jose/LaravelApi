@@ -22,11 +22,12 @@ class StoreSedeRequest extends FormRequest
     public function rules(): array
     {
         return [
+            "universidad_id" => "required|exists:universidads,id",
             "nro_sede" => "required|numeric|unique:sedes,nro_sede",
             "nombre_sede" => "required|string",
             "nombre_abreviado" => "required|string|min:3",
             "direccion" => "required|string",
-            "municipio" => "required"
+            "municipio_id" => "required|exists:municipios,id_municipio",
         ];
     }
 
@@ -36,7 +37,17 @@ class StoreSedeRequest extends FormRequest
             "nro_sede" => "numero sede",
             "nombre_sede" => " nombre",
             "nombre_abreviado" => "nombre abreviado",
-            "municipio" => "municipio"
+            "municipio_id" => "municipio"
         ];
+    }
+
+    public function messages()
+    {
+        return [
+            "required" => "El campo :attribute es requerido",
+            "nro_sede.required" => "El campo número sede es requerido",
+            "nro_sede.unique" => "El campo número sede ya ha sido registrado",
+            "integer" => "El campo :attribute debe ser un número entero"
+        ]; 
     }
 }

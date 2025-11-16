@@ -4,38 +4,34 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePersonaRequest;
-use App\Models\AdscritaNoadscrita;
+use App\Http\Requests\UpdatePersonaRequest;
 use App\Models\Persona;
 use App\Models\Pnf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use PDOException;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\DB;
+/* use PDOException;
+use PhpParser\Node\Stmt\TryCatch; */
 
 class PersonaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Seleccionar las Personas
-        $persona = Persona::select(
-            'id',
-            'cedula_persona',
-            'nombre',
-            'apellido',
-            'direccion',
-            'municipio',
-            'direccion',
-            'telefono',
-            'email',
-            'tipo_persona',
-            'grado_inst'
-        )
-            ->get();
+        $query = Persona::query()->with('municipio');
 
-        // Enviar a la vista del listado de Personas con la variable
-        return response()->json($persona);
+        if ($request->tipo_persona) {
+            $query->where('tipo_persona', $request->tipo_persona);
+        }
+        if ($request->grado_inst) {
+            $query->where('grado_inst', $request->grado_inst);
+        }
+
+        $personas = $query->get();
+
+        return response()->json($personas);
     }
 
     /**
@@ -54,6 +50,12 @@ class PersonaController extends Controller
      */
     public function show(Persona $persona)
     {
+        $persona->load(['municipio' => function ($query) {
+            $query->select('id_municipio', 'municipio', 'id_estado')
+                ->with(['estado' => function ($query) {
+                    $query->select('id_estado', 'estado');
+                }]);
+        }]);
         // enviando datos al frontend
         return response()->json($persona);
     }
@@ -61,7 +63,7 @@ class PersonaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Persona $persona)
+    public function update(UpdatePersonaRequest $request, Persona $persona)
     {
         // Editando registro
         $persona->update($request->all());
@@ -75,11 +77,44 @@ class PersonaController extends Controller
      */
     public function destroy(Persona $persona)
     {
-        // Eliminando Persona
-        $persona->delete();
+        try {
+            DB::beginTransaction();
 
-        // Enviando respuesta a la api
-        return response()->json(['message' => 'Persona Eliminada'], 200);
+            // Eliminando el registro
+            $persona->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Persona Eliminada'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+
+            // Código de error de restricción de clave foránea en PostgreSQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar la persona porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la persona',
+                'error' => $e->getMessage()
+            ], 500);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getPnf()
@@ -87,5 +122,24 @@ class PersonaController extends Controller
         $pnfs = Pnf::select('id', 'nombre')->get();
 
         return response()->json($pnfs);
+    }
+
+    public function generarPDF(Request $request)
+    {
+        // Seleccionar las Personas
+        $query = Persona::query()->with('municipio');
+
+        if ($request->tipo_persona) {
+            $query->where('tipo_persona', $request->tipo_persona);
+        }
+        if ($request->grado_inst) {
+            $query->where('grado_inst', $request->grado_inst);
+        }
+
+        $personas = $query->get();
+        // Renderiza una vista blade para el PDF
+        $pdf = Pdf::loadView('pdf.personas', compact('personas'));
+
+        return $pdf->download('personas.pdf');
     }
 }

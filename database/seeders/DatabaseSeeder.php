@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\UnidadCurricular;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,10 +16,22 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
+            EstadosTableSeeder::class,
+            MunicipiosTableSeeder::class,
+            UniversidadSeeder::class,
+            TrayectoSeeder::class,
+            MatriculaSeeder::class,
+            TipoLapsosSeeder::class,
+            PersonaSeeder::class,
+            UnidadCurricularSeeder::class,
+            LapsoSeeder::class,
+            PnfSeeder::class,
+            SedeSeeder::class,
+            EspaciosSeeder::class,
             RolesAndPermissionsSeeder::class,
             UsuarioSeeder::class,
-            TipoLapsosSeeder::class,
-            TrimestreSeeder::class
-        ]);
+            DocenteSeeder::class, 
+            SeccionSeeder::class 
+        ]); 
     }
 }

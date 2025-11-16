@@ -9,7 +9,10 @@ class LapsoAcademico extends Model
     protected $fillable = [
         'nombre_lapso',
         'ano',
-        'tipo_lapso_id'
+        'tipo_lapso_id',
+        'fecha_inicio',
+        'fecha_fin',
+        'status'
     ];
     // Relación con el modelo Tipo_persona
     public function tipo_persona()
@@ -20,5 +23,10 @@ class LapsoAcademico extends Model
     public function tipoLapso()
     {
         return $this->belongsTo(TipoLapso::class);
+    }
+    // Relación con el modelo Seccion
+    public function secciones()
+    {
+        return $this->hasMany(Seccion::class, 'lapso_id');
     }
 }

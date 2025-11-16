@@ -10,14 +10,24 @@ class UnidadCurricular extends Model
         "nombre",
         "descripcion",
         "unidad_credito",
-        "hora_acad",
+        "hora_teorica",
+        "hora_practica",
         "hora_total_est",
         "periodo",
-        "trimestre_id"
     ];
 
-    public function trimestre()
+    public function trimestres()
     {
-        return $this->belongsTo(Trimestre::class);
+        return $this->belongsToMany(Trimestre::class);
+    }
+
+    public function clases()
+{
+    return $this->hasMany(Clase::class, 'unidad_curricular_id');
+}
+
+    public function docentes()
+    {
+        return $this->belongsToMany(Docente::class);
     }
 }

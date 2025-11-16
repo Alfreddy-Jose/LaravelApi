@@ -22,20 +22,20 @@ class StoreAulaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "codigo" => "required|unique:espacios,codigo",
-            "nombre_aula" => "required|unique:espacios,nombre_aula",
             "etapa" => "required|string",
             "nro_aula" => "required|numeric",
-            "sede_id" => "required|exists:sedes,id"
+            "sede_id" => "required|exists:sedes,id" ,
+            "nombre_aula" => "required|unique:espacios,nombre_aula"
         ];
     }
 
     public function attributes()
     {
         return [
-            "nombre_aula" => "nombre de aula",
+            "etapa" => "etapa",
             "nro_aula" => "numero de aula",
-            "sede_id" => "sede"
+            "sede_id" => "sede",
+            "nombre_aula" => "nombre aula"
         ];
     }
 }

@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nombre_lapso', 50);
             $table->bigInteger('ano');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->boolean('status')->default(true);
             $table->foreignId('tipo_lapso_id')
                 ->constrained()
                 ->onDelete('cascade');
