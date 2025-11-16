@@ -15,18 +15,37 @@ class ClaseController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $clase = Clase::with([
-            'unidadCurricular',
-            'docente.persona',
-            'espacio',
-        ])->get();
-
-        return response()->json($clase);
+     */public function index($trimestreId, $horarioId)
+{
+    // Primero obtenemos el horario para sacar el lapso académico
+    $horario = Horario::find($horarioId);
+    
+    if (!$horario) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Horario no encontrado'
+        ], 404);
     }
 
+    $lapsoAcademico = $horario->lapso_academico;
+
+    // Obtenemos las clases con las relaciones exactas que necesitas
+    $clases = Clase::with([
+        'unidadCurricular',
+        'docente.persona',
+        'espacio'
+    ])
+    ->where('trimestre_id', $trimestreId)
+    ->whereHas('horario', function ($query) use ($lapsoAcademico) {
+        $query->where('lapso_academico', $lapsoAcademico);
+    })
+    ->orderBy('dia')
+    ->orderBy('bloque_id')
+    ->get();
+
+    // Devolvemos directamente el array de clases (sin el wrapper success, etc.)
+    return response()->json($clases);
+}
     /**
      * Show the form for creating a new resource.
      */

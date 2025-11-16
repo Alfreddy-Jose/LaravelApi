@@ -136,7 +136,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/docente/{docente}', [DocenteController::class, 'show']);
     Route::post('/docentes', [DocenteController::class, 'store']);
     Route::put('/docente/{docente}', [DocenteController::class, 'update']);
-    Route::put('/docente_horas/{docente_id}', [DocenteController::class, 'actualizarHorasDedicacion']);
     Route::delete('/docente/{docente}', [DocenteController::class, 'destroy']);
 
     // Rutas para Voceros
@@ -211,7 +210,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bloques', [BloquesTurnoController::class, 'index']);
 
     // Rutas para las clases
-    Route::get('/clases', [ClaseController::class, 'index']);
+    Route::get('/clases/trimestre/{trimestreId}/horario/{horarioId}', [ClaseController::class, 'index']);
     Route::post('/clases', [ClaseController::class, 'store']);
     Route::put('/clase/{clase}', [ClaseController::class, 'update']);
     Route::put('/claseEdit/{clase}', [ClaseController::class, 'edit']);

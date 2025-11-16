@@ -197,31 +197,6 @@ class DocenteController extends Controller
         return response()->json($docentes);
     }
 
-
-
-    public function actualizarHorasDedicacion(Request $request, $id)
-    {
-        $docente = Docente::findOrFail($id);
-
-        // Recibe la diferencia de horas por query param
-        $diferencia = intval($request->query('horas_dedicacion', 0));
-
-        // Suma o resta según el valor recibido
-        $docente->horas_dedicacion += $diferencia;
-
-        // Opcional: asegúrate de que no sea negativo
-        if ($docente->horas_dedicacion < 0) {
-            $docente->horas_dedicacion = 0;
-        }
-
-        $docente->save();
-
-        return response()->json([
-            'success' => true,
-            'horas_disponibles' => $docente->horas_dedicacion,
-        ]);
-    }
-
     public function conClases()
     {
         $docentesPorTrimestre = DB::table('clases')
