@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class Docente extends Model
 {
+    use Auditable;
+
     public $fillable = [
         'categoria',
         'pnf_id',

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePersonaRequest extends FormRequest
 {
@@ -22,12 +23,16 @@ class UpdatePersonaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "cedula_persona" => "required|numeric|unique:personas,cedula_persona" . ',' . $this->route('persona')->id,
+            "cedula_persona" => "required|numeric|unique:personas,cedula_persona," . $this->route('persona')->id . ",id",
             "nombre" => "required|string",
             "apellido" => "required|string",
-            "email" => "email|unique:personas,email",
+            "email" => "email|unique:personas,email," . $this->route('persona')->id . ",id",
             "direccion" => "max:255",
-            "telefono" => "numeric|unique:personas,telefono"
+            "telefono" => [
+                'nullable',
+                'numeric',
+                Rule::unique('personas', 'telefono')->ignore($this->route('persona')?->id)
+            ]
         ];
     }
 

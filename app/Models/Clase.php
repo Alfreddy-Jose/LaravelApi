@@ -7,9 +7,12 @@ use App\Models\Sede;
 use App\Models\Pnf;
 use App\Models\Trayecto;
 use App\Models\BloquesTurno;
+use App\Traits\Auditable;
 
 class Clase extends Model
 {
+    use Auditable;
+
     protected $fillable = [
         'horario_id',
         'sede_id',

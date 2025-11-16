@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AutenticacionController;
+use App\Http\Controllers\Api\BitacoraController;
 use App\Http\Controllers\Api\BloquesTurnoController;
 use App\Http\Controllers\Api\EspacioController;
 use App\Http\Controllers\Api\DocenteController;
@@ -154,10 +155,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::put('/coordinador/{coordinador}', [CoordinadorController::class, 'update']);
     Route::delete('/coordinador/{coordinador}', [CoordinadorController::class, 'destroy']);
 
-    // Rutas de tipos de personas
-    Route::get('/tipo_persona', [TipoPersonaController::class, 'getFormData']);
-    Route::get('/tipo_personas/list', [TipoPersonaController::class, 'index']);
-
     // Rutas de Espacios
     Route::get('/aula', [EspacioController::class, 'indexAula']);
     Route::get('/espacio/getSedes', [EspacioController::class, 'getSedes']);
@@ -234,4 +231,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rutas para docentes con clases
     Route::get('/docentes/con_clases', [DocenteController::class, 'conClases']);
+
+    // Rutas para la biotacora Bitacoras
+    Route::get('/bitacora', [BitacoraController::class, 'index']);
 });

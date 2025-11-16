@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class LapsoAcademico extends Model
 {
+    use Auditable; 
+
     protected $fillable = [
         'nombre_lapso',
         'ano',
@@ -14,11 +17,6 @@ class LapsoAcademico extends Model
         'fecha_fin',
         'status'
     ];
-    // Relación con el modelo Tipo_persona
-    public function tipo_persona()
-    {
-        return $this->hasMany(Tipo_persona::class, 'lapso_academico_id');
-    }
 
     public function tipoLapso()
     {

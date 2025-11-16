@@ -93,7 +93,7 @@ class CoordinadorController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Coordinador Eliminada'
+                'message' => 'Coordinador Eliminado'
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();

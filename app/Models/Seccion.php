@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Seccion extends Model
 {
+    use Auditable;
+
     protected $fillable = [
         'pnf_id',
         'matricula_id',

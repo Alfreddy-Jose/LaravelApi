@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class Coordinador extends Model
 {
+    use Auditable;
+
     protected $table = 'coordinadors';
 
     protected $fillable = [
