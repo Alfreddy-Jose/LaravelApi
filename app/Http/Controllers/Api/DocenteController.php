@@ -144,7 +144,7 @@ class DocenteController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar la sección',
+                'message' => 'Error al eliminar el docente',
                 'error' => $e->getMessage()
             ], 500);
         } catch (\Exception $e) {
