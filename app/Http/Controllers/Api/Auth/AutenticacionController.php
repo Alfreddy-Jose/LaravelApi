@@ -26,9 +26,21 @@ class AutenticacionController extends Controller
         // Obtener nombres de los permisos
         $permissions = $user->getAllPermissions()->pluck('name')->toArray();
 
+        // Si el rol del usuario es COORDINADOR buscar el Pnf del coordinador
+        if ($user->hasRole('COORDINADOR')) {
+            // primero buscar la persona en caso de que exista
+            $persona = $user->persona;
+            if ($persona) {
+                // buscar el docente y extraer el id del pnf
+                $docente = $persona->docente;
+                $pnf = $docente->pnf_id;
+            }
+        }
+
         return response()->json([
             'message' => 'Inicio de sesión exitoso',
             'user' => $user,
+            'pnf' => $pnf ? $pnf : null,
             'token' => $token,
             'permissions' => $permissions,
         ], 200);
