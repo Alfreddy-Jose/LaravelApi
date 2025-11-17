@@ -62,7 +62,7 @@ class UniversidadController extends Controller
     {
         $universidad->update($request->validated());
 
-        return response()->json(["message" => "Universidad Actualizada"], 200);
+        return response()->json(["message" => "Universidad Editada"], 200);
     }
 
     /**

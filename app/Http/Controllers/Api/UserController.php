@@ -183,9 +183,24 @@ class UserController extends Controller
      */
     public function destroy(User $usuario)
     {
+        // Validar que nunca se elimine el ultimo usuario administrador
+        if ($usuario->hasRole('ADMINISTRADOR')) {
+            // contar los usuarios con el rol ADMINISTRADOR
+            $count = User::whereHas('roles', function ($query) {
+                $query->where('name', 'ADMINISTRADOR');
+            })->count();
+
+            if ($count < 2) {
+                return response()->json([
+                    'message' => 'No se puede eliminar el último usuario con el rol ADMINISTRADOR'
+                ], 403);
+            }
+        }
+
+
         // Eliminar rol del usuario en caso que tenga alguno
         $usuario->roles()->detach();
-        
+
         // Eliminar avatar
         if ($usuario->avatar) {
             Storage::disk('public')->delete($usuario->avatar);

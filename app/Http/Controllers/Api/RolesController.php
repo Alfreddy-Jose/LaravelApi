@@ -112,6 +112,14 @@ class RolesController extends Controller
      */
     public function destroy(Role $rol)
     {
+
+        // Validar que no se pueda eliminar el ultimo Rol ADMINISTRADOR
+        if ($rol->name == 'ADMINISTRADOR') {
+            return response()->json([
+                'message' => 'No se puede eliminar el último rol con el nombre ADMINISTRADOR'
+            ], 403);
+        }
+
         // eliminando rol desvinculando permisos
         $rol->syncPermissions([]);
         $rol->delete();

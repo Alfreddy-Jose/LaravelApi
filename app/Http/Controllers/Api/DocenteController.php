@@ -118,9 +118,44 @@ class DocenteController extends Controller
      */
     public function destroy(Docente $docente)
     {
-        $docente->delete();
+        try {
+            DB::beginTransaction();
 
-        return response()->json(['message' => 'Docente eliminado'], 200);
+            // Eliminando registro
+            $docente->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Docente eliminado'
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+
+            // Código de error de restricción de clave foránea en PostgreSQL
+            if ($e->getCode() == '23503') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar el docente porque tiene registros relacionados',
+                    'error_type' => 'foreign_key_constraint'
+                ], 422);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la sección',
+                'error' => $e->getMessage()
+            ], 500);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrio un error inesperado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getDataSelect()
@@ -229,9 +264,9 @@ class DocenteController extends Controller
             )
             ->get()
             ->map(function ($item, $index) {
-            // Aplicamos la misma lógica del accessor
-            $romanos = [1 => 'I', 2 => 'II', 3 => 'III'];
-            $nombreRelativo = $romanos[$item->numero_relativo] ?? $item->trimestre_nombre;
+                // Aplicamos la misma lógica del accessor
+                $romanos = [1 => 'I', 2 => 'II', 3 => 'III'];
+                $nombreRelativo = $romanos[$item->numero_relativo] ?? $item->trimestre_nombre;
 
                 return [
                     'id' => $index + 1, // ID secuencial para la tabla
@@ -248,5 +283,13 @@ class DocenteController extends Controller
             });
 
         return response()->json($docentesPorTrimestre);
+    }
+
+    // Metodo para generar PDF
+    public function generarPDF()
+    {
+        $docentes = Docente::with('persona', 'pnf', 'unidades_curriculares', 'condicionContrato')->get();
+        $pdf = PDF::loadView('pdf.docentes', compact('docentes'));
+        return $pdf->download('docente.pdf');
     }
 }

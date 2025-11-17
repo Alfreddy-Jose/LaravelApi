@@ -55,7 +55,7 @@ class TrayectoController extends Controller
         $trayecto = Trayecto::findOrFail($trayecto);
         $trayecto->update($request->all());
         
-        return response()->json(['message' => 'Trayecto Actualizado'], 201);
+        return response()->json(['message' => 'Trayecto Ediado'], 201);
         
     }
 

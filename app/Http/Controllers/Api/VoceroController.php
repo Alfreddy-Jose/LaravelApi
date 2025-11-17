@@ -33,7 +33,7 @@ class VoceroController extends Controller
     {
         Vocero::create($request->all());
 
-        return response()->json(['message' => 'Vocero Creado'], 200);
+        return response()->json(['message' => 'Vocero Registrado'], 200);
     }
 
     /**

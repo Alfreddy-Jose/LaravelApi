@@ -74,12 +74,14 @@ class RolesAndPermissionsSeeder extends Seeder
                 Permission::firstOrCreate(['name' => 'aula.eliminar']);
                 Permission::firstOrCreate(['name' => 'aula.ver']);
                 Permission::firstOrCreate(['name' => 'aula.pdf']);
+                Permission::firstOrCreate(['name' => 'aula.importar excel']);
                 // Permisos laboratorios
                 Permission::firstOrCreate(['name' => 'laboratorio.crear']);
                 Permission::firstOrCreate(['name' => 'laboratorio.editar']);
                 Permission::firstOrCreate(['name' => 'laboratorio.eliminar']);
                 Permission::firstOrCreate(['name' => 'laboratorio.ver']);
                 Permission::firstOrCreate(['name' => 'laboratorio.pdf']);
+                Permission::firstOrCreate(['name' => 'laboratorio.importar excel']);
                 // Permisos turno
                 Permission::firstOrCreate(['name' => 'turno.crear']);
                 Permission::firstOrCreate(['name' => 'turno.editar']);
@@ -128,10 +130,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 Permission::firstOrCreate(['name' => 'horario_docente.pdf']);
 
 
-                // Permisos para ver Estadisticas
-                /*         Permission::create(['name' => 'ver estadisticas']);
-        Permission::create(['name' => 'ver general']);
-        Permission::create(['name' => 'ver instrucciones']); */
+                // Permisos para ver Bitacora
+                Permission::create(['name' => 'bitacora.ver']);
 
                 // Crear Roles y asignar permisos
 
@@ -143,7 +143,26 @@ class RolesAndPermissionsSeeder extends Seeder
                 // Rol de Asistente
                 $asistenteRole = Role::firstOrCreate(['name' => 'ASISTENTE']);
                 // Asignar permisos al rol de Asistente
-                $asistenteRole->givePermissionTo(['pnf.ver', 'sede.ver', 'lapso.ver']);
+                $asistenteRole->givePermissionTo([
+                        'pnf.ver', 
+                        'sede.ver',
+                        'lapso.ver',
+                        'lapso.ver',
+                        'trayecto.ver',
+                        'unidad Curricular.ver',
+                        'Tipo Matricula.ver',
+                        'seccion.ver',
+                        'aula.ver',
+                        'laboratorio.ver',
+                        'turno.ver',
+                        'persona.ver',
+                        'docente.ver',
+                        'coordinador.ver',
+                        'universidad.ver',
+                        'vocero.ver',
+                        'horario.ver',
+                        'horario_docente.ver',
+                ]);
 
                 // Rol de coordinador
                 $coordinadorRole = Role::firstOrCreate(['name' => 'COORDINADOR']);

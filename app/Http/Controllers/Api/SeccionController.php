@@ -209,17 +209,13 @@ class SeccionController extends Controller
 
     public function getDataSelect()
     {
-        $pnfs = Pnf::select('id', 'nombre')->get();
         $trayectos = Trayecto::select('id', 'nombre')->get();
         $tipo_matricula = Matricula::select('id', 'nombre', 'numero')->get();
-        $sedes = Sede::select('id', 'nro_sede', 'nombre_sede')->get();
         $lapsos = LapsoAcademico::select('id', 'nombre_lapso', 'ano')->get();
 
         return response()->json([
-            "pnfs" => $pnfs,
             "trayectos" => $trayectos,
             "tipo_matricula" => $tipo_matricula,
-            "sedes" => $sedes,
             "lapsos" => $lapsos
         ]);
     }
