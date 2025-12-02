@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('abreviado_univ');
             $table->string('rif_univ')->unique();
             $table->string('direccion');
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

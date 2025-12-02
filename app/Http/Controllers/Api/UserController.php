@@ -39,17 +39,17 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
-            Log::info('Datos recibidos:', $request->all());
+/*             Log::info('Datos recibidos:', $request->all());
             Log::info('Archivo recibido:', [
                 'hasFile' => $request->hasFile('avatar'),
                 'isValid' => $request->hasFile('avatar') ? $request->file('avatar')->isValid() : false,
                 'fileName' => $request->hasFile('avatar') ? $request->file('avatar')->getClientOriginalName() : null,
-            ]);
+            ]); */
             // Procesar el avatar si existe
             $avatarPath = null;
             if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
                 $avatarPath = $request->file('avatar')->store('avatars', 'public');
-                Log::info('Avatar guardado en:', ['path' => $avatarPath]);
+                // Log::info('Avatar guardado en:', ['path' => $avatarPath]);
             }
 
             // Crear el usuario

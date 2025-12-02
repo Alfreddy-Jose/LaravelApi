@@ -21,8 +21,8 @@ return new class extends Migration
             $table->foreignId('trayecto_id')->constrained('trayectos')->onDelete('cascade');
             $table->foreignId('trimestre_id')->constrained('trimestres')->onDelete('cascade');
             $table->foreignId('unidad_curricular_id')->constrained('unidad_curriculars')->onDelete('cascade');
-            $table->foreignId('docente_id')->constrained('docentes')->onDelete('cascade');
-            $table->foreignId('espacio_id')->constrained('espacios')->onDelete('cascade');
+            $table->foreignId('docente_id')->nullable()->constrained('docentes')->onDelete('cascade');
+            $table->foreignId('espacio_id')->nullable()->constrained('espacios')->onDelete('cascade');
             $table->foreignId('bloque_id')->constrained('bloques_turnos')->onDelete('cascade');
             $table->foreignId('horario_id')
                 ->after('id')
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->integer('duracion'); // Duración en bloques (1 bloque = 1 hora)
             $table->timestamps();
 
-// Restricción única menos restrictiva (solo para evitar duplicados exactos)
+            // Restricción única menos restrictiva (solo para evitar duplicados exactos)
             $table->unique([
                 'docente_id',
                 'espacio_id',
@@ -58,6 +58,5 @@ return new class extends Migration
             $table->dropConstrainedForeignId('horario_id');
             $table->dropIndex(['horario_id', 'dia']);
         });
-
     }
 };

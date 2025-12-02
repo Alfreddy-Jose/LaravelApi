@@ -35,7 +35,7 @@ Route::post('/login', [AutenticacionController::class, 'login']);
 // Rutas para generar PDF
 Route::get('/secciones/pdf', [SeccionController::class, 'pdf']); // <-- Ruta para generar PDF de secciones
 Route::get('/generar_horario_pdf/{horarioId}', [ClaseController::class, 'generarPDF']); // <-- Ruta para generar PDF de horarios por secciones
-Route::get('/generar_pdf_docente/{docenteId}/{trimestreId}', [HorarioDocenteController::class, 'generarPDFDocente']); // <-- Ruta para generar PDF de horarios por docentes
+Route::get('/generar_pdf_docente/{docenteId}/{trimestreId?}/{lapso_academico?}', [HorarioDocenteController::class, 'generarPDFDocente']); // <-- Ruta para generar PDF de horarios por docentes
 Route::get('/unidad_curricular/pdf', [UnidadCurricularController::class, 'exportarPDF']); // <-- Ruta para generar PDF de Unidades Curriculares
 Route::get('/pnf/pdf', [PnfController::class, 'generarPDF']); // <-- Ruta para generar PDF de PNF
 Route::get('/sedes/pdf', [SedeController::class, 'generaPDF']); // <-- Ruta para generar PDF de Sedes
@@ -195,7 +195,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rutas para selects de Horarios
     Route::get('/horarios/sedes', [HorarioSelectsController::class, 'getSedes']);
-    Route::get('/horarios/sedes/{sede}/pnfs', [HorarioSelectsController::class, 'getPnfs']);
+    Route::get('/horarios/sedes/{sede}/pnfs/{coordinador}', [HorarioSelectsController::class, 'getPnfs']);
     Route::get('/horarios/trayectos', [HorarioSelectsController::class, 'getTrayectos']);
     Route::get('/horarios/trayectos/{trayecto}/trimestres', [HorarioSelectsController::class, 'getTrimestres']);
     Route::get('/horarios/trimestres/{trimestres}/unidadesCurriculares', [HorarioSelectsController::class, 'getUnidadesCurriculares']);
@@ -222,7 +222,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('horarios/anterior', [HorarioController::class, 'verificarHorarioAnterior']);
     });
     Route::get('horarios/{horario}/clases', [HorarioController::class, 'show']);
-    Route::get('horarios', [HorarioController::class, 'index2']);
+    Route::get('horarios/{lapso_academico}', [HorarioController::class, 'index2']);
     Route::get('horario/{horario}', [HorarioController::class, 'horario']);
     Route::delete('/horarios/{horario}', [HorarioController::class, 'destroy']);
     Route::post('/horarios/{horario}/publicar', [HorarioPublicacionController::class, 'publicar']);
@@ -230,7 +230,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
 
     // Rutas para docentes con clases
-    Route::get('/docentes/con_clases', [DocenteController::class, 'conClases']);
+    Route::get('/docentes/con_clases/{lapso_academico}', [DocenteController::class, 'conClases']);
 
     // Rutas para la biotacora Bitacoras
     Route::get('/bitacora', [BitacoraController::class, 'index']);

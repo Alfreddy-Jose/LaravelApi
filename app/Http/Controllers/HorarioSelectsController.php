@@ -10,6 +10,7 @@ use App\Models\Trimestre;
 use App\Models\UnidadCurricular;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HorarioSelectsController extends Controller
 {
@@ -25,10 +26,23 @@ class HorarioSelectsController extends Controller
     /**
      * Obtener Pnfs basados en sede seleccionada
      */
-    public function getPnfs($sede)
+    public function getPnfs($sede, $coordinador)
     {
         $sede = Sede::findOrFail($sede);
-        $pnfs = $sede->pnfs()->orderBy('nombre')->get(['pnfs.id', 'pnfs.nombre']);
+        // Convertir string a booleano real
+        $coordinador = filter_var($coordinador, FILTER_VALIDATE_BOOLEAN);
+
+        $user = Auth::user();
+        if ($coordinador) {
+            $pnf_id = $user->persona->docente->pnf_id;
+
+            if (!$pnf_id) {
+                return response()->json([]);
+            }
+            $pnfs = $sede->pnfs()->where('pnfs.id', $pnf_id)->orderBy('pnfs.nombre')->get(['pnfs.id', 'pnfs.nombre']);
+        } else {
+            $pnfs = $sede->pnfs()->orderBy('pnfs.nombre')->get(['pnfs.id', 'pnfs.nombre']);
+        }
 
         return response()->json($pnfs);
     }

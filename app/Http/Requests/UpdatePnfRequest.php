@@ -25,7 +25,8 @@ class UpdatePnfRequest extends FormRequest
             'codigo' => 'required|numeric|unique:pnfs,codigo,' . $this->route('pnf')->id,
             'nombre' => 'required|string',
             'abreviado' => 'required|string|min:4',
-            'abreviado_coord' => 'required|string|min:3'
+            'abreviado_coord' => 'required|string|min:3',
+            'logo' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
     // Personalizar atributos de error

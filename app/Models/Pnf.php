@@ -14,7 +14,8 @@ class Pnf extends Model
         'codigo',
         'nombre',
         'abreviado',
-        'abreviado_coord'
+        'abreviado_coord',
+        'logo',
     ];
     
     // Relación con el modelo Seccion

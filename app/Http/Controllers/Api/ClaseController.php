@@ -15,37 +15,39 @@ class ClaseController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */public function index($trimestreId, $horarioId)
-{
-    // Primero obtenemos el horario para sacar el lapso académico
-    $horario = Horario::find($horarioId);
-    
-    if (!$horario) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Horario no encontrado'
-        ], 404);
+     */ public function index($trimestreId, $horarioId)
+    {
+        // Primero obtenemos el horario para sacar el lapso académico
+        $horario = Horario::find($horarioId);
+
+        if (!$horario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Horario no encontrado'
+            ], 404);
+        }
+
+        $lapsoAcademico = $horario->lapso_academico;
+
+        // Obtenemos las clases con las relaciones exactas que necesitas
+        $clases = Clase::with([
+            'unidadCurricular',
+            'docente.persona',
+            'espacio'
+        ])
+            ->join('trimestres', 'clases.trimestre_id', '=', 'trimestres.id')
+            ->where('trimestres.numero_relativo', $trimestreId)
+            ->whereHas('horario', function ($query) use ($lapsoAcademico) {
+                $query->where('lapso_academico', $lapsoAcademico);
+            })
+            ->select('clases.*') // Seleccionar solo las columnas de clases
+            ->orderBy('dia')
+            ->orderBy('bloque_id')
+            ->get();
+
+        // Devolvemos directamente el array de clases (sin el wrapper success, etc.)
+        return response()->json($clases);
     }
-
-    $lapsoAcademico = $horario->lapso_academico;
-
-    // Obtenemos las clases con las relaciones exactas que necesitas
-    $clases = Clase::with([
-        'unidadCurricular',
-        'docente.persona',
-        'espacio'
-    ])
-    ->where('trimestre_id', $trimestreId)
-    ->whereHas('horario', function ($query) use ($lapsoAcademico) {
-        $query->where('lapso_academico', $lapsoAcademico);
-    })
-    ->orderBy('dia')
-    ->orderBy('bloque_id')
-    ->get();
-
-    // Devolvemos directamente el array de clases (sin el wrapper success, etc.)
-    return response()->json($clases);
-}
     /**
      * Show the form for creating a new resource.
      */
@@ -65,10 +67,14 @@ class ClaseController extends Controller
             $horario = Horario::findOrFail($data['horario_id']);
             $lapso_academico = $horario->lapso_academico;
             Log::info('lapso_academico: ' . $lapso_academico);
-            // Verificación con 8 parámetros (sin trayecto_id)
-            $disponible = DB::selectOne("
-            SELECT verificar_bloques_consecutivos_disponibles(?, ?, ?, ?, ?, ?, ?, ?) as disponible
-        ", [
+
+            // Asegurarnos de que docente_id y espacio_id estén presentes, incluso si son null
+            $data['docente_id'] = $data['docente_id'] ?? null;
+            $data['espacio_id'] = $data['espacio_id'] ?? null;
+
+            // Solo verificar disponibilidad si se proporciona docente_id o espacio_id
+            $verificarDisponibilidad = false;
+            $params = [
                 $data['espacio_id'],
                 $data['docente_id'],
                 $data['dia'],
@@ -77,12 +83,23 @@ class ClaseController extends Controller
                 $data['trimestre_id'],
                 $lapso_academico,
                 $data['horario_id']
-            ]);
-            Log::info('disponibilidad: ' . json_encode($disponible));
-            if (!$disponible->disponible) {
-                return response()->json([
-                    'message' => 'Verifique la disponibilidad del aula y el docente en el bloque de hora que se quieren ingresar en este trimestre.'
-                ], 422);
+            ];
+
+            // Si hay al menos un docente o aula seleccionado, verificar disponibilidad
+            if ($data['docente_id'] || $data['espacio_id']) {
+                $disponible = DB::selectOne("
+                SELECT verificar_bloques_consecutivos_disponibles(?, ?, ?, ?, ?, ?, ?, ?) as disponible
+            ", $params);
+
+                Log::info('disponibilidad: ' . json_encode($disponible));
+
+                if (!$disponible->disponible) {
+                    return response()->json([
+                        'message' => 'Verifique la disponibilidad del aula y el docente en el bloque de hora que se quieren ingresar en este trimestre.'
+                    ], 422);
+                }
+            } else {
+                Log::info('No se verifica disponibilidad: ni docente ni aula seleccionados');
             }
 
             $clase = $horario->Clase()->create($data);
@@ -92,6 +109,7 @@ class ClaseController extends Controller
                 "clase"   => $clase
             ], 201);
         } catch (\Exception $e) {
+            Log::error('Error al crear clase: ' . $e->getMessage());
             return response()->json([
                 'message' => 'No se pudo crear la clase',
                 'detalle' => $e->getMessage()
@@ -113,13 +131,16 @@ class ClaseController extends Controller
     public function edit(Request $request, Clase $clase)
     {
         try {
-            $clase->update([
+            $updateData = [
                 "unidad_curricular_id" => $request->unidad_curricular_id,
-                "docente_id" => $request->docente_id,
-                "espacio_id" => $request->espacio_id,
-            ]);
+                "docente_id" => $request->docente_id ?? null, // Permitir null
+                "espacio_id" => $request->espacio_id ?? null, // Permitir null
+            ];
+
+            $clase->update($updateData);
             return response()->json(['message' => 'Clase editada'], 200);
         } catch (\Exception $e) {
+            Log::error('Error al editar clase: ' . $e->getMessage());
             return response()->json(['error' => 'Error al editar la clase'], 500);
         }
     }

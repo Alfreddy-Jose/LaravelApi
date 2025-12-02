@@ -21,7 +21,7 @@ class SedeController extends Controller
     public function index()
     {
         // Obtener todas las sedes
-        $sedes = Sede::with('municipio:municipio,id_municipio')
+        $sedes = Sede::with('municipio:municipio,id_municipio', 'pnfs:id,nombre')
             ->select('id', 'nro_sede', 'nombre_sede', 'nombre_abreviado', 'direccion', 'municipio_id')
             ->get();
 

@@ -31,9 +31,10 @@ class HorarioController extends Controller
     }
 
     // funcion para mostrar todos los horarios
-    public function index2()
+    public function index2($lapsoAcademico)
     {
         return Horario::with(['trimestre', 'seccion'])
+            ->where('lapso_academico', $lapsoAcademico)
             ->orderByDesc('created_at')
             ->get();
     }

@@ -26,6 +26,7 @@ class UpdateUniversidadRequest extends FormRequest
             'abreviado_univ' => 'required|string|max:50',
             'rif_univ' => 'required|string|max:20',
             'direccion' => 'nullable|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ];
     }
 

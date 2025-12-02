@@ -7,12 +7,11 @@ use App\Models\BloquesTurno;
 use App\Models\Clase;
 use App\Models\Docente;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class HorarioDocenteController extends Controller
 {
-    public function generarPDFDocente($docenteId, $trimestreId = null)
+    public function generarPDFDocente($docenteId, $trimestreId = null, $lapsoAcademico = null)
     {
         try {
             // Buscar docente con su persona
@@ -74,10 +73,17 @@ class HorarioDocenteController extends Controller
             ])
                 ->where('docente_id', $docenteId);
 
-            // Filtrar por trimestre si se proporciona
-            if ($trimestreId) {
-                $clasesQuery->whereHas('horario', function ($query) use ($trimestreId) {
-                    $query->where('trimestre_id', $trimestreId);
+            // MODIFICACIÓN: Filtrar por número relativo del trimestre y lapso académico
+            if ($trimestreId || $lapsoAcademico) {
+                $clasesQuery->whereHas('horario', function ($query) use ($trimestreId, $lapsoAcademico) {
+                    if ($trimestreId) {
+                        $query->whereHas('trimestre', function ($trimestreQuery) use ($trimestreId) {
+                            $trimestreQuery->where('numero_relativo', $trimestreId);
+                        });
+                    }
+                    if ($lapsoAcademico) {
+                        $query->where('lapso_academico', $lapsoAcademico);
+                    }
                 });
             }
 
@@ -86,10 +92,9 @@ class HorarioDocenteController extends Controller
             // Obtener información del trimestre seleccionado
             $trimestreSeleccionado = null;
             if ($trimestreId) {
-                $trimestreSeleccionado = \App\Models\Trimestre::find($trimestreId);
+                $trimestreSeleccionado = \App\Models\Trimestre::where('numero_relativo', $trimestreId)->first();
             }
 
-            // Procesar las clases a eventos
             // Procesar las clases a eventos
             $eventosProcesados = $clases->map(function ($clase) use ($mapeoDias, $mapaIdAPosicion) {
                 $bloque_id = $clase->bloque_id;
@@ -140,7 +145,7 @@ class HorarioDocenteController extends Controller
                 'trayecto' => $primerClase->trayecto->nombre ?? 'N/A',
                 'trimestre' => $trimestreSeleccionado ? $trimestreSeleccionado->nombre_relativo : ($primerClase->trimestre->nombre_relativo ?? 'N/A'),
                 'seccion' => $primerClase->horario->seccion->nombre ?? 'N/A',
-                'lapso' => $primerClase->horario->seccion->lapso->nombre_lapso ?? 'N/A',
+                'lapso' => $lapsoAcademico ?? ($primerClase->horario->seccion->lapso->nombre_lapso ?? 'N/A'),
             ];
 
             // Preparar datos para la vista
@@ -161,7 +166,10 @@ class HorarioDocenteController extends Controller
             // Nombre del archivo personalizado
             $nombreArchivo = "horario_docente_" . $docente->persona->nombre . "_" . $docente->persona->apellido;
             if ($trimestreSeleccionado) {
-                $nombreArchivo .= "_trimestre_" . $trimestreSeleccionado->nombre;
+                $nombreArchivo .= "_trimestre_" . $trimestreSeleccionado->numero_relativo;
+            }
+            if ($lapsoAcademico) {
+                $nombreArchivo .= "_lapso_" . $lapsoAcademico;
             }
             $nombreArchivo .= ".pdf";
 

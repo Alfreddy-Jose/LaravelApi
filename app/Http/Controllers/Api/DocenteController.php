@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDocenteRequest;
-use App\Models\Clase;
 use App\Models\CondicionContrato;
 use App\Models\Docente;
 use App\Models\Persona;
@@ -232,41 +231,37 @@ class DocenteController extends Controller
         return response()->json($docentes);
     }
 
-    public function conClases()
+
+    public function conClases($lapsoAcademico)
     {
-        $docentesPorTrimestre = DB::table('clases')
+        $query = DB::table('clases')
             ->join('docentes', 'clases.docente_id', '=', 'docentes.id')
             ->join('personas', 'docentes.persona_id', '=', 'personas.id')
             ->join('horarios', 'clases.horario_id', '=', 'horarios.id')
-            ->join('trimestres', 'horarios.trimestre_id', '=', 'trimestres.id')
+            ->join('trimestres', 'horarios.trimestre_id', '=', 'trimestres.id');
+
+            $query->where('horarios.lapso_academico', $lapsoAcademico);
+
+            $docentesPorTrimestre = $query
             ->select(
                 'docentes.id as docente_id',
-                'docentes.categoria',
-                'docentes.horas_dedicacion',
-                'personas.nombre',
-                'personas.apellido',
-                'personas.cedula_persona',
-                'trimestres.id as trimestre_id',
-                'trimestres.nombre as trimestre_nombre',
+                DB::raw('MIN(docentes.categoria) as categoria'),
+                DB::raw('MIN(docentes.horas_dedicacion) as horas_dedicacion'),
+                DB::raw('MIN(personas.nombre) as nombre'),
+                DB::raw('MIN(personas.apellido) as apellido'),
+                DB::raw('MIN(personas.cedula_persona) as cedula_persona'),
                 'trimestres.numero_relativo',
                 DB::raw('COUNT(clases.id) as clases_count')
             )
             ->groupBy(
-                'docentes.id',
-                'docentes.categoria',
-                'docentes.horas_dedicacion',
-                'personas.nombre',
-                'personas.apellido',
-                'personas.cedula_persona',
-                'trimestres.id',
-                'trimestres.nombre',
-                'trimestres.numero_relativo'
+                'docentes.id',           // Solo el ID del docente
+                'trimestres.numero_relativo' // Solo el numero_relativo del trimestre
             )
             ->get()
             ->map(function ($item, $index) {
                 // Aplicamos la misma lógica del accessor
                 $romanos = [1 => 'I', 2 => 'II', 3 => 'III'];
-                $nombreRelativo = $romanos[$item->numero_relativo] ?? $item->trimestre_nombre;
+                $nombreRelativo = $romanos[$item->numero_relativo] ?? 'N/A';
 
                 return [
                     'id' => $index + 1, // ID secuencial para la tabla
@@ -275,9 +270,9 @@ class DocenteController extends Controller
                     'horas_dedicacion' => $item->horas_dedicacion,
                     'nombre_completo' => $item->nombre . ' ' . $item->apellido,
                     'cedula' => $item->cedula_persona,
-                    'trimestre_id' => $item->trimestre_id,
-                    'trimestre_nombre' => $nombreRelativo, // Usamos el nombre relativo
-                    'trimestre_valor_real' => $item->trimestre_nombre, // Mantenemos el valor real
+                    'trimestre_id' => $item->numero_relativo,
+                    'trimestre_nombre' => $nombreRelativo,
+                    'trimestre_valor_real' => $item->numero_relativo,
                     'clases_count' => $item->clases_count
                 ];
             });

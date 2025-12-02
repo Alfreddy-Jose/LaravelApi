@@ -15,6 +15,7 @@ class Universidad extends Model
         'nombre_univ',
         'abreviado_univ',
         'rif_univ',
-        'direccion'
+        'direccion',
+        'logo',
     ];
 }

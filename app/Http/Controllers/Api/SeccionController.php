@@ -13,6 +13,7 @@ use App\Models\Sede;
 use App\Models\Trayecto;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SeccionController extends Controller
@@ -112,7 +113,7 @@ class SeccionController extends Controller
      */
 
     public function update(UpdateSeccionRequest $request, Seccion $seccion)
-    {   
+    {
 
         // actualizando la sección
         $seccion->update(
@@ -212,11 +213,13 @@ class SeccionController extends Controller
         $trayectos = Trayecto::select('id', 'nombre')->get();
         $tipo_matricula = Matricula::select('id', 'nombre', 'numero')->get();
         $lapsos = LapsoAcademico::select('id', 'nombre_lapso', 'ano')->get();
+        $sedes = Sede::select('id', 'nombre_sede')->get();
 
         return response()->json([
             "trayectos" => $trayectos,
             "tipo_matricula" => $tipo_matricula,
-            "lapsos" => $lapsos
+            "lapsos" => $lapsos,
+            "sedes" => $sedes
         ]);
     }
 

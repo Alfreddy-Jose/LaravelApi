@@ -9,6 +9,8 @@ use App\Models\Pnf;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PnfController extends Controller
 {
@@ -18,7 +20,7 @@ class PnfController extends Controller
     public function index()
     {
         // Seleccionar los pnf
-        $pnf = Pnf::select('id', 'codigo', 'nombre', 'abreviado', 'abreviado_coord')->get();
+        $pnf = Pnf::select('id', 'codigo', 'nombre', 'abreviado', 'abreviado_coord', 'logo')->get();
 
         // Si no hay registros, devuelve un array vacío para que el frontend lo maneje
         if ($pnf->isEmpty()) {
@@ -34,10 +36,32 @@ class PnfController extends Controller
      */
     public function store(StorePnfRequest $request)
     {
+        try {
+            // Procesar el logo si existe
+            $logoPath = null;
+            if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
+                $logoPath = $request->file('logo')->store('pnf_logos', 'public');
+            }
 
-        Pnf::create($request->all());
+            // Crear el PNF con el logo
+            $pnf = Pnf::create([
+                'codigo' => $request['codigo'],
+                'nombre' => $request['nombre'],
+                'abreviado' => $request['abreviado'],
+                'abreviado_coord' => $request['abreviado_coord'],
+                'logo' => $logoPath,
+            ]);
 
-        return response()->json(["message" => "PNF Registrado"], 200);
+            return response()->json([
+                "message" => "PNF Registrado",
+                "pnf" => $pnf
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al crear el PNF',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -53,12 +77,58 @@ class PnfController extends Controller
      */
     public function update(UpdatePnfRequest $request, Pnf $pnf)
     {
+        try {
+            DB::beginTransaction();
 
-        // actualizando pnf
-        $pnf->update($request->all());
+            // Procesar eliminación del logo
+            if ($request->has('remove_logo') && $request->remove_logo == '1') {
+                // Eliminar logo existente
+                if ($pnf->logo) {
+                    Storage::disk('public')->delete($pnf->logo);
+                    $pnf->logo = null;
+                }
+            } 
+            // Procesar nuevo logo
+            elseif ($request->hasFile('logo') && $request->file('logo')->isValid()) {
+                // Eliminar logo anterior si existe
+                if ($pnf->logo) {
+                    Storage::disk('public')->delete($pnf->logo);
+                }
+                
+                // Guardar nuevo logo
+                $logoPath = $request->file('logo')->store('pnf_logos', 'public');
+                $pnf->logo = $logoPath;
+            }
 
-        // Enviando respuesta a la api
-        return response()->json(['message' => 'PNF Editado'], 200);
+            // Actualizar datos del PNF
+            $pnf->update([
+                'codigo' => $request['codigo'],
+                'nombre' => $request['nombre'],
+                'abreviado' => $request['abreviado'],
+                'abreviado_coord' => $request['abreviado_coord'],
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'PNF Editado',
+                'pnf' => $pnf
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('Error al actualizar PNF:', [
+                'pnf_id' => $pnf->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Error al actualizar el PNF',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('abreviado');
             $table->string('abreviado_coord');
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

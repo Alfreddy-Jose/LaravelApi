@@ -28,8 +28,8 @@ class StoreClaseRequest extends FormRequest
             'trayecto_id' => 'required|exists:trayectos,id',
             'trimestre_id' => 'required|exists:trimestres,id',
             'unidad_curricular_id' => 'required|exists:unidad_curriculars,id',
-            'docente_id' => 'required|exists:docentes,id',
-            'espacio_id' => 'required|exists:espacios,id',
+            'docente_id' => 'nullable|exists:docentes,id',
+            'espacio_id' => 'nullable|exists:espacios,id',
             'bloque_id' => 'required|exists:bloques_turnos,id',
             'dia' => 'required|string|max:10',
             'duracion' => 'required|integer|min:1'
